@@ -10,11 +10,13 @@
 
 .nav {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 
 .logo {
+  justify-content: flex-start;
+  display: flex;
   font-size: 1.5rem;
   font-weight: bold;
 }

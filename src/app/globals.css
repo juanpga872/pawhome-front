@@ -10,7 +10,7 @@ header, .hero-section, .adopt-section, .how-it-works-section, .help-pets-section
 }
 
 header {
-  display: flex;
+  
   justify-content: space-between;
   align-items: center;
 }

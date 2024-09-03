@@ -1,0 +1,40 @@
+.hero-section {
+  background-image: url('https://media.revistagq.com/photos/6582ce59b0f3e26d93a1ae9e/4:3/w_4488,h_3366,c_limit/544673512');
+  background-size: cover;
+  background-position: center;
+  height: 400px; /* Ajusta según el diseño */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.hero-text {
+  color: white;
+  font-size: 2rem;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.hero-text h1 {
+  margin: 0;
+  margin-bottom: 20px;
+}
+
+.hero-text button {
+  background-color: #0070f3;
+  border: none;
+  padding: 10px 20px;
+  color: white;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.hero-text button:hover {
+  background-color: #005bb5;
+}
+
