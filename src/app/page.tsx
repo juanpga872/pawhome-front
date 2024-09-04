@@ -1,6 +1,6 @@
-
-import { Header } from "./componets/ui/Header";
-import { HeroSection } from "./componets/ui/HeroSection";
+"use client";
+import  Header  from "./componets/ui/Navbar/Header.ui";
+import HeroSection from "./componets/ui/Navbar/Herosection.ui";
 
 
 export default function Home() {
@@ -8,9 +8,7 @@ export default function Home() {
     <>
       <Header />
       <main>
-      <HeroSection/>
-        
-
+        <HeroSection />
       </main>
 
     </>
