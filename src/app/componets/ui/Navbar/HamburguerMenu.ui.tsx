@@ -5,7 +5,7 @@ const HamburgerWrapper = styled.div`
   display: none; 
   cursor: pointer;
 
-  @media (max-width: 1000px) { 
+  @media (max-width: 800px) { 
     display: block; 
   }
 `;
