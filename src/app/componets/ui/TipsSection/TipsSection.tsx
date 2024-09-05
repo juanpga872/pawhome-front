@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { DogAdoptionButton } from "../Button/button.ui";
-import { TipItem } from './TipItem'; // Asegúrate de ajustar la ruta según la ubicación del componente.
+import { TipItem } from './TipItem'; 
 
 const TipsSectionWrapper = styled.section`
   display: flex;
