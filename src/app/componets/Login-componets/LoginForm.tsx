@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import InputField from './InputField';
 import { FaEnvelope, FaLock } from 'react-icons/fa';
-import { DogAdoptionButton } from '../Button/button.ui';
+import { DogAdoptionButton } from '../ui/Button/button.ui';
 
 const FormWrapper = styled.div`
   width: 100%;
