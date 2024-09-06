@@ -29,12 +29,10 @@ const NavLinks: React.FC<NavLinksProps> = ({ isOpen }) => {
       <NavLink href="/foster">Foster</NavLink>
       <NavLink href="/food">Food</NavLink>
       <NavLink href="/cart">
-        <FontAwesomeIcon icon={faShoppingCart} /> {}
+        <FontAwesomeIcon icon={faShoppingCart} />
       </NavLink>
       <NavLink href="/login">
-        <FontAwesomeIcon icon={faUser} /> {}
-      <NavLink href="/Login">
-        <FontAwesomeIcon icon={faUser} /> {/* Usuario */}
+        <FontAwesomeIcon icon={faUser} />
       </NavLink>
     </NavLinksList>
   );

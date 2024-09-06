@@ -8,6 +8,7 @@ body {
 
 header, .hero-section, .adopt-section, .how-it-works-section, .help-pets-section, .tips-section, footer {
   padding: 20px;
+  background-color: none;
 }
 
 header {

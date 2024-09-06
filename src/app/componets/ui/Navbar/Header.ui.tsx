@@ -14,6 +14,9 @@ const HeaderWrapper = styled.header`
   align-items: center;
   justify-content: space-between;
   background-color: #ffdddd69;
+  @media (max-width: 800px) {
+    
+  }
 `;
 
 const Nav = styled.nav`

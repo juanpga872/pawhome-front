@@ -44,7 +44,7 @@ const Paw = styled.div`
   &::after {
     content: '';
     position: absolute;
-    background-color: #e91e63; // Rosado
+    background-color: #e91e63; 
     border-radius: 50%;
     animation: ${bounce} 1.5s infinite ease-in-out, ${pulse} 1.5s infinite ease-in-out;
   }
