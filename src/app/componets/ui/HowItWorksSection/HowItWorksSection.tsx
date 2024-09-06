@@ -7,6 +7,7 @@ const HowItWorksWrapper = styled.section`
   justify-content: center;
   padding: 60px;
   background-color: #e2e2e2;
+  border-radius:30px;
 
   @media (max-width: 768px) {
     flex-direction: column;
