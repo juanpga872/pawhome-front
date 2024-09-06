@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
+
 import { FaFacebookF, FaTwitter, FaInstagram } from 'react-icons/fa';
 const FooterWrapper = styled.footer`
   background-color: #333;
