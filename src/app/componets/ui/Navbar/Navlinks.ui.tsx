@@ -31,9 +31,8 @@ const NavLinks: React.FC<NavLinksProps> = ({ isOpen }) => {
       <NavLink href="/cart">
         <FontAwesomeIcon icon={faShoppingCart} /> {}
       </NavLink>
-      <NavLink href="/login">
         <FontAwesomeIcon icon={faUser} /> {}
-      <NavLink href="/Login">
+      <NavLink href="/login">
         <FontAwesomeIcon icon={faUser} /> {/* Usuario */}
       </NavLink>
     </NavLinksList>
