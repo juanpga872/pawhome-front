@@ -25,13 +25,15 @@ const NavLinksList = styled.ul<NavLinksProps>`
 const NavLinks: React.FC<NavLinksProps> = ({ isOpen }) => {
   return (
     <NavLinksList isOpen={isOpen}>
-      <NavLink href="/adopt-a-pet">Donate</NavLink>
-      <NavLink href="/how-it-works">Foster</NavLink>
-      <NavLink href="/help-us">Food</NavLink>
+      <NavLink href="/donate">Donate</NavLink>
+      <NavLink href="/foster">Foster</NavLink>
+      <NavLink href="/food">Food</NavLink>
       <NavLink href="/cart">
-        <FontAwesomeIcon icon={faShoppingCart} /> {/* Carrito */}
+        <FontAwesomeIcon icon={faShoppingCart} /> {}
       </NavLink>
       <NavLink href="/login">
+        <FontAwesomeIcon icon={faUser} /> {}
+      <NavLink href="/Login">
         <FontAwesomeIcon icon={faUser} /> {/* Usuario */}
       </NavLink>
     </NavLinksList>

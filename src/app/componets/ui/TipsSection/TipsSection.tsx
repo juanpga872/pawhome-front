@@ -4,17 +4,20 @@ import { TipItem } from './TipItem';
 
 const TipsSectionWrapper = styled.section`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   padding: 50px;
-  background-image: url('/img-tips/background.jpg'); /* Imagen de fondo */
+  background-image: url('');
   background-size: cover;
   background-position: center;
   border-radius: 10px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  min-height: 400px;
 
   @media (max-width: 768px) {
     flex-direction: column;
+    align-items: center;
+    padding: 20px;
   }
 `;
 
@@ -24,8 +27,9 @@ const TipsImage = styled.img`
   border-radius: 10px;
 
   @media (max-width: 768px) {
-    margin-bottom: 20px;
     width: 100%;
+    max-width: 500px;
+    margin-bottom: 20px;
   }
 `;
 
@@ -35,6 +39,7 @@ const TipsList = styled.div`
 
   @media (max-width: 768px) {
     margin-left: 0;
+    text-align: center;
   }
 `;
 
@@ -52,6 +57,7 @@ const SeeAllButton = styled.button`
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-top: 20px; 
 
   &:hover {
     background-color: #000;
