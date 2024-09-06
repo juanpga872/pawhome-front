@@ -6,7 +6,7 @@ const HowItWorksWrapper = styled.section`
   align-items: center;
   justify-content: center;
   padding: 60px;
-  background-color: #f9f9f9;
+  background-color: #e2e2e2;
 
   @media (max-width: 768px) {
     flex-direction: column;

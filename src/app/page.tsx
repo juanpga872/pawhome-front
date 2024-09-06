@@ -14,8 +14,8 @@ export default function Home() {
         <HeroSection />
         <TodaySection />
         <HowItWorksSection />
-        <TipsSection />
         <HelpingPetsSection />
+        <TipsSection />
       </main>
 
     </>

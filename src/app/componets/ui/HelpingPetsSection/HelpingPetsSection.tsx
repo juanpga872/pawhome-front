@@ -6,7 +6,6 @@ const HelpingPetsSectionWrapper = styled.section`
   padding: 60px;
   background-color: #f7f7f7;
   text-align: center;
-
   @media (max-width: 768px) {
     padding: 30px;
   }
