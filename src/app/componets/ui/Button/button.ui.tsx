@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const DogAdoptionButton = styled.button`
+export const DogAdoptionButton = styled.a`
   background-color: #FF69B4; /* Rosa intenso */
   color: #ffffff; /* Texto blanco */
   border: none;
@@ -11,7 +11,7 @@ export const DogAdoptionButton = styled.button`
   cursor: pointer; /* Cambiar cursor a manita */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.6); /* Sombra suave */
   transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Transición suave al pasar el mouse */
-
+  text-decoration: none;
   &:hover {
     background-color: #FF1493; /* Rosa más oscuro */
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada al pasar el mouse */

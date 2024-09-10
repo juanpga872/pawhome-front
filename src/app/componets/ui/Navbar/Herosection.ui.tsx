@@ -33,7 +33,7 @@ const HeroSection = () => {
     <HeroSectionWrapper>
       <HeroText>
         <h4>You can make a difference in their lives</h4>
-        <DogAdoptionButton>Adopt a pet</DogAdoptionButton>
+        <DogAdoptionButton href="/donate" >Adopt a pet</DogAdoptionButton>
       </HeroText>
     </HeroSectionWrapper>
   );
