@@ -286,6 +286,8 @@ const LoginForm: React.FC = () => {
       </Container>
     </>
   );
+
+  
 };
 
 export default LoginForm;
