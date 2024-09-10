@@ -9,7 +9,7 @@ interface InputFieldProps {
 const InputWrapper = styled.div`
   display: flex;
   align-items: center;
-  background-color: #f5f5f5;
+  background-color: #FFF2F2FF;
   padding: 10px;
   border-radius: 10px;
   margin-bottom: 15px;

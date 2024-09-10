@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import styled, { createGlobalStyle, keyframes, css } from 'styled-components';
-import { FaFacebookF, FaGooglePlusG, FaLinkedinIn } from 'react-icons/fa';
+import styled, { createGlobalStyle, keyframes } from 'styled-components';
+import { FaFacebookF, FaGooglePlusG, FaLinkedinIn, FaArrowLeft } from 'react-icons/fa';
 
+// Global Styles
 const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
   
@@ -10,31 +11,73 @@ const GlobalStyle = createGlobalStyle`
   }
   
   body {
-    background: #f6f5f7;
+    background: #FFFFFFFF;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     font-family: 'Montserrat', sans-serif;
     height: 100vh;
-    margin: -20px 0 50px;
   }
 `;
 
-const show = keyframes`
-  0%, 49.99% {
-    opacity: 0;
-    z-index: 1;
+// Keyframes for animations
+const slideInFromRight = keyframes`
+  from {
+    transform: translateX(100%);
   }
-  
-  50%, 100% {
-    opacity: 1;
-    z-index: 5;
+  to {
+    transform: translateX(0);
+  }
+`;
+
+const slideOutToLeft = keyframes`
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+`;
+
+const slideInFromLeft = keyframes`
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+`;
+
+const slideOutToRight = keyframes`
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+`;
+
+// Styled Components
+const StyledIcon = styled(FaArrowLeft)<{ rightPanelActive: boolean }>`
+  color: #FF416C;
+  font-size: 24px;
+  position: absolute;
+  top: 20px;
+  left: 20px;  /* Cambiado de 'right' a 'left' */
+  cursor: pointer;
+  z-index: 1100;
+  transition: transform 0.3s ease;
+
+  transform: ${props => props.rightPanelActive ? 'rotate(180deg)' : 'rotate(0deg)'};
+
+  &:hover {
+    color: #d74d6b;
   }
 `;
 
 const Container = styled.div<{ rightPanelActive: boolean }>`
-  background-color: #fff;
+  background-color: #FF7897D8;
   border-radius: 10px;
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
   position: relative;
@@ -47,27 +90,24 @@ const Container = styled.div<{ rightPanelActive: boolean }>`
     position: absolute;
     top: 0;
     height: 100%;
-    transition: all 0.6s ease-in-out;
+    transition: transform 0.6s ease-in-out;
   }
 
   .sign-in-container {
     left: 0;
     width: 50%;
     z-index: 2;
-    ${props => props.rightPanelActive && css`transform: translateX(100%);`}
+    transform: ${props => props.rightPanelActive ? 'translateX(100%)' : 'translateX(0)'};
+    animation: ${props => props.rightPanelActive ? slideOutToLeft : slideInFromRight} 0.6s ease-in-out;
   }
 
   .sign-up-container {
     left: 0;
     width: 50%;
-    opacity: 0;
-    z-index: 1;
-    ${props => props.rightPanelActive && css`
-      transform: translateX(100%);
-      opacity: 1;
-      z-index: 5;
-      animation: ${show} 0.6s;
-    `}
+    opacity: ${props => props.rightPanelActive ? '1' : '0'};
+    z-index: ${props => props.rightPanelActive ? '5' : '1'};
+    transform: ${props => props.rightPanelActive ? 'translateX(100%)' : 'translateX(0)'};
+    animation: ${props => props.rightPanelActive ? slideInFromRight : slideOutToLeft} 0.6s ease-in-out;
   }
 
   .overlay-container {
@@ -79,24 +119,18 @@ const Container = styled.div<{ rightPanelActive: boolean }>`
     overflow: hidden;
     transition: transform 0.6s ease-in-out;
     z-index: 100;
-    ${props => props.rightPanelActive && css`transform: translateX(-100%);`}
+    transform: ${props => props.rightPanelActive ? 'translateX(-100%)' : 'translateX(0)'};
   }
 
   .overlay {
-    background: #FF416C;
-    background: -webkit-linear-gradient(to right, #F3EDF7, #FF416C);
-    background: linear-gradient(to right, #F3EDF7, #FF416C);
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: 0 0;
+    background: linear-gradient(to right, #E0BAFCFF, #EE597CFF);
     color: #FFFFFF;
     position: relative;
     left: -100%;
     height: 100%;
     width: 200%;
-    transform: translateX(0);
+    transform: ${props => props.rightPanelActive ? 'translateX(50%)' : 'translateX(0)'};
     transition: transform 0.6s ease-in-out;
-    ${props => props.rightPanelActive && css`transform: translateX(50%);`}
   }
 
   .overlay-panel {
@@ -110,19 +144,50 @@ const Container = styled.div<{ rightPanelActive: boolean }>`
     top: 0;
     height: 100%;
     width: 50%;
-    transform: translateX(0);
     transition: transform 0.6s ease-in-out;
   }
 
   .overlay-left {
-    transform: translateX(-20%);
-    ${props => props.rightPanelActive && css`transform: translateX(0);`}
+    transform: ${props => props.rightPanelActive ? 'translateX(0)' : 'translateX(-20%)'};
   }
 
   .overlay-right {
     right: 0;
-    transform: translateX(0);
-    ${props => props.rightPanelActive && css`transform: translateX(20%);`}
+    transform: ${props => props.rightPanelActive ? 'translateX(20%)' : 'translateX(0)'};
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    .form-container {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      transition: none;
+    }
+
+    .sign-in-container, .sign-up-container {
+      left: 0;
+      opacity: 1;
+      z-index: 1;
+      transform: translateX(0);
+    }
+
+    .sign-in-container {
+      animation: ${props => props.rightPanelActive ? slideOutToRight : slideInFromLeft} 0.6s ease-in-out;
+      display: ${props => props.rightPanelActive ? 'none' : 'block'};
+    }
+
+    .sign-up-container {
+      animation: ${props => props.rightPanelActive ? slideInFromLeft : slideOutToRight} 0.6s ease-in-out;
+      display: ${props => props.rightPanelActive ? 'block' : 'none'};
+    }
+
+    .overlay-container {
+      display: none;
+    }
   }
 `;
 
@@ -132,11 +197,12 @@ const Title = styled.h1`
 `;
 
 const Paragraph = styled.p`
-  font-size: 14px;
+  font-size: 23px;
   font-weight: 100;
   line-height: 20px;
   letter-spacing: 0.5px;
   margin: 20px 0 30px;
+  color: white;
 `;
 
 const Span = styled.span`
@@ -150,11 +216,11 @@ const Anchor = styled.a`
   margin: 15px 0;
 `;
 
-const Button = styled.button<{ ghost?: boolean }>`
+const Button = styled.button<{ $ghost?: boolean }>`
   border-radius: 20px;
-  border: 1px solid white;
-  background-color: ${({ ghost }) => ghost ? 'transparent' : '#F3ED'};
-  color: #FFFFFF;
+  border: 1px solid ${({ $ghost }) => $ghost ? '#F8F8F8FF' : 'white'};
+  background-color: ${({ $ghost }) => $ghost ? 'transparent' : '#FF416C'};
+  color: ${({ $ghost }) => $ghost ? '#FFFFFFFF' : '#FFFFFF'};
   font-size: 12px;
   font-weight: bold;
   padding: 12px 45px;
@@ -172,8 +238,25 @@ const Button = styled.button<{ ghost?: boolean }>`
   }
 `;
 
+const ToggleButton = styled(Button)`
+  display: none;
+  margin-top: 20px;
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #FF416C;
+  color: #FFFFFF;
+  border: none;
+  z-index: 1000;
+
+  @media (max-width: 768px) {
+    display: block;
+  }
+`;
+
 const Form = styled.form`
-  background-color: #FFFFFF;
+  background-color: #FFFFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -181,6 +264,10 @@ const Form = styled.form`
   padding: 0 50px;
   height: 100%;
   text-align: center;
+
+  @media (max-width: 768px) {
+    background: linear-gradient(to right, #F79BB0FF, #FFB6C1);
+  }
 `;
 
 const Input = styled.input`
@@ -196,7 +283,7 @@ const SocialContainer = styled.div`
 `;
 
 const SocialLink = styled.a`
-  border: 1px solid #DDDDDD;
+  border: 1px solid #FFFFFFFF;
   border-radius: 50%;
   display: inline-flex;
   justify-content: center;
@@ -204,7 +291,7 @@ const SocialLink = styled.a`
   margin: 0 5px;
   height: 40px;
   width: 40px;
-  color: #333;
+  color: #000000FF;
 `;
 
 const Footer = styled.footer`
@@ -222,22 +309,28 @@ const Footer = styled.footer`
     margin: 10px 0;
   }
   
-  i {
-    color: red;
-  }
-  
   a {
     color: #3c97bf;
     text-decoration: none;
   }
 `;
 
+// Main Component
 const LoginForm: React.FC = () => {
   const [rightPanelActive, setRightPanelActive] = useState(false);
+
+  const handleGoHome = () => {
+    window.location.href = '/'; 
+  };
+
+  const toggleForm = () => {
+    setRightPanelActive(!rightPanelActive);
+  };
 
   return (
     <>
       <GlobalStyle />
+      <StyledIcon rightPanelActive={rightPanelActive} onClick={handleGoHome} />
       <Container rightPanelActive={rightPanelActive}>
         <div className="form-container sign-up-container">
           <Form>
@@ -256,7 +349,7 @@ const LoginForm: React.FC = () => {
         </div>
         <div className="form-container sign-in-container">
           <Form>
-            <Title>Sign in</Title>
+            <Title>Sign In</Title>
             <SocialContainer>
               <SocialLink href="#"><FaFacebookF /></SocialLink>
               <SocialLink href="#"><FaGooglePlusG /></SocialLink>
@@ -274,20 +367,21 @@ const LoginForm: React.FC = () => {
             <div className="overlay-panel overlay-left">
               <Title>Welcome Back!</Title>
               <Paragraph>To keep connected with us please login with your personal info</Paragraph>
-              <Button ghost onClick={() => setRightPanelActive(false)}>Sign In</Button>
+              <Button $ghost onClick={() => setRightPanelActive(false)}>Sign In</Button>
             </div>
             <div className="overlay-panel overlay-right">
               <Title>Hello, Friend!</Title>
               <Paragraph>Enter your personal details and start journey with us</Paragraph>
-              <Button ghost onClick={() => setRightPanelActive(true)}>Sign Up</Button>
+              <Button $ghost onClick={() => setRightPanelActive(true)}>Sign Up</Button>
             </div>
           </div>
         </div>
+        <ToggleButton $ghost onClick={toggleForm}>
+          {rightPanelActive ? 'Sign In' : 'Sign Up'}
+        </ToggleButton>
       </Container>
     </>
   );
-
-  
 };
 
 export default LoginForm;
