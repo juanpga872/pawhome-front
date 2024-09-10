@@ -33,8 +33,6 @@ const NavLinks: React.FC<NavLinksProps> = ({ isOpen }) => {
       </NavLink>
       <NavLink href="/login">
         <FontAwesomeIcon icon={faUser} /> {}
-      <NavLink href="/Login">
-        <FontAwesomeIcon icon={faUser} /> {/* Usuario */}
       </NavLink>
     </NavLinksList>
   );

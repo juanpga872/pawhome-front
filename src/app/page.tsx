@@ -9,7 +9,6 @@ import HeroSection from "./componets/ui/Navbar/Herosection.ui";
 import { TipsSection } from "./componets/ui/TipsSection/TipsSection";
 import TodaySection from "@/app/componets/ui/TodaySeccion/todayseccion.ui";
 import PawPrintLoader from '@/app/componets/preloader/preloader';
-import styled from 'styled-components';
 import { HowItWorksSection } from "./componets/ui/HowItWorksSection/HowItWorksSection";
 import { Footer } from "./componets/ui/Footer/Footer";
 
@@ -36,8 +35,10 @@ export default function Home() {
           <Header />
             <HeroSection />
             <TodaySection />
+            <HowItWorksSection/>
             <HelpingPetsSection />
             <TipsSection />
+            <Footer/>
         </>
       )}
 
