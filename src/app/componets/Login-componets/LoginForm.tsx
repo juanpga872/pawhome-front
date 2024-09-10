@@ -273,6 +273,7 @@ const Form = styled.form`
 const Input = styled.input`
   background-color: #eee;
   border: none;
+  border-radius: 15px;
   padding: 12px 15px;
   margin: 8px 0;
   width: 100%;

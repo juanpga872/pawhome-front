@@ -1,28 +1,18 @@
-// src/components/PawPrintLoader.jsx
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
-// Animación de rebote
-const bounce = keyframes`
-  0%, 100% {
-    transform: translateY(0);
+const spiralAndSpin = keyframes`
+  0% {
+    opacity: 0;
+    transform: rotate(0deg) translateX(0px) translateY(0px);
   }
-  50% {
-    transform: translateY(-20px);
-  }
-`;
-
-// Animación de pulso
-const pulse = keyframes`
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.2);
+  100% {
+    opacity: 1;
+    transform: rotate(360deg) translateX(calc(100px * cos(360deg))) translateY(calc(-100px * sin(360deg)));
   }
 `;
 
-const PawLoader = styled.div`
+const LoaderContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -30,48 +20,53 @@ const PawLoader = styled.div`
   background: #f7f7f7;
 `;
 
-
-const Paw = styled.div`
+const SpinningCircle = styled.div`
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 60px;
-  height: 60px;
-  margin: 0 10px;
-  
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    background-color: #e91e63; // Rosado
-    border-radius: 50%;
-    animation: ${bounce} 1.5s infinite ease-in-out, ${pulse} 1.5s infinite ease-in-out;
-  }
-  
-  &::before {
-    width: 60px;
-    height: 60px;
-    top: 0;
-    left: 0;
-  }
-  
-  &::after {
-    width: 40px;
-    height: 40px;
-    background-color: #9c27b0; // Morado
-    top: 20px;
-    left: 10px;
-  }
+  width: 200px;
+  height: 200px;
 `;
 
-const PawPrintLoader = () => (
-  <PawLoader>
-    <Paw />
-    <Paw />
-    <Paw />
-    <Paw />
-  </PawLoader>
-);
+const Paw = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50px;
+  height: 50px;
+  opacity: 0;
+  animation: ${spiralAndSpin} 2s linear infinite;
+  animation-delay: ${props => props.delay};
+  transform-origin: center center;
+`;
+
+const PawImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+`;
+
+const PawPrintLoader = () => {
+  const pawCount = 8;
+  const paws = Array.from({ length: pawCount }, (_, index) => ({
+    delay: `${(index * 2) / pawCount}s`,  // Ajusta el retraso para distribuir la animación
+  }));
+
+  return (
+    <LoaderContainer>
+      <SpinningCircle>
+        {paws.map((paw, index) => (
+          <Paw
+            key={index}
+            delay={paw.delay}
+            style={{
+              transform: `rotate(${index * (360 / pawCount)}deg) translateX(100px)`,
+            }}
+          >
+            <PawImage src="/icons/preloader.png" alt="Huella" />
+          </Paw>
+        ))}
+      </SpinningCircle>
+    </LoaderContainer>
+  );
+};
 
 export default PawPrintLoader;
