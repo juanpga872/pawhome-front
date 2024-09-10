@@ -9,8 +9,7 @@ const SectionWrapper = styled.section`
   align-items: center;
   justify-content: center;
   padding: 50px 20px;
-  min-height: 100vh;
-  background-color: #f9f9f9;
+  
 `;
 
 const Logo = styled.img`
@@ -27,7 +26,7 @@ const Title = styled.h1`
 const LoginSection = () => {
   return (
     <SectionWrapper>
-      <Logo src="/images/logo.png" alt="Logo" />
+      <Logo src="/icons/logo.png" alt="" />
       <Title>Hello, welcome to pawHome</Title>
       <LoginForm />
     </SectionWrapper>

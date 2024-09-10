@@ -90,7 +90,7 @@ const TodaySection: React.FC = () => {
       <TodayContent>
         <TodayTitle>{defaultProps.title}</TodayTitle>
         <TodayDescription>{defaultProps.description}</TodayDescription>
-        <DogAdoptionButton>Adopt a pet</DogAdoptionButton>
+        <DogAdoptionButton href="/foster" >Adopt a pet</DogAdoptionButton>
       </TodayContent>
 
       <TodayImage src={defaultProps.imageSrc} alt={defaultProps.title} />

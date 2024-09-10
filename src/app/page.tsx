@@ -20,14 +20,14 @@ export default function Home() {
    
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 2000); 
+    }, 4000); 
 
     return () => clearTimeout(timer);
   }, []);
 
   return (
     <>
-
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       {loading ? (
         <PawPrintLoader />
       ) : (
