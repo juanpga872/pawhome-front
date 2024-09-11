@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { HelpingPetItem } from './HelpingPetItem';
-
+import{DogAdoptionButton} from '@/app/componets/ui/Button/button.ui'
 const HelpingPetsSectionWrapper = styled.section`
   padding: 60px;
   background-color: #f7f7f7;
@@ -70,24 +70,27 @@ export const HelpingPetsSection: React.FC = () => {
       <ItemsGrid>
         <StyledHelpingPetItem>
           <HelpingPetItem
-            icon="/icons/usd-circulo.png"
+            icon="/icons/donate.png"
             title="Donate"
             description="Your donations can make a difference in a pet's life."
           />
+           <DogAdoptionButton href="/donate" >Donate</DogAdoptionButton>
         </StyledHelpingPetItem>
         <StyledHelpingPetItem>
           <HelpingPetItem
-            icon="/img-helpingpets/volunteer-icon.png"
+  icon="/icons/voluntare.jpg"
             title="Volunteer"
             description="Help by volunteering at local shelters and rescue centers."
           />
+           <DogAdoptionButton href="/donate" >sponsor</DogAdoptionButton>
         </StyledHelpingPetItem>
         <StyledHelpingPetItem>
           <HelpingPetItem
-            icon="/img-helpingpets/adopt-icon.png"
+                 icon="/icons/adopt.png"
             title="Adopt"
             description="Give a loving home to a pet in need and change their life."
           />
+           <DogAdoptionButton href="/foster" >Adopt</DogAdoptionButton>
         </StyledHelpingPetItem>
       </ItemsGrid>
     </HelpingPetsSectionWrapper>
