@@ -92,7 +92,6 @@ const TodaySection: React.FC = () => {
         <TodayDescription>{defaultProps.description}</TodayDescription>
         <DogAdoptionButton href="/foster" >Adopt a pet</DogAdoptionButton>
       </TodayContent>
-
       <TodayImage src={defaultProps.imageSrc} alt={defaultProps.title} />
     </TodaySectionWrapper>
   );
