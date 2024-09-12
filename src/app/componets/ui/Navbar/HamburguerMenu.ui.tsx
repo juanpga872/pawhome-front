@@ -1,8 +1,10 @@
 import React, { useState, useEffect, MouseEvent } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShoppingCart, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+import CartComponent from '@/app/componets/cartIcon/cart.components'; // Importa el componente del carrito
 
+// Animations
 const slideIn = keyframes`
   from {
     transform: translateX(-100%);
@@ -39,6 +41,7 @@ const fadeOut = keyframes`
   }
 `;
 
+// Styles
 const Overlay = styled.div<{ isOpen: boolean }>`
   display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
   position: fixed;
@@ -56,13 +59,13 @@ const MenuWrapper = styled.div<{ isOpen: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
-  width: 250px; /* Ajusta el ancho del menú según sea necesario */
+  width: 250px;
   height: 100%;
   background: #fff;
   box-shadow: 4px 0 12px rgba(0, 0, 0, 0.5);
   transform: translateX(${({ isOpen }) => (isOpen ? '0' : '-100%')});
   transition: transform 0.3s ease-in-out;
-  animation: ${({ isOpen }) => (isOpen ? slideIn : slideOut)} 0.3s ease-in-out;
+  animation: ${({ isOpen }) => (isOpen ? slideIn : slideOut)} 0.10s ease-in-out;
   z-index: 20;
   display: flex;
   flex-direction: column;
@@ -71,14 +74,14 @@ const MenuWrapper = styled.div<{ isOpen: boolean }>`
 `;
 
 const MenuItems = styled.div`
-  flex: 1; /* Toma todo el espacio disponible, empujando el contenedor de los íconos hacia el fondo */
+  flex: 1; 
 `;
 
 const IconContainer = styled.div`
-  margin-top: auto; /* Empuja el contenido al final del contenedor */
+  margin-top: auto; 
   display: flex;
   flex-direction: column;
-  gap: 16px; /* Espacio entre los íconos */
+  gap: 16px; 
 `;
 
 const MenuItem = styled.a`
@@ -89,16 +92,15 @@ const MenuItem = styled.a`
   color: #333;
   display: flex;
   align-items: center;
-  gap: 10px; /* Espacio entre el ícono y el texto */
+  gap: 10px; 
   transition: background-color 0.2s ease, color 0.2s ease;
-
   &:hover {
     background-color: #f0f0f0;
     color: pink;
   }
 
   svg {
-    font-size: 20px; /* Ajusta el tamaño del ícono */
+    font-size: 20px; 
   }
 `;
 
@@ -118,7 +120,7 @@ const HamburgerWrapper = styled.div`
   display: none;
   cursor: pointer;
   position: fixed;
-  top: 16px;
+  top: 5px;
   left: 16px;
   z-index: 30;
 
@@ -141,7 +143,6 @@ const HamburgerMenu: React.FC<{ onClick: () => void }> = ({ onClick }) => (
 const App: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Cierra el menú si se hace clic fuera de él
   const handleClickOutside = (event: MouseEvent) => {
     const target = event.target as Node;
     const currentTarget = event.currentTarget as Node;
@@ -155,7 +156,7 @@ const App: React.FC = () => {
     document.addEventListener('mousedown', handleClickOutside as any);
     return () => document.removeEventListener('mousedown', handleClickOutside as any);
   }, []);
-
+  
   return (
     <div>
       <HamburgerMenu onClick={() => setIsMenuOpen(!isMenuOpen)} />
@@ -171,10 +172,6 @@ const App: React.FC = () => {
           <MenuItem href="/food">Food</MenuItem>
         </MenuItems>
         <IconContainer>
-          <MenuItem href="/cart">
-            <FontAwesomeIcon icon={faShoppingCart} />
-            Cart
-          </MenuItem>
           <MenuItem href="/login">
             <FontAwesomeIcon icon={faUser} />
             Login

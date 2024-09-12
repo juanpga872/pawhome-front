@@ -10,10 +10,11 @@ const HeaderWrapper = styled.header`
   width: 100%;
   padding: 10px 20px;
   z-index: 10;
+  height: 2%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #ffdddd69;
+  background-color: #EAA1F269;
 `;
 
 const Nav = styled.nav`
