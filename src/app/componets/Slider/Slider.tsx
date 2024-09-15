@@ -3,46 +3,30 @@ import styled from 'styled-components';
 
 const SliderContainer = styled.div`
   position: relative;
-  margin: 0 auto; 
+  margin: 0 auto;
   overflow: hidden;
   margin-top: 30px;
 `;
 
-const Slides = styled.div`
+const Slides = styled.div<{ transitioning: boolean }>`
   display: flex;
   transition: transform 0.5s ease-in-out;
-  width: 100%; 
-
-
-  @media (max-width: 412px) and (max-height: 915px) {
-    width: 100%; 
-  }
+  width: 100%;
 `;
 
-
-
-
-// este
-const Slide = styled.div`   
+const Slide = styled.div`
   min-width: 100%;
   box-sizing: border-box;
   display: flex;
-  align-items: center; 
+  align-items: center;
   justify-content: center;
 `;
 
 const Image = styled.img`
   width: 100%;
   height: auto;
-  object-fit: cover; /* Ajusta la imagen para cubrir el área del slide */
-
-  /* Media query para pantallas pequeñas */
-  @media (max-width: 412px) and (max-height: 915px) {
-    width: 100%; /* Ajusta el ancho de la imagen al 100% del contenedor */
-    height: auto; /* Ajusta la altura de la imagen automáticamente para mantener la proporción */
-  }
+  object-fit: cover;
 `;
-
 
 interface SliderProps {
   images: string[];
@@ -50,16 +34,43 @@ interface SliderProps {
 
 const Slider: React.FC<SliderProps> = ({ images }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [transitioning, setTransitioning] = useState(true);
+  const [forward, setForward] = useState(true);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+      if (forward) {
+        setCurrentIndex((prevIndex) => {
+          const nextIndex = (prevIndex + 1) % images.length;
+          if (nextIndex === images.length - 1) {
+            setForward(false);
+          }
+          return nextIndex;
+        });
+      } else {
+        setCurrentIndex((prevIndex) => {
+          const nextIndex = (prevIndex - 1 + images.length) % images.length;
+          if (nextIndex === 0) {
+            setForward(true);
+          }
+          return nextIndex;
+        });
+      }
+      setTransitioning(true);
     }, 5000); 
-    return () => clearInterval(interval); 
-  }, [images.length]);
+    setTimeout(() => {
+      setTransitioning(false);
+    }, 500);
+
+    return () => clearInterval(interval);
+  }, [forward, images.length]);
+
   return (
     <SliderContainer>
-      <Slides style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
+      <Slides
+        transitioning={transitioning}
+        style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+      >
         {images.map((image, index) => (
           <Slide key={index}>
             <Image src={image} alt={`Slide ${index}`} />
