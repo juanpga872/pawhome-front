@@ -22,8 +22,9 @@ export default function Donate() {
         <PawPrintLoader />
       ) : (
         <div>
-          <h1>Hola donate</h1>
-          {/* Aquí puedes agregar más contenido relacionado con la página de donación */}
+
+          
+
         </div>
       )}
     </ClientLayout>
