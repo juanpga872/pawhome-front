@@ -1,63 +1,107 @@
 import React from 'react';
 import styled from 'styled-components';
 
-interface Pet {
+// Define el tipo Pet con todas las propiedades necesarias
+type Pet = {
   id: number;
   name: string;
   image: string;
   age: string;
   breed: string;
-}
+  weight: string;
+  color: string;
+  distance: string;
+};
 
 interface PetCardProps {
   pet: Pet;
-  onViewMore: (pet: Pet) => void; // Función para ver más detalles
-  onAdopt: (petId: number) => void; // Función para adoptar la mascota
+  onViewMore: (pet: Pet) => void;
+  onAdopt: (petId: number) => void;
 }
 
-export default function PetCard({ pet, onViewMore, onAdopt }: PetCardProps) {
+export default function PetCard({ pet, onViewMore}: PetCardProps) {
   return (
     <Card>
       <PetImage src={pet.image} alt={pet.name} />
-      <h2>{pet.name}</h2>
-      <p>Raza: {pet.breed}</p>
-      <p>Edad: {pet.age}</p>
-      <Button onClick={() => onViewMore(pet)}>Ver más</Button>
-      <Button onClick={() => onAdopt(pet.id)}>Adoptar</Button>
+      <Content>
+        <PetName>{pet.name}</PetName>
+        <PetBreed>Breed: {pet.breed}</PetBreed>
+        <PetAge>Age: {pet.age}</PetAge>
+        <ButtonContainer>
+          <Button onClick={() => onViewMore(pet)}>View Details</Button>
+        </ButtonContainer>
+      </Content>
     </Card>
   );
 }
 
 const Card = styled.div`
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 15px;
+  background-color: #ffffff;
+  border-radius: 1.5rem;
+  overflow: hidden;
   width: 300px;
-  text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
 `;
 
 const PetImage = styled.img`
   width: 100%;
-  height: 200px; /* Altura fija para asegurar consistencia */
-  object-fit: cover; /* Asegura que la imagen mantenga sus proporciones y se ajuste al contenedor */
-  border-radius: 10px;
+  height: 200px;
+  object-fit: cover;
+  border-bottom: 1px solid #e5e7eb;
+`;
+
+const Content = styled.div`
+  padding: 1.5rem;
+  text-align: center;
+`;
+
+const PetName = styled.h2`
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 0.5rem;
+`;
+
+const PetBreed = styled.p`
+  font-size: 1.125rem;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+`;
+
+const PetAge = styled.p`
+  font-size: 1.125rem;
+  color: #6b7280;
+  margin-bottom: 1rem;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
 `;
 
 const Button = styled.button`
   background-color: #6c63ff;
-  color: white;
+  color: #ffffff;
   border: none;
   border-radius: 5px;
-  padding: 10px 20px;
-  margin-top: 10px;
+  padding: 0.75rem 1.5rem;
   cursor: pointer;
-  width: 100%;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
 
   &:hover {
     background-color: #5a54d1;
   }
 `;
-
-
