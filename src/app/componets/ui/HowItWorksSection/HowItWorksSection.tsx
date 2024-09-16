@@ -149,7 +149,7 @@ export const HowItWorksSection: React.FC = () => {
       <p>The adoption process on our site is as follows:</p>
       <p><strong>1. Register:</strong> Create an account on our platform to access all features.</p>
       <p><strong>2. Find your preferred pet:</strong> Use our search tool to find the pet that you like the most.</p>
-      <p><strong>3. View details:</strong> Check the detailed information about the pet you're interested in, including photos, description, and requirements.</p>
+      <p><strong>3. View details:</strong> Check the detailed information about the pet you are interested in, including photos, description, and requirements.</p>
       <p><strong>4. Click Adopt:</strong> Complete the online adoption form to express your interest in the pet.</p>
       <p><strong>5. Wait for a response:</strong> Our team will review your application and contact you with the next steps.</p>
           </ModalContent>

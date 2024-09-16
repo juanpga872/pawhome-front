@@ -2,7 +2,6 @@ import React, { useState, useEffect, MouseEvent } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-import CartComponent from '@/app/componets/cartIcon/cart.components'; // Importa el componente del carrito
 
 // Animations
 const slideIn = keyframes`
@@ -65,7 +64,7 @@ const MenuWrapper = styled.div<{ isOpen: boolean }>`
   box-shadow: 4px 0 12px rgba(0, 0, 0, 0.5);
   transform: translateX(${({ isOpen }) => (isOpen ? '0' : '-100%')});
   transition: transform 0.3s ease-in-out;
-  animation: ${({ isOpen }) => (isOpen ? slideIn : slideOut)} 0.10s ease-in-out;
+  animation: ${({ isOpen }) => (isOpen ? slideIn : slideOut)} 0.3s ease-in-out;
   z-index: 20;
   display: flex;
   flex-direction: column;
@@ -134,7 +133,11 @@ const HamburgerIcon = styled.span`
   color: #333;
 `;
 
-const HamburgerMenu: React.FC<{ onClick: () => void }> = ({ onClick }) => (
+interface HamburgerMenuProps {
+  onClick: () => void;
+}
+
+const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ onClick }) => (
   <HamburgerWrapper onClick={onClick}>
     <HamburgerIcon>&#9776;</HamburgerIcon>
   </HamburgerWrapper>
@@ -156,7 +159,7 @@ const App: React.FC = () => {
     document.addEventListener('mousedown', handleClickOutside as any);
     return () => document.removeEventListener('mousedown', handleClickOutside as any);
   }, []);
-  
+
   return (
     <div>
       <HamburgerMenu onClick={() => setIsMenuOpen(!isMenuOpen)} />

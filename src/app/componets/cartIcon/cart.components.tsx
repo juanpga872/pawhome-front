@@ -3,16 +3,29 @@ import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faTimes, faMinus, faPlus, faTrash, faShoppingBasket } from '@fortawesome/free-solid-svg-icons';
 
+const FloatingCartContainer = styled.div`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+`;
+
 const CartIcon = styled.div`
   cursor: pointer;
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   background-color: #AD57D2FF;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  }
 `;
 
 const CartCount = styled.span`
@@ -22,8 +35,8 @@ const CartCount = styled.span`
   padding: 2px 6px;
   font-size: 12px;
   position: absolute;
-  top: -5px;
-  right: -5px;
+  top: 0;
+  right: 0;
 `;
 
 const CloseButton = styled.button`
@@ -76,7 +89,7 @@ const CartItemCard = styled.div<{ isHighlighted: boolean }>`
   margin: 5px 0;
   background-color: ${({ isHighlighted }) => (isHighlighted ? '#fffbf1' : '#fff')};
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  position: relative; /* Necesario para el contador en la tarjeta */
+  position: relative;
 `;
 
 const ProductImage = styled.img`
@@ -124,7 +137,7 @@ const QuantityButton = styled.button`
   color: white;
   border: none;
   padding: 5px 10px;
-  border-radius: 50%; /* Hace los botones redondos */
+  border-radius: 50%;
   cursor: pointer;
   margin: 0 5px;
   &:hover {
@@ -137,7 +150,7 @@ const RemoveButton = styled.button`
   color: white;
   border: none;
   padding: 5px 10px;
-  border-radius: 50%; /* Hace el botón redondo */
+  border-radius: 50%;
   cursor: pointer;
   &:hover {
     background-color: #C82333;
@@ -167,12 +180,12 @@ const QuantityCounter = styled.span`
   background-color: #AD57D2FF;
   color: white;
   border-radius: 50%;
-  padding: 5px 10px; /* Ajusta el padding para hacerlo más redondo */
-  font-size: 16px; /* Aumenta el tamaño del texto para mejor visibilidad */
+  padding: 5px 10px;
+  font-size: 16px;
   position: absolute;
   top: 50%;
   right: 10px;
-  transform: translateY(-50%); /* Centra verticalmente el contador */
+  transform: translateY(-50%);
 `;
 
 const CartTotalContainer = styled.div`
@@ -256,7 +269,7 @@ const SavingsMessage = styled.div`
 `;
 
 type CartItemType = {
-  id: number;
+  id: string;
   name: string;
   price: number;
   weight: string;
@@ -275,7 +288,7 @@ const CartComponent: React.FC<{ cartItems: CartItemType[], onRemoveItem: (index:
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setMessage(null); // Clear message when closing modal
+    setMessage(null);
   };
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -306,19 +319,20 @@ const CartComponent: React.FC<{ cartItems: CartItemType[], onRemoveItem: (index:
     }
   };
 
-  // Calcula el total del carrito
   const total = cartItems.reduce((sum, item) => {
-    const price = Number(item.price) || 0; // Asegúrate de que price sea un número
-    const quantity = Number(item.quantity) || 0; // Asegúrate de que quantity sea un número
+    const price = Number(item.price) || 0; 
+    const quantity = Number(item.quantity) || 0;
     return sum + price * quantity;
   }, 0);
 
   return (
     <>
-      <CartIcon onClick={openModal}>
-        <FontAwesomeIcon icon={faShoppingCart} size="lg" color="white" />
-        {cartItems.length > 0 && <CartCount>{cartItems.length}</CartCount>}
-      </CartIcon>
+      <FloatingCartContainer>
+        <CartIcon onClick={openModal}>
+          <FontAwesomeIcon icon={faShoppingCart} size="lg" color="white" />
+          {cartItems.length > 0 && <CartCount>{cartItems.length}</CartCount>}
+        </CartIcon>
+      </FloatingCartContainer>
       <Modal isOpen={isModalOpen}>
         <ModalContent hasItems={cartItems.length > 0}>
           <ScrollableContent>

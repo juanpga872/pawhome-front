@@ -1,4 +1,3 @@
-"use client";
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Logo from './logo.ui';
@@ -25,16 +24,13 @@ const Nav = styled.nav`
 `;
 
 const Header = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen] = useState(false);
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
 
   return (
     <HeaderWrapper>
       <Nav>
-        <HamburgerMenu onClick={toggleMenu} />
+        <HamburgerMenu/>
         <Logo />
         <NavLinks isOpen={isOpen} />
       </Nav>
