@@ -72,6 +72,7 @@ const Button = styled.button`
   border: none;
   font-size: 16px;
   cursor: pointer;
+  background-color: #D45BF8E7;
 
   &:hover {
     background-color: #FF69B4;
@@ -104,7 +105,6 @@ const CloseButton = styled.button`
   background: #333;
   color: #fff;
   border: none;
-  padding: 10px;
   width: 30px;
   height: 30px;
   cursor: pointer;

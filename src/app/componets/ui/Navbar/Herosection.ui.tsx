@@ -25,6 +25,7 @@ const HeroText = styled.div`
   display: flex;
   flex-direction: column; 
   align-items: flex-start; 
+  background-color: #75747452;
 `;
 
 
@@ -33,7 +34,7 @@ const HeroSection = () => {
     <HeroSectionWrapper>
       <HeroText>
         <h4>You can make a difference in their lives</h4>
-        <DogAdoptionButton href="/donate" >Adopt a pet</DogAdoptionButton>
+        <DogAdoptionButton href="/donate" >Donate</DogAdoptionButton>
       </HeroText>
     </HeroSectionWrapper>
   );
