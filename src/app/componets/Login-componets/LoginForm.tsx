@@ -4,11 +4,11 @@ import { FaFacebookF, FaGooglePlusG, FaLinkedinIn, FaArrowLeft } from 'react-ico
 
 const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
-
+  
   * {
     box-sizing: border-box;
   }
-
+  
   body {
     background: #FFFFFFFF;
     display: flex;
@@ -17,10 +17,10 @@ const GlobalStyle = createGlobalStyle`
     flex-direction: column;
     font-family: 'Montserrat', sans-serif;
     height: 100vh;
-    margin: 0;
   }
 `;
 
+// Keyframes for animations
 const slideInFromRight = keyframes`
   from {
     transform: translateX(100%);
@@ -57,12 +57,13 @@ const slideOutToRight = keyframes`
   }
 `;
 
+// Styled Components
 const StyledIcon = styled(FaArrowLeft)<{ rightPanelActive: boolean }>`
   color: #FF416C;
   font-size: 24px;
   position: absolute;
   top: 20px;
-  left: 20px;
+  left: 20px;  /* Cambiado de 'right' a 'left' */
   cursor: pointer;
   z-index: 1100;
   transition: transform 0.3s ease;
@@ -80,8 +81,8 @@ const Container = styled.div<{ rightPanelActive: boolean }>`
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
   position: relative;
   overflow: hidden;
-  width: 90vw; /* Ajusta el ancho para que sea responsivo */
-  max-width: 768px; /* Límite máximo */
+  width: 768px;
+  max-width: 100%;
   min-height: 480px;
 
   .form-container {
@@ -155,11 +156,12 @@ const Container = styled.div<{ rightPanelActive: boolean }>`
   }
 
   @media (max-width: 768px) {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
 
     .form-container {
+      position: absolute;
       width: 100%;
       height: 100%;
       transition: none;
@@ -225,30 +227,30 @@ const Button = styled.button<{ $ghost?: boolean }>`
   text-transform: uppercase;
   transition: transform 80ms ease-in;
   cursor: pointer;
-
+  
   &:active {
     transform: scale(0.95);
   }
-
+  
   &:focus {
     outline: none;
   }
 `;
 
 const ToggleButton = styled(Button)`
-  display: none;
-  margin-top: 20px;
-  position: fixed;
-  bottom: 20px;
+  display: none; /* Hidden by default */
+  position: absolute;
+  bottom: 20px; /* Adjust as needed */
   left: 50%;
   transform: translateX(-50%);
   background-color: #FF416C;
   color: #FFFFFF;
   border: none;
   z-index: 1000;
+  margin: 0;
 
   @media (max-width: 768px) {
-    display: block;
+    display: block; /* Visible only on small screens */
   }
 `;
 
@@ -302,11 +304,11 @@ const Footer = styled.footer`
   right: 0;
   text-align: center;
   z-index: 999;
-
+  
   p {
     margin: 10px 0;
   }
-
+  
   a {
     color: #3c97bf;
     text-decoration: none;
