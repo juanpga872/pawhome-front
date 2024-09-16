@@ -8,6 +8,7 @@ import Header from '@/app/componets/ui/Navbar/Header.ui';
 
 
 
+
 interface ClientLayoutProps {
     children: React.ReactNode;
     isLoaded: boolean; // Añadido para controlar la carga

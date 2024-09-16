@@ -1,7 +1,7 @@
 "use client"
 
 import styled from 'styled-components';
-import LoginForm from '../componets/Login-componets/LoginForm';
+import LoginForm from '../componets/Login-componets/LoginForm'; // Asegúrate de que la ruta sea correcta
 
 const SectionWrapper = styled.section`
   display: flex;
@@ -9,7 +9,6 @@ const SectionWrapper = styled.section`
   align-items: center;
   justify-content: center;
   padding: 50px 20px;
-  
 `;
 
 const Logo = styled.img`
@@ -26,7 +25,9 @@ const Title = styled.h1`
 const LoginSection = () => {
   return (
     <SectionWrapper>
-      <Logo src="/icons/logo.png" alt="" />
+
+
+      <Logo src="/icons/logo.png" alt="Logo" />
       <Title>Hello, welcome to pawHome</Title>
       <LoginForm />
     </SectionWrapper>

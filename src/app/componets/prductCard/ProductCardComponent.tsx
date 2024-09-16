@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import Image from 'next/image';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import TypeSelector from '@/app/componets/typeselector/typeselector';
 import CartComponent from '@/app/componets/cartIcon/cart.components';
 
-// Estilos...
+// Estilos
+
 const Card = styled.div`
   width: 16rem;
   padding: 1rem;
@@ -92,121 +92,124 @@ const ProductGrid = styled.div`
   margin: 2rem 0;
 `;
 
-// Definición de los productos con precios incrementales basados en el peso
-const products = {
-  dog: [
-    {
-      name: 'Producto Perro 1',
-      imageUrl: '/icons/product.jpg',
-      originalPrice: 40.00,
-      weights: [
-        { label: '500g', value: 0, priceIncrement: 0 },
-        { label: '1kg', value: 1, priceIncrement: 5 },
-        { label: '2kg', value: 2, priceIncrement: 15 }
-      ],
-      rating: 4,
-      membershipType: 'Miembro Premium'
-    },
-    {
-      name: 'Producto Perro 2',
-      imageUrl: '/icons/product.jpg',
-      originalPrice: 80.00,
-      weights: [
-        { label: '500g', value: 0, priceIncrement: 0 },
-        { label: '1kg', value: 1, priceIncrement: 10 },
-        { label: '2kg', value: 2, priceIncrement: 20 }
-      ],
-      rating: 5,
-      membershipType: 'Miembro Premium'
-    },
-  ],
-  cat: [
-    {
-      name: 'Producto Gato 1',
-      imageUrl: '/icons/comida-gato.jpg',
-      originalPrice: 60.00,
-      weights: [
-        { label: '200g', value: 0, priceIncrement: 0 },
-        { label: '500g', value: 1, priceIncrement: 10 },
-        { label: '1kg', value: 2, priceIncrement: 20 }
-      ],
-      rating: 5,
-      membershipType: 'Miembro Básico'
-    },
-    {
-      name: 'Producto Gato 2',
-      imageUrl: '/icons/comida-gato.jpg',
-      originalPrice: 120.00,
-      weights: [
-        { label: '200g', value: 0, priceIncrement: 0 },
-        { label: '500g', value: 1, priceIncrement: 20 },
-        { label: '1kg', value: 2, priceIncrement: 40 }
-      ],
-      rating: 4,
-      membershipType: 'Miembro Básico'
-    },
-  ]
-};
+// Tipos para la respuesta de la API
+
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  description: string;
+  weightKG: number;
+  quantity: number;
+}
 
 interface CartItem {
+  id: number;
   name: string;
-  imageUrl: string;
   price: number;
-  weight: string;
+  description: string;
+  weight: number;
+  quantity: number;
 }
 
 const ProductPage: React.FC = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [productType, setProductType] = useState<'dog' | 'cat'>('dog');
   const [selectedWeight, setSelectedWeight] = useState<{ [key: string]: number }>({});
+  const [products, setProducts] = useState<Product[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleAddToCart = (product: CartItem) => {
-    setCart((prevCart) => [...prevCart, product]);
+  // Fetch products from the API
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('https://powhome.azurewebsites.net/api/v1/Products', {
+          method: 'GET', // Explicitly specify the method
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data: Product[] = await response.json();
+        setProducts(data);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        setError('Error al obtener los productos');
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const handleAddToCart = (product: Omit<CartItem, 'id' | 'quantity'>) => {
+    const newItem: CartItem = {
+      ...product,
+      id: Date.now(), // Use a number ID
+      quantity: 1
+    };
+    setCart(prevCart => [...prevCart, newItem]);
   };
 
-  const handleWeightSelect = (productName: string, weight: { label: string; value: number; priceIncrement: number }) => {
+  const handleWeightSelect = (productName: string, weight: number) => {
     setSelectedWeight(prevState => ({
       ...prevState,
-      [productName]: weight.value
+      [productName]: weight
     }));
   };
 
   const handleRemoveFromCart = (index: number) => {
-    setCart((prevCart) => prevCart.filter((_, i) => i !== index));
+    setCart(prevCart => prevCart.filter((_, i) => i !== index));
   };
 
-  const currentProducts = products[productType];
+  const handleUpdateQuantity = (index: number, delta: number) => {
+    setCart(prevCart => {
+      const newCart = [...prevCart];
+      const newQuantity = newCart[index].quantity + delta;
+      if (newQuantity <= 0) {
+        newCart.splice(index, 1);
+      } else {
+        newCart[index].quantity = newQuantity;
+      }
+      return newCart;
+    });
+  };
 
   return (
     <>
-      <CartComponent cartItems={cart} onRemoveItem={handleRemoveFromCart} />
-      <TypeSelector onTypeChange={(type) => setProductType(type)} />
+      {error && <div>{error}</div>}
+      <CartComponent
+        cartItems={cart}
+        onRemoveItem={handleRemoveFromCart}
+        onUpdateQuantity={handleUpdateQuantity}
+      />
+      <TypeSelector onTypeChange={setProductType} />
       <ProductGrid>
-        {currentProducts.map((product, index) => {
-          const selectedWeightValue = selectedWeight[product.name] || 0;
-          const weight = product.weights.find(weight => weight.value === selectedWeightValue);
-          const productPrice = product.originalPrice + (weight ? weight.priceIncrement : 0);
+        {products.map((product) => {
+          const selectedWeightValue = selectedWeight[product.name] || product.weightKG;
+          const productPrice = product.price; // Asumiendo que el precio ya está descontado
 
           return (
-            <Card key={index}>
-              <Image src={product.imageUrl} alt={product.name} width={250} height={250} />
+            <Card key={product.id}>
               <ProductName>{product.name}</ProductName>
               <PriceContainer>
                 <DiscountedPrice>${productPrice.toLocaleString()}</DiscountedPrice>
-                <OriginalPrice>${product.originalPrice.toLocaleString()}</OriginalPrice>
+                <OriginalPrice>${product.price.toLocaleString()}</OriginalPrice>
               </PriceContainer>
               <WeightSelector>
-                {product.weights.map((weight, idx) => (
-                  <WeightButton
-                    key={idx}
-                    selected={selectedWeight[product.name] === weight.value}
-                    onClick={() => handleWeightSelect(product.name, weight)}
-                  >
-                    {weight.label}
-                  </WeightButton>
-                ))}
+                <WeightButton
+                  selected={selectedWeightValue === product.weightKG}
+                  onClick={() => handleWeightSelect(product.name, product.weightKG)}
+                >
+                  {product.weightKG} KG
+                </WeightButton>
               </WeightSelector>
-              <AddToCartButton onClick={() => handleAddToCart({ ...product, price: productPrice, weight: weight?.label || '' })}>
+              <AddToCartButton onClick={() => handleAddToCart({ 
+                name: product.name, 
+                price: product.price, 
+                description: product.description, 
+                weight: product.weightKG 
+              })}>
                 Add to Cart
               </AddToCartButton>
             </Card>
