@@ -4,11 +4,11 @@ import styled, { keyframes } from 'styled-components';
 const spiralAndSpin = keyframes`
   0% {
     opacity: 0;
-    transform: rotate(0deg) translateX(0px) translateY(0px);
+    transform: rotate(0deg) translateX(100px) translateY(0);
   }
   100% {
     opacity: 1;
-    transform: rotate(360deg) translateX(calc(100px * cos(360deg))) translateY(calc(-100px * sin(360deg)));
+    transform: rotate(360deg) translateX(100px) translateY(0);
   }
 `;
 
@@ -18,6 +18,7 @@ const LoaderContainer = styled.div`
   align-items: center;
   height: 100vh;
   background: #f7f7f7;
+  position: relative;
 `;
 
 const SpinningCircle = styled.div`
@@ -47,7 +48,7 @@ const PawImage = styled.img`
 const PawPrintLoader = () => {
   const pawCount = 8;
   const paws = Array.from({ length: pawCount }, (_, index) => ({
-    delay: `${(index * 2) / pawCount}s`,  // Ajusta el retraso para distribuir la animación
+    delay: `${(index * 0.2)}s`,  // Ajusta el retraso para distribuir la animación
   }));
 
   return (
