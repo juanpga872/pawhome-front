@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import TypeSelector from '@/app/componets/typeselector/typeselector';
 import CartComponent from '@/app/componets/cartIcon/cart.components';
 
-// Estilos...
+// Estilos
 const Card = styled.div`
   width: 16rem;
   padding: 1rem;
@@ -92,7 +92,7 @@ const ProductGrid = styled.div`
   margin: 2rem 0;
 `;
 
-// Definición de los productos con precios incrementales basados en el peso
+// Productos
 const products = {
   dog: [
     {
@@ -149,20 +149,28 @@ const products = {
 };
 
 interface CartItem {
+  id: string; // Change this to `number`
   name: string;
   imageUrl: string;
   price: number;
   weight: string;
+  quantity: number;
 }
 
-const ProductPage: React.FC = () => {
+const  ProductPage: React.FC = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [productType, setProductType] = useState<'dog' | 'cat'>('dog');
   const [selectedWeight, setSelectedWeight] = useState<{ [key: string]: number }>({});
 
-  const handleAddToCart = (product: CartItem) => {
-    setCart((prevCart) => [...prevCart, product]);
+  const handleAddToCart = (product: Omit<CartItem, 'id' | 'quantity'>) => {
+    const newItem: CartItem = {
+      ...product,
+      id: Date.now().toString(), 
+      quantity: 1
+    };
+    setCart(prevCart => [...prevCart, newItem]);
   };
+  
 
   const handleWeightSelect = (productName: string, weight: { label: string; value: number; priceIncrement: number }) => {
     setSelectedWeight(prevState => ({
@@ -172,15 +180,32 @@ const ProductPage: React.FC = () => {
   };
 
   const handleRemoveFromCart = (index: number) => {
-    setCart((prevCart) => prevCart.filter((_, i) => i !== index));
+    setCart(prevCart => prevCart.filter((_, i) => i !== index));
+  };
+
+  const handleUpdateQuantity = (index: number, delta: number) => {
+    setCart(prevCart => {
+      const newCart = [...prevCart];
+      const newQuantity = newCart[index].quantity + delta;
+      if (newQuantity <= 0) {
+        newCart.splice(index, 1);
+      } else {
+        newCart[index].quantity = newQuantity;
+      }
+      return newCart;
+    });
   };
 
   const currentProducts = products[productType];
 
   return (
     <>
-      <CartComponent cartItems={cart} onRemoveItem={handleRemoveFromCart} />
-      <TypeSelector onTypeChange={(type) => setProductType(type)} />
+      <CartComponent
+        cartItems={cart}
+        onRemoveItem={handleRemoveFromCart}
+        onUpdateQuantity={handleUpdateQuantity} // Pass this function
+      />
+      <TypeSelector onTypeChange={setProductType} />
       <ProductGrid>
         {currentProducts.map((product, index) => {
           const selectedWeightValue = selectedWeight[product.name] || 0;
@@ -206,7 +231,12 @@ const ProductPage: React.FC = () => {
                   </WeightButton>
                 ))}
               </WeightSelector>
-              <AddToCartButton onClick={() => handleAddToCart({ ...product, price: productPrice, weight: weight?.label || '' })}>
+              <AddToCartButton onClick={() => handleAddToCart({ 
+                name: product.name, 
+                imageUrl: product.imageUrl, 
+                price: productPrice, 
+                weight: weight?.label || '' 
+              })}>
                 Add to Cart
               </AddToCartButton>
             </Card>
@@ -217,4 +247,5 @@ const ProductPage: React.FC = () => {
   );
 };
 
-export default ProductPage;
+
+export default ProductPage

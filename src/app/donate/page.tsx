@@ -1,5 +1,5 @@
-// src/app/donate/page.tsx
-"use client"; // Marca el archivo como componente del lado del cliente
+
+"use client"; 
 
 import React, { useState, useEffect } from 'react';
 import ClientLayout from '@/app/ClientLayout'; // Ajusta la ruta según tu estructura
@@ -55,7 +55,8 @@ export default function Donate() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 2000); // Simula la carga por 2 segundos
+
+    }, 2000);
 
     return () => clearTimeout(timer); // Limpia el temporizador si el componente se desmonta
   }, []);
@@ -112,6 +113,7 @@ export default function Donate() {
               </ul>
             </Modal>
           )}
+
         </div>
       )}
     </ClientLayout>

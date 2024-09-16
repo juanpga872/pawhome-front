@@ -5,6 +5,7 @@ import ClientLayout from '@/app/ClientLayout'; // Asegúrate de ajustar la ruta 
 import PawPrintLoader from '@/app/componets/preloader/preloader'; // Asegúrate de ajustar la ruta según tu estructura
 import PetCard from '@/app/componets/foster-componets/PetCard'; // Ajusta la ruta si es necesario
 import Modal from '@/app/componets/foster-componets/Modal'; // Ajusta la ruta si es necesario
+import CartComponent from'@/app/componets/cartIcon/cart.components'
 
 // Simulación de datos de mascotas
 const petsData = [
