@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faTimes, faMinus, faPlus, faTrash, faShoppingBasket } from '@fortawesome/free-solid-svg-icons';
 
+// Estilos
+
 const FloatingCartContainer = styled.div`
   position: fixed;
   bottom: 20px;
@@ -92,13 +94,6 @@ const CartItemCard = styled.div<{ isHighlighted: boolean }>`
   position: relative;
 `;
 
-const ProductImage = styled.img`
-  width: 50px;
-  height: 50px;
-  border-radius: 5px;
-  object-fit: cover;
-`;
-
 const CartItemDetails = styled.div`
   display: flex;
   flex-direction: column;
@@ -130,16 +125,22 @@ const ProductWeight = styled.span`
 const QuantityControl = styled.div`
   display: flex;
   align-items: center;
+  margin-right: 10px;
 `;
 
 const QuantityButton = styled.button`
   background-color: #AD57D2FF;
   color: white;
   border: none;
-  padding: 5px 10px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   cursor: pointer;
   margin: 0 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
   &:hover {
     background-color: #731D97FF;
   }
@@ -149,9 +150,14 @@ const RemoveButton = styled.button`
   background-color: #FF4136;
   color: white;
   border: none;
-  padding: 5px 10px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
   &:hover {
     background-color: #C82333;
   }
@@ -268,16 +274,23 @@ const SavingsMessage = styled.div`
   color: #FF8C00;
 `;
 
+// Tipo para los ítems del carrito
+
 type CartItemType = {
-  id: string;
+  id: number;  // Cambiado de string a number
   name: string;
   price: number;
-  weight: string;
-  imageUrl: string;
+  weight: number;  // Cambiado de string a number
   quantity: number;
 };
 
-const CartComponent: React.FC<{ cartItems: CartItemType[], onRemoveItem: (index: number) => void, onUpdateQuantity: (index: number, delta: number) => void }> = ({ cartItems = [], onRemoveItem, onUpdateQuantity }) => {
+// Componente del carrito
+
+const CartComponent: React.FC<{ 
+  cartItems: CartItemType[], 
+  onRemoveItem: (index: number) => void, 
+  onUpdateQuantity: (id: number, newQuantity: number) => void 
+}> = ({ cartItems = [], onRemoveItem, onUpdateQuantity }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -308,32 +321,31 @@ const CartComponent: React.FC<{ cartItems: CartItemType[], onRemoveItem: (index:
     };
   }, [isModalOpen]);
 
-  const handleQuantityChange = (index: number, delta: number) => {
-    const newQuantity = cartItems[index].quantity + delta;
+  const handleQuantityChange = (id: number, delta: number) => {
+    const itemIndex = cartItems.findIndex(item => item.id === id);
+    if (itemIndex === -1) return;
+
+    const newQuantity = cartItems[itemIndex].quantity + delta;
     if (newQuantity <= 0) {
-      onRemoveItem(index);
+      onRemoveItem(itemIndex);
       setMessage("Producto eliminado");
       setTimeout(() => setMessage(null), 2000);
     } else {
-      onUpdateQuantity(index, delta);
+      onUpdateQuantity(id, newQuantity);
     }
   };
 
-  const total = cartItems.reduce((sum, item) => {
-    const price = Number(item.price) || 0; 
-    const quantity = Number(item.quantity) || 0;
-    return sum + price * quantity;
-  }, 0);
+  const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
     <>
       <FloatingCartContainer>
         <CartIcon onClick={openModal}>
           <FontAwesomeIcon icon={faShoppingCart} size="lg" color="white" />
-          {cartItems.length > 0 && <CartCount>{cartItems.length}</CartCount>}
+          {cartItems.length > 0 && <CartCount>{cartItems.reduce((sum, item) => sum + item.quantity, 0)}</CartCount>}
         </CartIcon>
       </FloatingCartContainer>
-      <Modal isOpen={isModalOpen}>
+      <Modal isOpen={isModalOpen} ref={modalRef}>
         <ModalContent hasItems={cartItems.length > 0}>
           <ScrollableContent>
             <CloseButton onClick={closeModal}>
@@ -350,28 +362,30 @@ const CartComponent: React.FC<{ cartItems: CartItemType[], onRemoveItem: (index:
             ) : (
               <>
                 <CartItemsList>
-                  {cartItems.map((item, index) => (
+                  {cartItems.map((item) => (
                     <CartItemCard key={item.id} isHighlighted={item.quantity > 1}>
-                      <ProductImage src={item.imageUrl} alt={item.name} />
                       <CartItemDetails>
                         <ProductName>{item.name}</ProductName>
                         <ProductPrice>${item.price.toFixed(2)}</ProductPrice>
-                        <ProductWeight>{item.weight}</ProductWeight>
+                        <ProductWeight>Weight: {item.weight}kg</ProductWeight>
                       </CartItemDetails>
                       <QuantityControl>
-                        <QuantityButton onClick={() => handleQuantityChange(index, -1)}>
+                        <QuantityButton onClick={() => handleQuantityChange(item.id, -1)}>
                           <FontAwesomeIcon icon={faMinus} />
                         </QuantityButton>
                         <QuantityCounter>{item.quantity}</QuantityCounter>
-                        <QuantityButton onClick={() => handleQuantityChange(index, 1)}>
+                        <QuantityButton onClick={() => handleQuantityChange(item.id, 1)}>
                           <FontAwesomeIcon icon={faPlus} />
                         </QuantityButton>
                       </QuantityControl>
                       {item.quantity === 1 && (
                         <RemoveButton onClick={() => {
-                          onRemoveItem(index);
-                          setMessage("Producto eliminado");
-                          setTimeout(() => setMessage(null), 2000);
+                          const indexToRemove = cartItems.findIndex(cartItem => cartItem.id === item.id);
+                          if (indexToRemove !== -1) {
+                            onRemoveItem(indexToRemove);
+                            setMessage("Producto eliminado");
+                            setTimeout(() => setMessage(null), 2000);
+                          }
                         }}>
                           <FontAwesomeIcon icon={faTrash} />
                         </RemoveButton>
