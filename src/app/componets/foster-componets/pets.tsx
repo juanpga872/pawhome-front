@@ -1,13 +1,11 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import ClientLayout from '@/app/ClientLayout';
 import PawPrintLoader from '@/app/componets/preloader/preloader';
 import PetCard from '@/app/componets/foster-componets/PetCard';
 import Modali from '@/app/componets/foster-componets/Modal';
 import styled from 'styled-components';
 import TypeSelector from '@/app/componets/typeselector/typeselector';
 import { FaSearch } from 'react-icons/fa';
-
 
 type Pet = {
   id: number;
@@ -22,13 +20,12 @@ type Pet = {
   specie: boolean; 
 };
 
-
-export default function pets() {
+export default function Pets() {
   const [loading, setLoading] = useState(true);
   const [pets, setPets] = useState<Pet[]>([]);
   const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [filter, setFilter] = useState<'dog' | 'cat' | 'all'>('all'); // Update to 'dog' or 'cat'
+  const [filter, setFilter] = useState<'dog' | 'cat' | 'all'>('all');
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
@@ -75,7 +72,7 @@ export default function pets() {
     );
 
   return (
-    <ClientLayout isLoaded={!loading}>
+    <>
       {loading ? (
         <PawPrintLoader />
       ) : (
@@ -112,7 +109,7 @@ export default function pets() {
           )}
         </Container>
       )}
-    </ClientLayout>
+    </>
   );
 }
 
