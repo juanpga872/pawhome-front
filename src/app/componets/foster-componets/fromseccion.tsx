@@ -162,72 +162,76 @@ const PlusIcon = styled.span<{ isOpen: boolean }>`
 `;
 
 const AdoptionFAQ: React.FC = () => {
-    const [openQuestion, setOpenQuestion] = useState<number | null>(null);
-  
-    const toggleQuestion = (index: number) => {
-      setOpenQuestion(openQuestion === index ? null : index);
-    };
-  
-    const faqs = [
-      {
-        question: "What is the process to adopt an animal from the foundation?",
-        answer: "We have a large number of applications and limited human resources for processing them, so we ask for your patience and respect. Please read the information provided carefully to begin the adoption process.\n\n1. Choose the puppy or kitten you wish to adopt, considering the space you have, your age, and size.\n2. Complete the Training Form. The entered data will be verified by Foundation officials (this verification takes 3 calendar days). If you do not continue in the process, we will send you an email informing you.\n3. If your form is approved, we will call you to provide instructions on how to record a video of the place where the pet will live and send it to us, as we cannot do the home visit due to Coronavirus.\n4. We will review your application and, if everything is in order, we will contact you to coordinate the day when the pet you chose will arrive at your home."
-      },
-      {
-        question: "What are the benefits of adopting?",
-        answer: "Adoption provides companionship, improves mental health, saves a life, and creates space for other animals in shelters."
-      },
-      {
-        question: "Why adopt instead of buying?",
-        answer: "Adoption saves lives, reduces overpopulation, is more cost-effective, and helps fight against puppy mills."
-      },
-      {
-        question: "What are the responsibilities of an adopter?",
-        answer: "Providing food, shelter, medical care, exercise, training, and love. Ensuring the pet is spayed/neutered and microchipped."
-      },
-      {
-        question: "What special care should be taken?",
-        answer: "Regular vet check-ups, proper diet, exercise, grooming, and attention to any breed-specific needs."
-      },
-      {
-        question: "How many animals have been given for adoption?",
-        answer: "Our foundation has successfully placed over 1000 animals in loving homes in the past year."
-      },
-    ];
-  
-    return (
-      <Container>
-        <LeftColumn>
-          <Title>ARE YOU READY?</Title>
-          <Subtitle>BEFORE APPLYING</Subtitle>
-          <Paragraph>
-            If you are interested in adopting one of our furry friends, before filling out the training form, you must carefully read each of the following frequently asked questions:
-          </Paragraph>
-          <PreFormButton>
-            TRAINING FORM
-          </PreFormButton>
-        </LeftColumn>
-        <RightColumn>
-          <Subtitle>FREQUENTLY ASKED QUESTIONS ABOUT ADOPTION</Subtitle>
-          {faqs.map((faq, index) => (
-            <FAQItem key={index}>
-              <FAQQuestion
-                isOpen={openQuestion === index}
-                onClick={() => toggleQuestion(index)}
-              >
-                <span>{faq.question}</span>
-                <PlusIcon isOpen={openQuestion === index}>+</PlusIcon>
-              </FAQQuestion>
-              {openQuestion === index && (
-                <FAQAnswer>
-                  {faq.answer}
-                </FAQAnswer>
-              )}
-            </FAQItem>
-          ))}
-        </RightColumn>
-      </Container>
-    );
+  const [openQuestion, setOpenQuestion] = useState<number | null>(null);
+
+  const toggleQuestion = (index: number) => {
+    setOpenQuestion(openQuestion === index ? null : index);
   };
-  
-  export default AdoptionFAQ;
+
+  const handleFormClick = () => {
+    window.open('https://forms.gle/5PeAXJf1DJncbojr7', '_blank');
+  };
+
+  const faqs = [
+    {
+      question: "What is the process to adopt an animal from the foundation?",
+      answer: "We have a large number of applications and limited human resources for processing them, so we ask for your patience and respect. Please read the information provided carefully to begin the adoption process.\n\n1. Choose the puppy or kitten you wish to adopt, considering the space you have, your age, and size.\n2. Complete the Training Form. The entered data will be verified by Foundation officials (this verification takes 3 calendar days). If you do not continue in the process, we will send you an email informing you.\n3. If your form is approved, we will call you to provide instructions on how to record a video of the place where the pet will live and send it to us, as we cannot do the home visit due to Coronavirus.\n4. We will review your application and, if everything is in order, we will contact you to coordinate the day when the pet you chose will arrive at your home."
+    },
+    {
+      question: "What are the benefits of adopting?",
+      answer: "Adoption provides companionship, improves mental health, saves a life, and creates space for other animals in shelters."
+    },
+    {
+      question: "Why adopt instead of buying?",
+      answer: "Adoption saves lives, reduces overpopulation, is more cost-effective, and helps fight against puppy mills."
+    },
+    {
+      question: "What are the responsibilities of an adopter?",
+      answer: "Providing food, shelter, medical care, exercise, training, and love. Ensuring the pet is spayed/neutered and microchipped."
+    },
+    {
+      question: "What special care should be taken?",
+      answer: "Regular vet check-ups, proper diet, exercise, grooming, and attention to any breed-specific needs."
+    },
+    {
+      question: "How many animals have been given for adoption?",
+      answer: "Our foundation has successfully placed over 1000 animals in loving homes in the past year."
+    },
+  ];
+
+  return (
+    <Container>
+      <LeftColumn>
+        <Title>ARE YOU READY?</Title>
+        <Subtitle>BEFORE APPLYING</Subtitle>
+        <Paragraph>
+          If you are interested in adopting one of our furry friends, before filling out the training form, you must carefully read each of the following frequently asked questions:
+        </Paragraph>
+        <PreFormButton onClick={handleFormClick}>
+          TRAINING FORM
+        </PreFormButton>
+      </LeftColumn>
+      <RightColumn>
+        <Subtitle>FREQUENTLY ASKED QUESTIONS ABOUT ADOPTION</Subtitle>
+        {faqs.map((faq, index) => (
+          <FAQItem key={index}>
+            <FAQQuestion
+              isOpen={openQuestion === index}
+              onClick={() => toggleQuestion(index)}
+            >
+              <span>{faq.question}</span>
+              <PlusIcon isOpen={openQuestion === index}>+</PlusIcon>
+            </FAQQuestion>
+            {openQuestion === index && (
+              <FAQAnswer>
+                {faq.answer}
+              </FAQAnswer>
+            )}
+          </FAQItem>
+        ))}
+      </RightColumn>
+    </Container>
+  );
+};
+
+export default AdoptionFAQ;
