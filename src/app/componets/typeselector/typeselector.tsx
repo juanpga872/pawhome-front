@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { AiOutlineSearch } from 'react-icons/ai'; // Importa el ícono de búsqueda
 
 // Contenedor del selector
 const SelectorContainer = styled.div`
@@ -47,35 +46,16 @@ const SelectorButton = styled.button<{ active: boolean }>`
   }
 `;
 
-
-const SearchIconContainer = styled.div`
-  margin-top: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  
-  svg {
-    width: 2.5rem; // Ajusta el tamaño del ícono según sea necesario
-    height: auto;
-    color: #5F00F8FF; // Ajusta el color según sea necesario
-  }
-
-  &:hover svg {
-    color: #6600FFFF; // Cambia el color al pasar el ratón
-  }
-`;
-
 // Tipo de selector
 type TypeSelectorProps = {
-  onTypeChange: (type: 'dog' | 'cat') => void;
+  onTypeChange: (type: 'dog' | 'cat' | 'all') => void; // Agregar 'all' al tipo
 };
 
 // Componente del selector
 const TypeSelector: React.FC<TypeSelectorProps> = ({ onTypeChange }) => {
-  const [selectedType, setSelectedType] = useState<'dog' | 'cat'>('dog');
+  const [selectedType, setSelectedType] = useState<'dog' | 'cat' | 'all'>('all'); // Iniciar con 'all'
 
-  const handleTypeChange = (type: 'dog' | 'cat') => {
+  const handleTypeChange = (type: 'dog' | 'cat' | 'all') => {
     setSelectedType(type);
     onTypeChange(type);
   };
@@ -83,18 +63,18 @@ const TypeSelector: React.FC<TypeSelectorProps> = ({ onTypeChange }) => {
   return (
     <SelectorContainer>
       <div style={{ display: 'flex', alignItems: 'center' }}>
+        <SelectorButton active={selectedType === 'all'} onClick={() => handleTypeChange('all')}>
+          <span>All</span>
+        </SelectorButton>
         <SelectorButton active={selectedType === 'dog'} onClick={() => handleTypeChange('dog')}>
           <img src="/icons/icon-dog.avif" alt="dog" />
-          <span>Perro</span>
+          <span>Dog</span>
         </SelectorButton>
         <SelectorButton active={selectedType === 'cat'} onClick={() => handleTypeChange('cat')}>
           <img src="/icons/icon-cat.avif" alt="cat" />
-          <span>Gato</span>
+          <span>Cat</span>
         </SelectorButton>
       </div>
-      <SearchIconContainer>
-        <AiOutlineSearch />
-      </SearchIconContainer>
     </SelectorContainer>
   );
 };

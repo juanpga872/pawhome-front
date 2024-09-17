@@ -29,14 +29,14 @@ const CardsContainer = styled.div`
 const DonateButton = styled.button`
   margin-top: 20px;
   padding: 10px 20px;
-  background-color: #4CAF50;
+  background-color: #ff1493;
   color: white;
   border: none;
   cursor: pointer;
   border-radius: 5px;
 
   &:hover {
-    background-color: #45a049;
+    background-color: #FF69B4;
   }
 `;
 
