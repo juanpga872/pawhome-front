@@ -20,6 +20,7 @@ const NavbarWrapper = styled.nav`
   align-items: center;
   z-index: 3; /* Asegura que esté encima de todo */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para un efecto más elevado */
+  z-index: 1;
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -33,6 +34,7 @@ const NavLinksList = styled.ul<NavLinksProps>`
   margin: 0;
   justify-content: center;
   flex-grow: 1;
+  z-index: 1;
 
   @media (max-width: 768px) {
     display: ${props => (props.isOpen ? 'block' : 'none')};
@@ -50,6 +52,7 @@ const NavLinks: React.FC<NavLinksProps> = ({ isOpen }) => {
         <FontAwesomeIcon icon={faUser} />
       </NavLink>
     </NavLinksList>
+
   );
 };
 

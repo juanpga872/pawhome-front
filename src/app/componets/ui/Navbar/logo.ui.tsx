@@ -8,7 +8,7 @@ const LogoWrapper = styled.div`
   margin: 10px; 
   display: flex;
   align-items: center;
-
+  z-index: 2;
   @media (max-width: 800px) {
     display: none; 
   }
