@@ -1,4 +1,4 @@
-"use client";
+// Pets.tsx
 import React, { useState, useEffect } from 'react';
 import PawPrintLoader from '@/app/componets/preloader/preloader';
 import PetCard from '@/app/componets/foster-componets/PetCard';
@@ -76,7 +76,7 @@ export default function Pets() {
       {loading ? (
         <PawPrintLoader />
       ) : (
-        <Container>
+        <Container id="pets-section">
           <Header>
             <h1>Adopta una Mascota</h1>
             <TypeSelector onTypeChange={handleFilterChange} />

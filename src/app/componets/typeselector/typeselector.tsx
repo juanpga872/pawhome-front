@@ -10,6 +10,15 @@ const SelectorContainer = styled.div`
 `;
 
 // Contenedor del botón de selector
+const ButtonContainer = styled.div`
+  display: flex;
+  flex-direction: row; // Mantener en fila por defecto
+  flex-wrap: wrap; // Permitir envoltura en pantallas pequeñas
+  justify-content: center; // Centrar botones
+  gap: 1rem; // Espacio entre botones
+`;
+
+// Contenedor del botón de selector
 const SelectorButton = styled.button<{ active: boolean }>`
   background-color: ${({ active }) => (active ? '#5F00F8FF' : '#9333ea')};
   color: white;
@@ -18,13 +27,12 @@ const SelectorButton = styled.button<{ active: boolean }>`
   border-radius: 0.5rem;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
-  margin: 0 0.5rem;
-  margin-top: 2rem;
+  margin: 0;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center; // Centrar contenido dentro del botón
   font-size: 1rem;
-  width: 8rem; 
+  width: 8rem;
   height: 4rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   background-color: ${({ active }) => (active ? '#5F00F8FF' : '#9333ea')};
@@ -38,7 +46,7 @@ const SelectorButton = styled.button<{ active: boolean }>`
   img {
     width: 2.5rem; // Ajusta el tamaño del ícono según sea necesario
     height: auto;
-    margin-right: 0.75rem; 
+    margin-right: 0.75rem;
   }
 
   span {
@@ -48,12 +56,12 @@ const SelectorButton = styled.button<{ active: boolean }>`
 
 // Tipo de selector
 type TypeSelectorProps = {
-  onTypeChange: (type: 'dog' | 'cat' | 'all') => void; 
+  onTypeChange: (type: 'dog' | 'cat' | 'all') => void;
 };
 
 // Componente del selector
 const TypeSelector: React.FC<TypeSelectorProps> = ({ onTypeChange }) => {
-  const [selectedType, setSelectedType] = useState<'dog' | 'cat' | 'all'>('all'); 
+  const [selectedType, setSelectedType] = useState<'dog' | 'cat' | 'all'>('all');
 
   const handleTypeChange = (type: 'dog' | 'cat' | 'all') => {
     setSelectedType(type);
@@ -62,7 +70,7 @@ const TypeSelector: React.FC<TypeSelectorProps> = ({ onTypeChange }) => {
 
   return (
     <SelectorContainer>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <ButtonContainer>
         <SelectorButton active={selectedType === 'all'} onClick={() => handleTypeChange('all')}>
           <span>All</span>
         </SelectorButton>
@@ -74,7 +82,7 @@ const TypeSelector: React.FC<TypeSelectorProps> = ({ onTypeChange }) => {
           <img src="/icons/icon-cat.avif" alt="cat" />
           <span>Cat</span>
         </SelectorButton>
-      </div>
+      </ButtonContainer>
     </SelectorContainer>
   );
 };

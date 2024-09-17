@@ -52,8 +52,7 @@ export default function Header() {
             <p>Encuentra tu alma gemela</p>
           </Title>
           <Buttons>
-      <DogAdoptionButton>visita</DogAdoptionButton>
-      <DogAdoptionButton>Donate</DogAdoptionButton>
+      <DogAdoptionButton href='/donate'>Donate</DogAdoptionButton>
           </Buttons>
         </ContainerInformation>
       </Container>
