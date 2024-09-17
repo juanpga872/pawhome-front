@@ -1,54 +1,44 @@
 import React from 'react';
 import styled from 'styled-components';
 
-// Define el tipo Pet con todas las propiedades necesarias
+// Define el tipo Pet con las propiedades necesarias
 type Pet = {
   id: number;
   name: string;
   image: string;
-  age: string;
   breed: string;
-  weight: string;
-  color: string;
-  distance: string;
+  location: string;
+  specie: boolean; // true for dog, false for cat
 };
 
 interface PetCardProps {
   pet: Pet;
-  onViewMore: (pet: Pet) => void;
-  onAdopt: (petId: number) => void;
+  onViewMore: () => void;
 }
 
-export default function PetCard({ pet, onViewMore}: PetCardProps) {
+const PetCard: React.FC<PetCardProps> = ({ pet, onViewMore }) => {
   return (
     <Card>
-      <PetImage src={pet.image} alt={pet.name} />
-      <Content>
+      <PetImage src={pet.image || 'https://via.placeholder.com/300'} alt={pet.name} />
+      <PetDetails>
         <PetName>{pet.name}</PetName>
-        <PetBreed>Breed: {pet.breed}</PetBreed>
-        <PetAge>Age: {pet.age}</PetAge>
-        <ButtonContainer>
-          <Button onClick={() => onViewMore(pet)}>View Details</Button>
-        </ButtonContainer>
-      </Content>
+        <PetInfo>{pet.specie ? 'Dog' : 'Cat'} - {pet.breed}</PetInfo>
+        <Location>{pet.location}</Location>
+        <ViewMoreButton onClick={onViewMore}>View Details</ViewMoreButton>
+      </PetDetails>
     </Card>
   );
-}
+};
 
 const Card = styled.div`
-  background-color: #ffffff;
-  border-radius: 1.5rem;
+  border: 1px solid #ddd;
+  border-radius: 10px;
   overflow: hidden;
-  width: 300px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  
+  transition: transform 0.3s ease;
+
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transform: scale(1.05);
   }
 `;
 
@@ -56,41 +46,29 @@ const PetImage = styled.img`
   width: 100%;
   height: 200px;
   object-fit: cover;
-  border-bottom: 1px solid #e5e7eb;
 `;
 
-const Content = styled.div`
-  padding: 1.5rem;
-  text-align: center;
+const PetDetails = styled.div`
+  padding: 1rem;
 `;
 
-const PetName = styled.h2`
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #333;
-  margin-bottom: 0.5rem;
+const PetName = styled.h3`
+  font-size: 1.25rem;
+  margin: 0;
 `;
 
-const PetBreed = styled.p`
-  font-size: 1.125rem;
-  color: #6b7280;
-  margin-bottom: 0.25rem;
+const PetInfo = styled.p`
+  color: #666;
+  font-size: 0.875rem;
 `;
 
-const PetAge = styled.p`
-  font-size: 1.125rem;
-  color: #6b7280;
-  margin-bottom: 1rem;
+const Location = styled.p`
+  color: #999;
+  font-size: 0.75rem;
 `;
 
-const ButtonContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  width: 100%;
-`;
-
-const Button = styled.button`
+const ViewMoreButton = styled.button`
+  margin-top: 1rem;
   background-color: #6c63ff;
   color: #ffffff;
   border: none;
@@ -105,3 +83,5 @@ const Button = styled.button`
     background-color: #5a54d1;
   }
 `;
+
+export default PetCard;
