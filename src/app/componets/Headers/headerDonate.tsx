@@ -2,21 +2,40 @@ import styled from "styled-components";
 import { FaHeart } from "react-icons/fa";
 
 const Container = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 60vh;
-  background-image: url("/icons/header.jpg"); 
-  background-size: cover;
-  background-position: center;
   color: white;
   text-align: center;
-  padding: 2rem;  // Added padding for better spacing on small screens
+  padding: 2rem;
+
 
   @media (max-width: 768px) {
     height: auto;
     padding: 1rem;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5); /* Capa semitransparente */
+  }
+
+  video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
   }
 `;
 
@@ -25,6 +44,7 @@ const Title = styled.h1`
   font-weight: bold;
   margin-bottom: 1.5rem;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  z-index: 1;
 
   @media (max-width: 768px) {
     font-size: 2rem;
@@ -35,6 +55,7 @@ const Title = styled.h1`
 const Subtitle = styled.p`
   font-size: 1.5rem;
   margin-bottom: 2rem;
+  z-index: 1;
 
   @media (max-width: 768px) {
     font-size: 1.2rem;
@@ -47,6 +68,8 @@ const DonateOptions = styled.div`
   flex-wrap: wrap;
   gap: 1rem;
   justify-content: center;
+  z-index: 1;
+
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -56,16 +79,17 @@ const DonateOptions = styled.div`
 
 const Button = styled.button`
   padding: 1rem 2rem;
-  background-color: #ff69b4; 
+  background-color: #ff69b4;
   border: none;
   border-radius: 5px;
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease;
   font-size: 1rem;
+  z-index: 1;
 
   &:hover {
-    background-color: #ff5287; 
+    background-color: #ff5287;
   }
 
   @media (max-width: 768px) {
@@ -79,6 +103,7 @@ const ContactInfo = styled.div`
   flex-direction: column;
   gap: 1rem;
   margin-bottom: 2rem;
+  z-index: 1;
 
   @media (max-width: 768px) {
     margin-bottom: 1.5rem;
@@ -90,6 +115,7 @@ const ContactItem = styled.div`
   align-items: center;
   gap: 0.5rem;
   font-size: 1rem;
+  z-index: 1;
 
   @media (max-width: 768px) {
     font-size: 0.9rem;
@@ -97,8 +123,8 @@ const ContactItem = styled.div`
 `;
 
 const HeartIcon = styled(FaHeart)`
-  color: #ff69b4; /* Adjust color if needed */
-  font-size: 1.5rem; /* Adjust size if needed */
+  color: #ff69b4;
+  font-size: 1.5rem;
 
   @media (max-width: 768px) {
     font-size: 1.2rem;
@@ -108,6 +134,10 @@ const HeartIcon = styled(FaHeart)`
 const DonationPage = () => {
   return (
     <Container>
+      <video autoPlay loop muted>
+        <source src="/video/donate.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
       <Title>Adopt and Donate</Title>
       <Subtitle>Our official donation channels</Subtitle>
       <ContactInfo>
