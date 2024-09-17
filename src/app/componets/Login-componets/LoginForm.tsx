@@ -314,7 +314,7 @@ const Footer = styled.footer`
     color: #3c97bf;
     text-decoration: none;
   }
-`;
+`; 
 
 const LoginForm: React.FC = () => {
   const [rightPanelActive, setRightPanelActive] = useState(false);
