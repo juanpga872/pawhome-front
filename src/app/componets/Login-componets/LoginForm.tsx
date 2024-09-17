@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import styled, { createGlobalStyle, keyframes } from 'styled-components';
 import { FaFacebookF, FaGooglePlusG, FaLinkedinIn, FaArrowLeft } from 'react-icons/fa';
@@ -313,13 +314,54 @@ const Footer = styled.footer`
     color: #3c97bf;
     text-decoration: none;
   }
-`;
+`; 
 
 const LoginForm: React.FC = () => {
   const [rightPanelActive, setRightPanelActive] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleGoHome = () => {
     window.location.href = '/'; 
+  };
+
+  // Función que maneja el inicio de sesión
+  const handleSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+  
+    try {
+      // Solicitud POST para el login usando fetch
+      const response = await fetch('https://powhome.azurewebsites.net/api/Auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+  
+      // Verificar si la respuesta fue exitosa
+      if (response.ok) {
+        const data = await response.json();
+        const { token } = data;
+  
+        // Guarda el token en localStorage
+        localStorage.setItem('token', token);
+        console.log('Token saved:', token);
+        // Redirige a la página principal o dashboard
+        window.location.href = '/';
+      } else {
+        // Manejo de errores basado en el código de estado
+        const errorData = await response.json();
+        setErrorMessage(errorData.message || 'Invalid email or password');
+      }
+    } catch (error) {
+      // Manejo de errores de red
+      setErrorMessage('An error occurred while trying to sign in');
+    }
   };
 
   const toggleForm = () => {
@@ -334,20 +376,10 @@ const LoginForm: React.FC = () => {
         <div className="form-container sign-up-container">
           <Form>
             <Title>Create Account</Title>
-            <SocialContainer>
-              <SocialLink href="#"><FaFacebookF /></SocialLink>
-              <SocialLink href="#"><FaGooglePlusG /></SocialLink>
-              <SocialLink href="#"><FaLinkedinIn /></SocialLink>
-            </SocialContainer>
-            <Span>or use your email for registration</Span>
-            <Input type="text" placeholder="Name" />
-            <Input type="email" placeholder="Email" />
-            <Input type="password" placeholder="Password" />
-            <Button>Sign Up</Button>
           </Form>
         </div>
         <div className="form-container sign-in-container">
-          <Form>
+          <Form onSubmit={handleSignIn}>
             <Title>Sign In</Title>
             <SocialContainer>
               <SocialLink href="#"><FaFacebookF /></SocialLink>
@@ -355,25 +387,24 @@ const LoginForm: React.FC = () => {
               <SocialLink href="#"><FaLinkedinIn /></SocialLink>
             </SocialContainer>
             <Span>or use your account</Span>
-            <Input type="email" placeholder="Email" />
-            <Input type="password" placeholder="Password" />
+            <Input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
             <Anchor href="#">Forgot your password?</Anchor>
-            <Button>Sign In</Button>
+            <Button type="submit">Sign In</Button>
           </Form>
         </div>
         <div className="overlay-container">
-          <div className="overlay">
-            <div className="overlay-panel overlay-left">
-              <Title>Welcome Back!</Title>
-              <Paragraph>To keep connected with us please login with your personal info</Paragraph>
-              <Button $ghost onClick={() => setRightPanelActive(false)}>Sign In</Button>
-            </div>
-            <div className="overlay-panel overlay-right">
-              <Title>Hello, Friend!</Title>
-              <Paragraph>Enter your personal details and start journey with us</Paragraph>
-              <Button $ghost onClick={() => setRightPanelActive(true)}>Sign Up</Button>
-            </div>
-          </div>
         </div>
         <ToggleButton $ghost onClick={toggleForm}>
           {rightPanelActive ? 'Sign In' : 'Sign Up'}
