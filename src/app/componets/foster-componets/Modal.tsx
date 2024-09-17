@@ -6,57 +6,76 @@ import { ArrowLeft, Heart } from 'lucide-react';
 type Pet = {
   id: number;
   name: string;
-  image: string;
-  age: string;
   breed: string;
-  weight: string;
-  color: string;
-  distance: string;
+  birthDate: string; // Fecha en formato 'YYYY-MM-DD'
+  description: string;
+  sex: boolean; // true for male, false for female
+  size: string;
+  location: string;
+  specie: boolean; // true for dog, false for cat
+  image: string;
 };
 
-interface ModalProps {
+interface ModaliProps {
   pet: Pet;
   onClose: () => void;
   onAdopt: (petId: number) => void;
 }
 
-export default function Modal({ pet, onClose, onAdopt }: ModalProps) {
+const Modali: React.FC<ModaliProps> = ({ pet, onClose, onAdopt }) => {
   const [isFavorite, setIsFavorite] = useState(false);
 
   const handleFavoriteClick = () => {
     setIsFavorite(!isFavorite);
   };
 
+  // Convert birthDate to a readable string
+  const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
+  const birthDate = formatDate(pet.birthDate);
+
   return (
     <ModalOverlay>
       <ModalContent>
         <ImageContainer>
-          <PetImage src={pet.image} alt={pet.name} />
+          <PetImage src={pet.image || 'https://via.placeholder.com/300'} alt={pet.name} />
           <IconButton onClick={onClose} style={{ left: '1rem' }}>
             <ArrowLeft size={24} />
           </IconButton>
-          <HeartIcon
-            onClick={handleFavoriteClick}
-            isFavorite={isFavorite}
-          />
+          <HeartIcon onClick={handleFavoriteClick} isFavorite={isFavorite} />
         </ImageContainer>
         <ContentContainer>
           <HeaderRow>
             <PetName>{pet.name}</PetName>
-            <Distance>{pet.distance} miles away</Distance>
+            <Distance>{pet.location}</Distance>
           </HeaderRow>
           <InfoGrid>
             <InfoItem>
-              <InfoLabel>Age</InfoLabel>
-              <InfoValue>{pet.age}</InfoValue>
+              <InfoLabel>Breed</InfoLabel>
+              <InfoValue>{pet.breed}</InfoValue>
             </InfoItem>
             <InfoItem>
-              <InfoLabel>Weight</InfoLabel>
-              <InfoValue>{pet.weight}</InfoValue>
+              <InfoLabel>Birth Date</InfoLabel>
+              <InfoValue>{birthDate}</InfoValue>
             </InfoItem>
             <InfoItem>
-              <InfoLabel>Color</InfoLabel>
-              <InfoValue>{pet.color}</InfoValue>
+              <InfoLabel>Size</InfoLabel>
+              <InfoValue>{pet.size}</InfoValue>
+            </InfoItem>
+            <InfoItem>
+              <InfoLabel>Sex</InfoLabel>
+              <InfoValue>{pet.sex ? 'Male' : 'Female'}</InfoValue>
+            </InfoItem>
+            <InfoItem>
+              <InfoLabel>Description</InfoLabel>
+              <InfoValue className="description">{pet.description}</InfoValue>
+            </InfoItem>
+            <InfoItem>
+              <InfoLabel>Specie</InfoLabel>
+              <InfoValue>{pet.specie ? 'Dog' : 'Cat'}</InfoValue>
             </InfoItem>
           </InfoGrid>
           <ActionButtons>
@@ -66,7 +85,7 @@ export default function Modal({ pet, onClose, onAdopt }: ModalProps) {
       </ModalContent>
     </ModalOverlay>
   );
-}
+};
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -142,12 +161,13 @@ const Distance = styled.span`
 
 const InfoGrid = styled.div`
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 1.5rem;
+  flex-direction: column;
+  gap: 1rem;
 `;
 
 const InfoItem = styled.div`
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
 `;
 
 const InfoLabel = styled.p`
@@ -157,6 +177,10 @@ const InfoLabel = styled.p`
 
 const InfoValue = styled.p`
   font-weight: 600;
+  
+  &.description {
+    margin-left: 5rem; 
+  }
 `;
 
 const ActionButtons = styled.div`
@@ -180,3 +204,5 @@ const Button = styled.button`
     background-color: #5a54d1;
   }
 `;
+
+export default Modali;

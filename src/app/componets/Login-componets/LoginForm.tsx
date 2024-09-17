@@ -376,7 +376,6 @@ const LoginForm: React.FC = () => {
         <div className="form-container sign-up-container">
           <Form>
             <Title>Create Account</Title>
-            {/* Código para el formulario de registro */}
           </Form>
         </div>
         <div className="form-container sign-in-container">
@@ -406,7 +405,6 @@ const LoginForm: React.FC = () => {
           </Form>
         </div>
         <div className="overlay-container">
-          {/* Panel de overlay */}
         </div>
         <ToggleButton $ghost onClick={toggleForm}>
           {rightPanelActive ? 'Sign In' : 'Sign Up'}

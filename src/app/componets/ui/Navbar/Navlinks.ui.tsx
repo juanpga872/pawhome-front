@@ -33,8 +33,8 @@ const NavLinksList = styled.ul<NavLinksProps>`
 const NavLinks: React.FC<NavLinksProps> = ({ isOpen }) => {
   return (
     <NavLinksList isOpen={isOpen}>
-      <NavLink href="/donate">Donate</NavLink>
-      <NavLink href="/foster">Foster</NavLink>
+      <NavLink href="/donate">sponsor and donate</NavLink>
+      <NavLink href="/foster">adopt</NavLink>
       <NavLink href="/food">Food</NavLink>
       <NavLink href="/login">
         <FontAwesomeIcon icon={faUser} />
