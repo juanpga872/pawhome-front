@@ -1,11 +1,17 @@
-"use client"; 
+
+"use client";
 
 import React, { useState, useEffect } from 'react';
-import ClientLayout from '@/app/ClientLayout';
-import PawPrintLoader from '@/app/componets/preloader/preloader';
+import ClientLayout from '@/app/ClientLayout'; // Adjust path according to your structure
+import PawPrintLoader from '@/app/componets/preloader/preloader'; // Adjust path according to your structure
 import styled from 'styled-components';
 import DonationCard from '../componets/DonationCard/DonationCard';
-import Modal from '../componets/DonationCard/Modal';
+import Modal from '../componets/DonationCard/Modal'; // Create this modal component separately
+import DonationPage from '../componets/Headers/headerDonate';
+import Donations from '../componets/donationsCarpet/donationseccion';
+import ApadrinaUnPerrito from '../componets/donationsCarpet/apadrinar';
+import RightsAndDuties from '../componets/donationsCarpet/derechosYdeberes'; // Import the RightsAndDuties component
+import PlanPage from '../componets/donationsCarpet/plans';
 
 const DonationSection = styled.section`
   position: relative; /* Establece el contexto para el video */
@@ -14,17 +20,6 @@ const DonationSection = styled.section`
   text-align: center;
   overflow: hidden; /* Asegura que el video no se salga de los bordes */
   z-index: -1;
-`;
-
-const BackgroundVideo = styled.video`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Cubre todo el contenedor */
-  opacity: 0.5;
-  z-index: 0; /* Asegúrate de que el video esté detrás de todos los elementos */
 `;
 
 const SectionTitle = styled.h2`
@@ -86,13 +81,13 @@ export default function Donate() {
         <PawPrintLoader />
       ) : (
         <div>
-          <DonationSection>
-            {/* Video de fondo */}
-            <BackgroundVideo autoPlay muted loop>
-              <source src="/video/donate.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </BackgroundVideo>
 
+          <DonationPage />
+          <Donations />
+          <ApadrinaUnPerrito />
+          <RightsAndDuties /> 
+          <PlanPage/> 
+        <DonationSection>
             <SectionTitle>Donate to Help Our Pets</SectionTitle>
             <CardsContainer>
               <DonationCard
