@@ -18,7 +18,7 @@ const NavbarWrapper = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 1000; /* Asegura que esté encima de todo */
+  z-index: 3; /* Asegura que esté encima de todo */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para un efecto más elevado */
 
   @media (max-width: 768px) {

@@ -1,22 +1,38 @@
-
 "use client"; 
 
 import React, { useState, useEffect } from 'react';
-import ClientLayout from '@/app/ClientLayout'; // Ajusta la ruta según tu estructura
-import PawPrintLoader from '@/app/componets/preloader/preloader'; // Ajusta la ruta según tu estructura
+import ClientLayout from '@/app/ClientLayout';
+import PawPrintLoader from '@/app/componets/preloader/preloader';
 import styled from 'styled-components';
 import DonationCard from '../componets/DonationCard/DonationCard';
-import Modal from '../componets/DonationCard/Modal'; // Crea este componente modal por separado
+import Modal from '../componets/DonationCard/Modal';
 
 const DonationSection = styled.section`
+  position: relative; /* Establece el contexto para el video */
   padding: 50px 20px;
   background-color: #e9ecef;
   text-align: center;
+  overflow: hidden; /* Asegura que el video no se salga de los bordes */
+  z-index: -1;
+`;
+
+const BackgroundVideo = styled.video`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Cubre todo el contenedor */
+  opacity: 0.5;
+  z-index: 0; /* Asegúrate de que el video esté detrás de todos los elementos */
 `;
 
 const SectionTitle = styled.h2`
   font-size: 2.5rem;
   margin-bottom: 20px;
+  color: white; /* El color blanco para que el texto sea visible sobre el video */
+  position: relative;
+  z-index: 1; /* Eleva el título por encima del video */
 `;
 
 const CardsContainer = styled.div`
@@ -24,6 +40,8 @@ const CardsContainer = styled.div`
   flex-wrap: wrap;
   justify-content: center;
   gap: 20px;
+  position: relative;
+  z-index: 1; /* Asegúrate de que las tarjetas estén sobre el video */
 `;
 
 const DonateButton = styled.button`
@@ -34,6 +52,8 @@ const DonateButton = styled.button`
   border: none;
   cursor: pointer;
   border-radius: 5px;
+  position: relative;
+  z-index: 1; /* Botón también por encima del video */
 
   &:hover {
     background-color: #FF69B4;
@@ -55,10 +75,9 @@ export default function Donate() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-
     }, 2000);
 
-    return () => clearTimeout(timer); // Limpia el temporizador si el componente se desmonta
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -68,6 +87,12 @@ export default function Donate() {
       ) : (
         <div>
           <DonationSection>
+            {/* Video de fondo */}
+            <BackgroundVideo autoPlay muted loop>
+              <source src="/video/donate.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </BackgroundVideo>
+
             <SectionTitle>Donate to Help Our Pets</SectionTitle>
             <CardsContainer>
               <DonationCard
@@ -113,7 +138,6 @@ export default function Donate() {
               </ul>
             </Modal>
           )}
-
         </div>
       )}
     </ClientLayout>
