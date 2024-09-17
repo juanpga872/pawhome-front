@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import styled, { createGlobalStyle, keyframes } from 'styled-components';
 import { FaFacebookF, FaGooglePlusG, FaLinkedinIn, FaArrowLeft } from 'react-icons/fa';
 
-// Global Styles
 const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
   
@@ -240,19 +239,19 @@ const Button = styled.button<{ $ghost?: boolean }>`
 `;
 
 const ToggleButton = styled(Button)`
-  display: none;
-  margin-top: 20px;
-  position: fixed;
-  bottom: 20px;
+  display: none; /* Hidden by default */
+  position: absolute;
+  bottom: 20px; /* Adjust as needed */
   left: 50%;
   transform: translateX(-50%);
   background-color: #FF416C;
   color: #FFFFFF;
   border: none;
   z-index: 1000;
+  margin: 0;
 
   @media (max-width: 768px) {
-    display: block;
+    display: block; /* Visible only on small screens */
   }
 `;
 
@@ -316,7 +315,6 @@ const Footer = styled.footer`
     text-decoration: none;
   }
 `;
-
 
 const LoginForm: React.FC = () => {
   const [rightPanelActive, setRightPanelActive] = useState(false);

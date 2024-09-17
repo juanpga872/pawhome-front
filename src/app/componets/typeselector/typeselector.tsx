@@ -47,7 +47,7 @@ const SelectorButton = styled.button<{ active: boolean }>`
   }
 `;
 
-
+// Contenedor del ícono de búsqueda
 const SearchIconContainer = styled.div`
   margin-top: 1rem;
   display: flex;
