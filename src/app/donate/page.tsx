@@ -1,12 +1,16 @@
-
-"use client"; 
+"use client";
 
 import React, { useState, useEffect } from 'react';
-import ClientLayout from '@/app/ClientLayout'; // Ajusta la ruta según tu estructura
-import PawPrintLoader from '@/app/componets/preloader/preloader'; // Ajusta la ruta según tu estructura
+import ClientLayout from '@/app/ClientLayout'; // Adjust path according to your structure
+import PawPrintLoader from '@/app/componets/preloader/preloader'; // Adjust path according to your structure
 import styled from 'styled-components';
 import DonationCard from '../componets/DonationCard/DonationCard';
-import Modal from '../componets/DonationCard/Modal'; // Crea este componente modal por separado
+import Modal from '../componets/DonationCard/Modal'; // Create this modal component separately
+import DonationPage from '../componets/Headers/headerDonate';
+import Donations from '../componets/donationsCarpet/donationseccion';
+import ApadrinaUnPerrito from '../componets/donationsCarpet/apadrinar';
+import RightsAndDuties from '../componets/donationsCarpet/derechosYdeberes'; // Import the RightsAndDuties component
+import PlanPage from '../componets/donationsCarpet/plans';
 
 const DonationSection = styled.section`
   padding: 50px 20px;
@@ -55,10 +59,9 @@ export default function Donate() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-
     }, 2000);
 
-    return () => clearTimeout(timer); // Limpia el temporizador si el componente se desmonta
+    return () => clearTimeout(timer); // Clean up the timer if the component unmounts
   }, []);
 
   return (
@@ -67,7 +70,12 @@ export default function Donate() {
         <PawPrintLoader />
       ) : (
         <div>
-          <DonationSection>
+          <DonationPage />
+          <Donations />
+          <ApadrinaUnPerrito />
+          <RightsAndDuties /> 
+          <PlanPage/> 
+        <DonationSection>
             <SectionTitle>Donate to Help Our Pets</SectionTitle>
             <CardsContainer>
               <DonationCard
@@ -113,7 +121,6 @@ export default function Donate() {
               </ul>
             </Modal>
           )}
-
         </div>
       )}
     </ClientLayout>
