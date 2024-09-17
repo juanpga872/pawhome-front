@@ -123,7 +123,7 @@ const SponsorADog = () => {
           <Title>Why Sponsor a Dog at Pawhome?</Title>
           <List>
             <ListItem>
-              Because you can’t have a dog at home, but still want a furry friend to cuddle with, even if it's only on weekends! It can become a reason to take walks with your loved ones.
+              Because you cant have a dog at home, but still want a furry friend to cuddle with, even if its only on weekends! It can become a reason to take walks with your loved ones.
             </ListItem>
             <ListItem>
               Because there are too many dogs here. Due to the sale of dogs in stores and unsterilized breeders, the high density of them on the streets, and their uncontrolled reproduction, many dogs spend years here without knowing what human love is.

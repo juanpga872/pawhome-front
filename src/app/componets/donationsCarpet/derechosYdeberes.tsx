@@ -35,12 +35,12 @@ const RightsAndDuties: React.FC = () => {
   return (
     <Container>
       <Box>
-        <h1>Foster Parents' Rights and Duties</h1>
+        <h1>Foster Parents Rights and Duties</h1>
         <h2>Rights</h2>
         <ul>
           <li>You can visit your fostered pet whenever you want.</li>
           <li>You can spend an afternoon bathing, pampering, and walking your pet.</li>
-          <li>You will receive updates and photos about your fostered pet's well-being.</li>
+          <li>You will receive updates and photos about your fostered pets well-being.</li>
         </ul>
       </Box>
       <Box>
