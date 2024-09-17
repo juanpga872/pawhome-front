@@ -48,12 +48,12 @@ const SelectorButton = styled.button<{ active: boolean }>`
 
 // Tipo de selector
 type TypeSelectorProps = {
-  onTypeChange: (type: 'dog' | 'cat' | 'all') => void; // Agregar 'all' al tipo
+  onTypeChange: (type: 'dog' | 'cat' | 'all') => void; 
 };
 
 // Componente del selector
 const TypeSelector: React.FC<TypeSelectorProps> = ({ onTypeChange }) => {
-  const [selectedType, setSelectedType] = useState<'dog' | 'cat' | 'all'>('all'); // Iniciar con 'all'
+  const [selectedType, setSelectedType] = useState<'dog' | 'cat' | 'all'>('all'); 
 
   const handleTypeChange = (type: 'dog' | 'cat' | 'all') => {
     setSelectedType(type);

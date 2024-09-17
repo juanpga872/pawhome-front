@@ -3,8 +3,7 @@ import styled from 'styled-components';
 import TypeSelector from '@/app/componets/typeselector/typeselector';
 import CartComponent from '@/app/componets/cartIcon/cart.components';
 
-// Estilos
-
+// Styled components
 const Card = styled.div`
   width: 16rem;
   padding: 1rem;
@@ -92,8 +91,7 @@ const ProductGrid = styled.div`
   margin: 2rem 0;
 `;
 
-// Tipos para la respuesta de la API
-
+// Types
 interface Product {
   id: number;
   name: string;
@@ -114,7 +112,7 @@ interface CartItem {
 
 const ProductPage: React.FC = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [productType, setProductType] = useState<'dog' | 'cat'>('dog');
+  const [productType, setProductType] = useState<'dog' | 'cat' | 'all'>('all');
   const [selectedWeight, setSelectedWeight] = useState<{ [key: string]: number }>({});
   const [products, setProducts] = useState<Product[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -124,7 +122,7 @@ const ProductPage: React.FC = () => {
     const fetchProducts = async () => {
       try {
         const response = await fetch('https://powhome.azurewebsites.net/api/v1/Products', {
-          method: 'GET', // Explicitly specify the method
+          method: 'GET',
         });
 
         if (!response.ok) {
@@ -145,7 +143,7 @@ const ProductPage: React.FC = () => {
   const handleAddToCart = (product: Omit<CartItem, 'id' | 'quantity'>) => {
     const newItem: CartItem = {
       ...product,
-      id: Date.now(), // Use a number ID
+      id: Date.now(),
       quantity: 1
     };
     setCart(prevCart => [...prevCart, newItem]);
@@ -185,36 +183,42 @@ const ProductPage: React.FC = () => {
       />
       <TypeSelector onTypeChange={setProductType} />
       <ProductGrid>
-        {products.map((product) => {
-          const selectedWeightValue = selectedWeight[product.name] || product.weightKG;
-          const productPrice = product.price; // Asumiendo que el precio ya está descontado
+        {products
+          .filter(product => 
+            productType === 'all' ||
+            (productType === 'dog' && product.name.toLowerCase().includes('dog')) ||
+            (productType === 'cat' && product.name.toLowerCase().includes('cat'))
+          )
+          .map((product) => {
+            const selectedWeightValue = selectedWeight[product.name] || product.weightKG;
+            const productPrice = product.price;
 
-          return (
-            <Card key={product.id}>
-              <ProductName>{product.name}</ProductName>
-              <PriceContainer>
-                <DiscountedPrice>${productPrice.toLocaleString()}</DiscountedPrice>
-                <OriginalPrice>${product.price.toLocaleString()}</OriginalPrice>
-              </PriceContainer>
-              <WeightSelector>
-                <WeightButton
-                  selected={selectedWeightValue === product.weightKG}
-                  onClick={() => handleWeightSelect(product.name, product.weightKG)}
-                >
-                  {product.weightKG} KG
-                </WeightButton>
-              </WeightSelector>
-              <AddToCartButton onClick={() => handleAddToCart({ 
-                name: product.name, 
-                price: product.price, 
-                description: product.description, 
-                weight: product.weightKG 
-              })}>
-                Add to Cart
-              </AddToCartButton>
-            </Card>
-          );
-        })}
+            return (
+              <Card key={product.id}>
+                <ProductName>{product.name}</ProductName>
+                <PriceContainer>
+                  <DiscountedPrice>${productPrice.toLocaleString()}</DiscountedPrice>
+                  <OriginalPrice>${product.price.toLocaleString()}</OriginalPrice>
+                </PriceContainer>
+                <WeightSelector>
+                  <WeightButton
+                    selected={selectedWeightValue === product.weightKG}
+                    onClick={() => handleWeightSelect(product.name, product.weightKG)}
+                  >
+                    {product.weightKG} KG
+                  </WeightButton>
+                </WeightSelector>
+                <AddToCartButton onClick={() => handleAddToCart({ 
+                  name: product.name, 
+                  price: product.price, 
+                  description: product.description, 
+                  weight: product.weightKG 
+                })}>
+                  Add to Cart
+                </AddToCartButton>
+              </Card>
+            );
+          })}
       </ProductGrid>
     </>
   );
