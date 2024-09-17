@@ -16,8 +16,17 @@ const NavLinksList = styled.ul<NavLinksProps>`
   justify-content: center;
   flex-grow: 1;
   z-index: 1;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   @media (max-width: 768px) {
     display: ${props => (props.isOpen ? 'block' : 'none')};
+    position: absolute;
+    top: 60px; // Ajustar según la altura del navbar
+    left: 0;
+    right: 0;
+    background: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    border-radius: 0;
   }
 `;
 
