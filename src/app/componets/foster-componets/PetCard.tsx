@@ -36,9 +36,16 @@ const Card = styled.div`
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
-
+  max-width: 300px; /* Set a maximum width for larger screens */
+  margin: 0 auto; /* Center the card */
+  
   &:hover {
     transform: scale(1.05);
+  }
+
+  @media (max-width: 600px) {
+    max-width: 100%; /* Full width on small screens */
+    margin: 10px; /* Add margin on small screens */
   }
 `;
 
@@ -46,25 +53,45 @@ const PetImage = styled.img`
   width: 100%;
   height: 200px;
   object-fit: cover;
+
+  @media (max-width: 600px) {
+    height: 150px; /* Adjust height for small screens */
+  }
 `;
 
 const PetDetails = styled.div`
   padding: 1rem;
+
+  @media (max-width: 600px) {
+    padding: 0.5rem; /* Reduce padding on small screens */
+  }
 `;
 
 const PetName = styled.h3`
   font-size: 1.25rem;
   margin: 0;
+
+  @media (max-width: 600px) {
+    font-size: 1rem; /* Reduce font size on small screens */
+  }
 `;
 
 const PetInfo = styled.p`
   color: #666;
   font-size: 0.875rem;
+
+  @media (max-width: 600px) {
+    font-size: 0.75rem; /* Reduce font size on small screens */
+  }
 `;
 
 const Location = styled.p`
   color: #999;
   font-size: 0.75rem;
+
+  @media (max-width: 600px) {
+    font-size: 0.625rem; /* Reduce font size on small screens */
+  }
 `;
 
 const ViewMoreButton = styled.button`
@@ -81,6 +108,11 @@ const ViewMoreButton = styled.button`
 
   &:hover {
     background-color: #5a54d1;
+  }
+
+  @media (max-width: 600px) {
+    font-size: 0.875rem; /* Reduce font size on small screens */
+    padding: 0.5rem 1rem; /* Adjust padding on small screens */
   }
 `;
 
