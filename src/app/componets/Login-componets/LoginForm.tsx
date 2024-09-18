@@ -364,18 +364,18 @@ const LoginForm: React.FC = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch('https://powhome.azurewebsites.net/api/Auth/register', {
+      const response = await fetch('https://powhome.azurewebsites.net/api/v1/Users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          id: 0, // Se puede omitir ya que lo generará el backend
+          id: 
           name,
           phone,
           email,
           password,
-          isAdmin, // Controlado desde el estado
+          isAdmin, 
         }),
       });
 
@@ -439,14 +439,6 @@ const LoginForm: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <label>
-              <Input
-                type="checkbox"
-                checked={isAdmin}
-                onChange={() => setIsAdmin(!isAdmin)}
-              />
-              Admin
-            </label>
             <Button type="submit">Sign Up</Button>
             {registerMessage && <p style={{ color: 'green' }}>{registerMessage}</p>}
             {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
