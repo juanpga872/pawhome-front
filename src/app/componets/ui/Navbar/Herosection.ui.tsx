@@ -19,7 +19,7 @@ const HeroText = styled.div`
   padding: 20px;
   border-radius: 10px;
   position: relative; 
-  z-index: 1; 
+  z-index: 0; 
   font-size: 3vh;
   display: flex;
   flex-direction: column; 
