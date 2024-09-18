@@ -2,6 +2,9 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import styled, { createGlobalStyle, keyframes } from 'styled-components';
 import { FaFacebookF, FaGooglePlusG, FaLinkedinIn, FaArrowLeft } from 'react-icons/fa';
+import jwtDecode from 'jwt-decode';
+
+
 
 const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
@@ -331,9 +334,28 @@ const LoginForm: React.FC = () => {
   const [registerMessage, setRegisterMessage] = useState('');
 
   // Función para manejar el login
+
+  const decodeBase64 = (str: string) => {
+    // Decodifica la cadena en Base64 y la convierte en una cadena de texto
+    return Buffer.from(str, 'base64').toString('utf8');
+  };
+  
+  const parseJwt = (token: string) => {
+    // Divide el token en sus tres partes
+    const parts = token.split('.');
+    
+    if (parts.length !== 3) {
+      throw new Error('Invalid JWT token');
+    }
+  
+    // Decodifica la parte del payload (segunda parte del token)
+    const payload = parts[1];
+    return JSON.parse(decodeBase64(payload));
+  };
+  
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     try {
       const response = await fetch('https://powhome.azurewebsites.net/api/Auth/login', {
         method: 'POST',
@@ -342,19 +364,32 @@ const LoginForm: React.FC = () => {
         },
         body: JSON.stringify({ email, password }),
       });
-
+  
       if (response.ok) {
         const data = await response.json();
         const { token } = data;
-
+  
+        // Decodifica el token manualmente
+        const decodedToken = parseJwt(token);
+  
+        // Extrae la propiedad isAdmin del token decodificado
+        const { isAdmin } = decodedToken;
+  
+        // Guarda el token en localStorage
         localStorage.setItem('token', token);
-        console.log('Token saved:', token);
-        window.location.href = '/';
+  
+        // Verifica si el usuario es admin y redirige a la página correspondiente
+        if (!isAdmin) {
+          window.location.href = '/admin';
+        } else {
+          window.location.href = '/';
+        }
       } else {
         const errorData = await response.json();
         setErrorMessage(errorData.message || 'Invalid email or password');
       }
     } catch (error) {
+      console.error('Error during sign-in:', error);
       setErrorMessage('An error occurred while trying to sign in');
     }
   };
