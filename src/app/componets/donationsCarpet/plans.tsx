@@ -2,26 +2,25 @@ import styled from 'styled-components';
 import Image from 'next/image';
 import { FC } from 'react';
 
-// Container for the layout
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding: 20px;
-  font-family: 'Roboto', sans-serif; /* Apply the custom font directly here */
-  
+  font-family: 'Roboto', sans-serif; 
+  align-items: center; /* Centrado horizontal en pantallas grandes */
+  margin: 0 auto; /* Centra el contenedor en pantallas grandes */
+  max-width: 1200px; /* Límite de ancho en pantallas grandes */
+
   @media (min-width: 768px) {
     flex-direction: row;
     padding: 40px;
   }
 `;
 
-// Container for the image
 const ImageContainer = styled.div`
-  width: 100%;
-  max-width: 400px;
+  width: 90%;
+  max-width: 600px; /* Aumentar el tamaño máximo */
   margin-bottom: 20px;
-  display: flex;
-  justify-content: center;
 
   @media (min-width: 768px) {
     width: 50%;
@@ -29,7 +28,6 @@ const ImageContainer = styled.div`
   }
 `;
 
-// Container for the content
 const ContentContainer = styled.div`
   width: 100%;
   display: flex;
@@ -41,30 +39,27 @@ const ContentContainer = styled.div`
   }
 `;
 
-// Title styling
 const Title = styled.h2`
   font-size: 28px;
   font-weight: bold;
   margin-bottom: 20px;
-  
+
   @media (min-width: 768px) {
     font-size: 32px;
   }
 `;
 
-// Grid for the plans
 const PlanGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(1, 1fr);
+  grid-template-columns: 1fr; 
   gap: 20px;
   margin-bottom: 20px;
 
   @media (min-width: 768px) {
-    grid-template-columns: repeat(2, 1fr); /* Ensures 2 columns on larger screens */
+    grid-template-columns: repeat(2, 1fr); 
   }
 `;
 
-// Container for each plan item
 const PlanContainer = styled.div`
   display: flex;
   align-items: center;
@@ -73,20 +68,17 @@ const PlanContainer = styled.div`
   background-color: #f5f5f5;
 `;
 
-// Styling for the star icon
 const StarIcon = styled.span`
   color: hotpink;
   font-size: 24px;
   margin-right: 10px;
 `;
 
-// Styling for the plan text
 const PlanText = styled.p`
   font-size: 16px;
   line-height: 1.5;
 `;
 
-// Call to action styling
 const CallToAction = styled.p`
   font-size: 20px;
   font-weight: bold;
@@ -99,11 +91,7 @@ const CallToAction = styled.p`
   }
 `;
 
-// Plan item component
-const PlanItem: FC<{ title: string; text: string }> = ({
-  title,
-  text,
-}) => {
+const PlanItem: FC<{ title: string; text: string }> = ({ title, text }) => {
   return (
     <PlanContainer>
       <StarIcon>★</StarIcon>
@@ -114,7 +102,6 @@ const PlanItem: FC<{ title: string; text: string }> = ({
   );
 };
 
-// Main page component
 const PlanPage: FC = () => {
   return (
     <Container>
@@ -122,8 +109,8 @@ const PlanPage: FC = () => {
         <Image
           src="/icons/catfond.jpg"
           alt="Black cat"
-          width={400}
-          height={400}
+          width={600}  // Aumentar el tamaño de la imagen
+          height={400} // Ajustar la altura proporcionalmente
           layout="responsive"
         />
       </ImageContainer>
