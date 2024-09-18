@@ -1,9 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faTimes, faMinus, faPlus, faTrash, faShoppingBasket } from '@fortawesome/free-solid-svg-icons';
-
-// Estilos
 
 const FloatingCartContainer = styled.div`
   position: fixed;
@@ -76,6 +74,7 @@ const StartShoppingButton = styled.a`
   text-decoration: none;
   margin: 20px auto;
   max-width: 200px;
+
   &:hover {
     background-color: #731D97FF;
   }
@@ -105,16 +104,11 @@ const ProductName = styled.span`
   font-weight: bold;
   font-size: 14px;
   color: #333;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 150px;
 `;
 
 const ProductPrice = styled.span`
   font-size: 14px;
   color: #888;
-  margin-top: 4px;
 `;
 
 const ProductWeight = styled.span`
@@ -141,45 +135,6 @@ const QuantityButton = styled.button`
   justify-content: center;
   align-items: center;
   font-size: 12px;
-  &:hover {
-    background-color: #731D97FF;
-  }
-`;
-
-const RemoveButton = styled.button`
-  background-color: #FF4136;
-  color: white;
-  border: none;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 12px;
-  &:hover {
-    background-color: #C82333;
-  }
-`;
-
-const SavingsButton = styled.button`
-  background-color: #FFD700;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  &:hover {
-    background-color: #FFA500;
-  }
-`;
-
-const Message = styled.div`
-  color: green;
-  font-size: 14px;
-  text-align: center;
-  margin-top: 10px;
 `;
 
 const QuantityCounter = styled.span`
@@ -214,9 +169,6 @@ const CheckoutButton = styled.button`
   display: inline-block;
   width: 100%;
   margin-top: 10px;
-  &:hover {
-    background-color: #731D97FF;
-  }
 `;
 
 const Modal = styled.div<{ isOpen: boolean }>`
@@ -231,7 +183,13 @@ const Modal = styled.div<{ isOpen: boolean }>`
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
   z-index: 1000;
   transition: transform 0.3s ease-in-out;
-  transform: translateX(${({ isOpen }) => (isOpen ? '0' : '100%')});
+
+  @media (max-width: 767px) {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    right: 0;
+  }
 `;
 
 const ModalContent = styled.div<{ hasItems: boolean }>`
@@ -261,6 +219,13 @@ const CartItemsList = styled.div`
   flex-direction: column;
 `;
 
+const Message = styled.div`
+  color: green;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 10px;
+`;
+
 const SavingsMessage = styled.div`
   display: flex;
   justify-content: space-between;
@@ -274,27 +239,66 @@ const SavingsMessage = styled.div`
   color: #FF8C00;
 `;
 
-// Tipo para los ítems del carrito
+const NotificationModal = styled.div<{ isVisible: boolean }>`
+  display: ${({ isVisible }) => (isVisible ? 'flex' : 'none')};
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  z-index: 2000;
+  transition: opacity 0.5s;
+  opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
+`;
+
+const ConfirmationModal = styled.div<{ isOpen: boolean }>`
+  display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 2000;
+`;
+
+const ConfirmationButton = styled.button`
+  background-color: #FF4136;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin: 5px;
+  cursor: pointer;
+`;
 
 type CartItemType = {
-  id: number;  // Cambiado de string a number
+  id: number; 
   name: string;
   price: number;
-  weight: number;  // Cambiado de string a number
+  weight: number; 
   quantity: number;
 };
-
-// Componente del carrito
 
 const CartComponent: React.FC<{ 
   cartItems: CartItemType[], 
   onRemoveItem: (index: number) => void, 
   onUpdateQuantity: (id: number, newQuantity: number) => void 
-}> = ({ cartItems = [], onRemoveItem, onUpdateQuantity }) => {
+}> = ({ cartItems, onRemoveItem, onUpdateQuantity }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<number | null>(null);
   const [message, setMessage] = useState<string | null>(null);
-  const modalRef = useRef<HTMLDivElement>(null);
-
+  const [discountCode, setDiscountCode] = useState('');
+  const [discountApplied, setDiscountApplied] = useState(false);
+  const [notificationVisible, setNotificationVisible] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
+  
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -302,40 +306,67 @@ const CartComponent: React.FC<{
   const closeModal = () => {
     setIsModalOpen(false);
     setMessage(null);
+    setDiscountCode('');
+    setDiscountApplied(false);
   };
 
-  const handleClickOutside = (event: MouseEvent) => {
-    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-      closeModal();
-    }
+  const openConfirmationModal = (itemId: number) => {
+    setItemToDelete(itemId);
+    setIsConfirmDeleteOpen(true);
   };
 
-  useEffect(() => {
-    if (isModalOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside);
+  const closeConfirmationModal = () => {
+    setIsConfirmDeleteOpen(false);
+    setItemToDelete(null);
+  };
+
+  const handleDeleteItem = () => {
+    if (itemToDelete !== null) {
+      onRemoveItem(cartItems.findIndex(item => item.id === itemToDelete));
+      setNotificationMessage("¡Producto eliminado!");
+      setNotificationVisible(true);
+      setTimeout(() => setNotificationVisible(false), 2000);
+      closeConfirmationModal();
     }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isModalOpen]);
+  };
 
   const handleQuantityChange = (id: number, delta: number) => {
     const itemIndex = cartItems.findIndex(item => item.id === id);
-    if (itemIndex === -1) return;
+    
+    if (itemIndex === -1) {
+      console.error("Item not found in cart");
+      return;
+    }
 
     const newQuantity = cartItems[itemIndex].quantity + delta;
+
     if (newQuantity <= 0) {
-      onRemoveItem(itemIndex);
-      setMessage("Producto eliminado");
-      setTimeout(() => setMessage(null), 2000);
+      openConfirmationModal(id);
     } else {
       onUpdateQuantity(id, newQuantity);
+      setNotificationMessage("¡Producto agregado!");
+      setNotificationVisible(true);
+      setTimeout(() => setNotificationVisible(false), 2000);
     }
   };
 
   const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const discountedTotal = discountApplied ? total - 5000 : total;
+
+  const handleApplyDiscount = () => {
+    if (discountCode === 'riwi' && total >= 20000 && !discountApplied) {
+      setDiscountApplied(true);
+      setMessage('Descuento aplicado');
+      setTimeout(() => setMessage(null), 2000);
+    } else {
+      setMessage('Cupón inválido o condiciones no cumplidas');
+      setTimeout(() => setMessage(null), 2000);
+    }
+  };
+
+  const formattedPrice = (price: number) => {
+    return price.toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
+  };
 
   return (
     <>
@@ -345,7 +376,8 @@ const CartComponent: React.FC<{
           {cartItems.length > 0 && <CartCount>{cartItems.reduce((sum, item) => sum + item.quantity, 0)}</CartCount>}
         </CartIcon>
       </FloatingCartContainer>
-      <Modal isOpen={isModalOpen} ref={modalRef}>
+      
+      <Modal isOpen={isModalOpen}>
         <ModalContent hasItems={cartItems.length > 0}>
           <ScrollableContent>
             <CloseButton onClick={closeModal}>
@@ -357,7 +389,7 @@ const CartComponent: React.FC<{
                   <FontAwesomeIcon icon={faShoppingBasket} size="3x" />
                 </EmptyCartIcon>
                 <EmptyCartMessage>Tu carrito está vacío.</EmptyCartMessage>
-                <StartShoppingButton href="/">Comienza a Comprar</StartShoppingButton>
+                <StartShoppingButton href="/food">Comienza a Comprar</StartShoppingButton>
               </>
             ) : (
               <>
@@ -366,30 +398,22 @@ const CartComponent: React.FC<{
                     <CartItemCard key={item.id} isHighlighted={item.quantity > 1}>
                       <CartItemDetails>
                         <ProductName>{item.name}</ProductName>
-                        <ProductPrice>${item.price.toFixed(2)}</ProductPrice>
+                        <ProductPrice>{formattedPrice(item.price)}</ProductPrice>
                         <ProductWeight>Weight: {item.weight}kg</ProductWeight>
                       </CartItemDetails>
                       <QuantityControl>
                         <QuantityButton onClick={() => handleQuantityChange(item.id, -1)}>
-                          <FontAwesomeIcon icon={faMinus} />
+                          {item.quantity > 1 ? (
+                            <FontAwesomeIcon icon={faMinus} />
+                          ) : (
+                            <FontAwesomeIcon icon={faTrash} />
+                          )}
                         </QuantityButton>
                         <QuantityCounter>{item.quantity}</QuantityCounter>
                         <QuantityButton onClick={() => handleQuantityChange(item.id, 1)}>
                           <FontAwesomeIcon icon={faPlus} />
                         </QuantityButton>
                       </QuantityControl>
-                      {item.quantity === 1 && (
-                        <RemoveButton onClick={() => {
-                          const indexToRemove = cartItems.findIndex(cartItem => cartItem.id === item.id);
-                          if (indexToRemove !== -1) {
-                            onRemoveItem(indexToRemove);
-                            setMessage("Producto eliminado");
-                            setTimeout(() => setMessage(null), 2000);
-                          }
-                        }}>
-                          <FontAwesomeIcon icon={faTrash} />
-                        </RemoveButton>
-                      )}
                     </CartItemCard>
                   ))}
                 </CartItemsList>
@@ -400,12 +424,17 @@ const CartComponent: React.FC<{
           {cartItems.length > 0 && (
             <FixedBottomContent>
               <SavingsMessage>
-                <span>¿Quieres ahorrar $869 en este pedido?</span>
-                <SavingsButton>Ahorra</SavingsButton>
+                <input 
+                  type="text" 
+                  value={discountCode} 
+                  onChange={(e) => setDiscountCode(e.target.value)} 
+                  placeholder="Código de descuento"
+                />
+                <button onClick={handleApplyDiscount}>Aplicar</button>
               </SavingsMessage>
               <CartTotalContainer>
                 <span>Total:</span>
-                <span>${total.toFixed(2)}</span>
+                <span>{formattedPrice(discountedTotal)}</span>
               </CartTotalContainer>
               <CheckoutButton>
                 Continuar al Checkout 
@@ -414,6 +443,16 @@ const CartComponent: React.FC<{
           )}
         </ModalContent>
       </Modal>
+
+      <NotificationModal isVisible={notificationVisible}>
+        {notificationMessage}
+      </NotificationModal>
+
+      <ConfirmationModal isOpen={isConfirmDeleteOpen}>
+        <p>¿Estás seguro de que deseas eliminar este producto?</p>
+        <ConfirmationButton onClick={handleDeleteItem}>Sí</ConfirmationButton>
+        <ConfirmationButton onClick={closeConfirmationModal}>No</ConfirmationButton>
+      </ConfirmationModal>
     </>
   );
 };

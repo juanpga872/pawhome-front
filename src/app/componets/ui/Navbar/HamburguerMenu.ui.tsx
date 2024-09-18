@@ -2,6 +2,7 @@ import React, { useState, useEffect, MouseEvent } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
+import Image from 'next/image'; // Importa el componente Image de Next.js
 
 // Animations
 const slideIn = keyframes`
@@ -156,7 +157,7 @@ const App: React.FC = () => {
         <CloseButton onClick={() => setIsMenuOpen(false)}>&#10005;</CloseButton>
         <MenuItems>
           <MenuItem href="/">
-            <img src="/icons/logo.png" alt="Logo" style={{ height: '100px' }} />
+            <Image src="/icons/logo.png" alt="Logo" width={100} height={100} />
           </MenuItem>
           <MenuItem href="/donate">Donate</MenuItem>
           <MenuItem href="/foster">Foster</MenuItem>

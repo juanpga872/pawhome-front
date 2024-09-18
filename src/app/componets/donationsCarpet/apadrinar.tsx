@@ -2,10 +2,6 @@ import React from 'react';
 import Image from 'next/image';
 import styled from 'styled-components';
 
-// Import the font in your global CSS
-// Example in _app.js or _document.js for Next.js
-// import 'https://fonts.googleapis.com/css2?family=Lora:wght@700&display=swap';
-
 // Main container with gray background
 const Container = styled.div`
   display: flex;
@@ -57,9 +53,9 @@ const ImageSection = styled.div`
 
 // Title with custom style
 const Title = styled.h1`
-  font-size: 2rem;  // Adjusted font size
+  font-size: 2.5rem;  // Increased font size
   font-weight: 700;
-  font-family: 'Lora', serif; // Custom font
+  font-family: 'Lora', serif; 
   margin-bottom: 1rem;
   color: #8e2de2; 
   padding: 0.5rem;
@@ -67,15 +63,16 @@ const Title = styled.h1`
   text-align: center;
 
   @media (max-width: 768px) {
-    font-size: 1.5rem; // Adjusted size for smaller screens
+    font-size: 2rem; // Adjusted size for smaller screens
   }
 `;
 
 // Paragraph with custom style
 const Paragraph = styled.p`
-  font-size: 1rem;
+  font-size: 1.25rem;  // Increased font size
   line-height: 1.5;
   margin-bottom: 1rem;
+  text-align: center;  // Centered text for better appearance
 `;
 
 // Styled list
@@ -92,7 +89,7 @@ const List = styled.ul`
 // List item
 const ListItem = styled.li`
   margin-bottom: 0.5rem;
-  font-size: 1rem; /* Adjusted font size */
+  font-size: 1.125rem; /* Increased font size */
 `;
 
 const SponsorADog = () => {
@@ -103,6 +100,7 @@ const SponsorADog = () => {
           <Image
             src="/icons/perro.jpg"
             alt="Dog"
+            layout="responsive" 
             width={500}
             height={300}
           />
@@ -143,6 +141,7 @@ const SponsorADog = () => {
           <Image
             src="/icons/niño.avif"
             alt="Children"
+            layout="responsive" 
             width={600}
             height={400}
           />

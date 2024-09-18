@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import Image from 'next/image'; // Importa el componente Image de Next.js
 
 const HowItWorksWrapper = styled.section`
   display: flex;
@@ -66,13 +67,12 @@ const StepItem = styled.li`
 const Button = styled.button`
   display: inline-block;
   padding: 10px 30px;
-  background-color: #333;
+  background-color: #D45BF8E7;
   color: #fff;
   border-radius: 5px;
   border: none;
   font-size: 16px;
   cursor: pointer;
-  background-color: #D45BF8E7;
 
   &:hover {
     background-color: #FF69B4;
@@ -126,7 +126,13 @@ export const HowItWorksSection: React.FC = () => {
     <>
       <HowItWorksWrapper>
         <ImageWrapper>
-          <img src="/img-howitworks/how1.jpg" alt="Person with dogs" />
+          <Image 
+            src="/img-howitworks/how1.jpg" 
+            alt="Person with dogs" 
+            layout="responsive" // Opcional: para mantener la proporción
+            width={500} // Ancho de la imagen
+            height={300} // Alto de la imagen
+          />
         </ImageWrapper>
         <ContentWrapper>
           <Title>How adoption works</Title>
@@ -145,13 +151,13 @@ export const HowItWorksSection: React.FC = () => {
           <ModalContent>
             <CloseButton onClick={closeModal}>X</CloseButton>
             <h1>Frequently Asked Questions About Pet Adoption</h1>
-      <h3>What is the adoption process on your site?</h3>
-      <p>The adoption process on our site is as follows:</p>
-      <p><strong>1. Register:</strong> Create an account on our platform to access all features.</p>
-      <p><strong>2. Find your preferred pet:</strong> Use our search tool to find the pet that you like the most.</p>
-      <p><strong>3. View details:</strong> Check the detailed information about the pet you are interested in, including photos, description, and requirements.</p>
-      <p><strong>4. Click Adopt:</strong> Complete the online adoption form to express your interest in the pet.</p>
-      <p><strong>5. Wait for a response:</strong> Our team will review your application and contact you with the next steps.</p>
+            <h3>What is the adoption process on your site?</h3>
+            <p>The adoption process on our site is as follows:</p>
+            <p><strong>1. Register:</strong> Create an account on our platform to access all features.</p>
+            <p><strong>2. Find your preferred pet:</strong> Use our search tool to find the pet that you like the most.</p>
+            <p><strong>3. View details:</strong> Check the detailed information about the pet you are interested in, including photos, description, and requirements.</p>
+            <p><strong>4. Click Adopt:</strong> Complete the online adoption form to express your interest in the pet.</p>
+            <p><strong>5. Wait for a response:</strong> Our team will review your application and contact you with the next steps.</p>
           </ModalContent>
         </ModalOverlay>
       )}
