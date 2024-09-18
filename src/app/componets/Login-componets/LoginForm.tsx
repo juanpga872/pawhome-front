@@ -2,6 +2,9 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import styled, { createGlobalStyle, keyframes } from 'styled-components';
 import { FaFacebookF, FaGooglePlusG, FaLinkedinIn, FaArrowLeft } from 'react-icons/fa';
+import jwtDecode from 'jwt-decode';
+
+
 
 const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
@@ -324,9 +327,32 @@ const LoginForm: React.FC = () => {
   const [rightPanelActive, setRightPanelActive] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false); // Estado para controlar si el usuario es admin
   const [errorMessage, setErrorMessage] = useState('');
+  const [registerMessage, setRegisterMessage] = useState('');
 
-  // Función que maneja el inicio de sesión
+  // Función para manejar el login
+
+  const decodeBase64 = (str: string) => {
+    // Decodifica la cadena en Base64 y la convierte en una cadena de texto
+    return Buffer.from(str, 'base64').toString('utf8');
+  };
+  
+  const parseJwt = (token: string) => {
+    // Divide el token en sus tres partes
+    const parts = token.split('.');
+    
+    if (parts.length !== 3) {
+      throw new Error('Invalid JWT token');
+    }
+  
+    // Decodifica la parte del payload (segunda parte del token)
+    const payload = parts[1];
+    return JSON.parse(decodeBase64(payload));
+  };
+  
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
   
@@ -336,30 +362,68 @@ const LoginForm: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
+        body: JSON.stringify({ email, password }),
       });
   
-      // Verificar si la respuesta fue exitosa
       if (response.ok) {
         const data = await response.json();
         const { token } = data;
   
+        // Decodifica el token manualmente
+        const decodedToken = parseJwt(token);
+  
+        // Extrae la propiedad isAdmin del token decodificado
+        const { isAdmin } = decodedToken;
+  
         // Guarda el token en localStorage
         localStorage.setItem('token', token);
-        console.log('Token saved:', token);
-        // Redirige a la página principal o dashboard
-        window.location.href = '/';
+  
+        // Verifica si el usuario es admin y redirige a la página correspondiente
+        if (!isAdmin) {
+          window.location.href = '/admin';
+        } else {
+          window.location.href = '/';
+        }
       } else {
-        // Manejo de errores basado en el código de estado
         const errorData = await response.json();
         setErrorMessage(errorData.message || 'Invalid email or password');
       }
     } catch (error) {
-      // Manejo de errores de red
+      console.error('Error during sign-in:', error);
       setErrorMessage('An error occurred while trying to sign in');
+    }
+  };
+
+  // Función para manejar el registro
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch('https://powhome.azurewebsites.net/api/v1/Users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: 
+          name,
+          phone,
+          email,
+          password,
+          isAdmin, 
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setRegisterMessage('Registration successful! Please log in.');
+        setErrorMessage('');
+      } else {
+        const errorData = await response.json();
+        setErrorMessage(errorData.message || 'Failed to register');
+      }
+    } catch (error) {
+      setErrorMessage('An error occurred while trying to register');
     }
   };
 
@@ -373,7 +437,7 @@ const LoginForm: React.FC = () => {
       <Container rightPanelActive={rightPanelActive}>
         {/* Registro */}
         <div className="form-container sign-up-container">
-          <Form>
+          <Form onSubmit={handleRegister}>
             <Title>Create Account</Title>
             <SocialContainer>
               <SocialLink href="#"><FaFacebookF /></SocialLink>
@@ -381,10 +445,38 @@ const LoginForm: React.FC = () => {
               <SocialLink href="#"><FaLinkedinIn /></SocialLink>
             </SocialContainer>
             <Span>or use your email for registration</Span>
-            <Input type="text" placeholder="Name" />
-            <Input type="email" placeholder="Email" />
-            <Input type="password" placeholder="Password" />
-            <Button>Sign Up</Button>
+            {/* Campos de registro */}
+            <Input
+              type="text"
+              placeholder="Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+            <Input
+              type="text"
+              placeholder="Phone"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              required
+            />
+            <Input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <Button type="submit">Sign Up</Button>
+            {registerMessage && <p style={{ color: 'green' }}>{registerMessage}</p>}
+            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
           </Form>
         </div>
 
@@ -398,7 +490,6 @@ const LoginForm: React.FC = () => {
               <SocialLink href="#"><FaLinkedinIn /></SocialLink>
             </SocialContainer>
             <Span>or use your account</Span>
-            {/* Inputs de email y contraseña */}
             <Input
               type="email"
               placeholder="Email"

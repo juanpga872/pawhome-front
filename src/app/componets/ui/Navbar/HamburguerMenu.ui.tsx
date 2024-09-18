@@ -42,18 +42,7 @@ const fadeOut = keyframes`
 `;
 
 // Styles
-const Overlay = styled.div<{ isOpen: boolean }>`
-  display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 10;
-  animation: ${({ isOpen }) => (isOpen ? fadeIn : fadeOut)} 0.3s ease-in-out;
-  transition: opacity 0.3s ease-in-out;
-`;
+
 
 const MenuWrapper = styled.div<{ isOpen: boolean }>`
   position: fixed;
@@ -66,7 +55,7 @@ const MenuWrapper = styled.div<{ isOpen: boolean }>`
   transform: translateX(${({ isOpen }) => (isOpen ? '0' : '-100%')});
   transition: transform 0.3s ease-in-out;
   animation: ${({ isOpen }) => (isOpen ? slideIn : slideOut)} 0.3s ease-in-out;
-  z-index: 20;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   padding: 16px;
@@ -164,7 +153,6 @@ const App: React.FC = () => {
   return (
     <div>
       <HamburgerMenu onClick={() => setIsMenuOpen(!isMenuOpen)} />
-      <Overlay isOpen={isMenuOpen} />
       <MenuWrapper isOpen={isMenuOpen} onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={() => setIsMenuOpen(false)}>&#10005;</CloseButton>
         <MenuItems>

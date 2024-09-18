@@ -25,7 +25,6 @@ const Container = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5); /* Capa semitransparente */
   }
 
   video {
@@ -44,7 +43,6 @@ const Title = styled.h1`
   font-weight: bold;
   margin-bottom: 1.5rem;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  z-index: 1;
 
   @media (max-width: 768px) {
     font-size: 2rem;
@@ -55,7 +53,6 @@ const Title = styled.h1`
 const Subtitle = styled.p`
   font-size: 1.5rem;
   margin-bottom: 2rem;
-  z-index: 1;
 
   @media (max-width: 768px) {
     font-size: 1.2rem;
@@ -68,8 +65,7 @@ const DonateOptions = styled.div`
   flex-wrap: wrap;
   gap: 1rem;
   justify-content: center;
-  z-index: 1;
-
+  
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -86,7 +82,7 @@ const Button = styled.button`
   cursor: pointer;
   transition: background-color 0.3s ease;
   font-size: 1rem;
-  z-index: 1;
+  
 
   &:hover {
     background-color: #ff5287;
@@ -103,7 +99,7 @@ const ContactInfo = styled.div`
   flex-direction: column;
   gap: 1rem;
   margin-bottom: 2rem;
-  z-index: 1;
+  
 
   @media (max-width: 768px) {
     margin-bottom: 1.5rem;
@@ -115,7 +111,7 @@ const ContactItem = styled.div`
   align-items: center;
   gap: 0.5rem;
   font-size: 1rem;
-  z-index: 1;
+  
 
   @media (max-width: 768px) {
     font-size: 0.9rem;
