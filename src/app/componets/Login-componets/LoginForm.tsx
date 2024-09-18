@@ -239,9 +239,8 @@ const Button = styled.button<{ $ghost?: boolean }>`
 `;
 
 const ToggleButton = styled(Button)`
-  display: none; /* Hidden by default */
   position: absolute;
-  bottom: 20px; /* Adjust as needed */
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
   background-color: #FF416C;
@@ -251,7 +250,12 @@ const ToggleButton = styled(Button)`
   margin: 0;
 
   @media (max-width: 768px) {
-    display: block; /* Visible only on small screens */
+    display: block; /* Mantener visible solo en pantallas pequeñas */
+  }
+
+  /* Hacerlo visible siempre */
+  @media (min-width: 768px) {
+    display: block; /* O cambiar a 'none' si quieres ocultarlo en pantallas grandes */
   }
 `;
 
@@ -322,16 +326,11 @@ const LoginForm: React.FC = () => {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  const handleGoHome = () => {
-    window.location.href = '/'; 
-  };
-
   // Función que maneja el inicio de sesión
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
   
     try {
-      // Solicitud POST para el login usando fetch
       const response = await fetch('https://powhome.azurewebsites.net/api/Auth/login', {
         method: 'POST',
         headers: {
@@ -371,22 +370,35 @@ const LoginForm: React.FC = () => {
   return (
     <>
       <GlobalStyle />
-      <StyledIcon rightPanelActive={rightPanelActive} onClick={handleGoHome} />
       <Container rightPanelActive={rightPanelActive}>
+        {/* Registro */}
         <div className="form-container sign-up-container">
           <Form>
             <Title>Create Account</Title>
+            <SocialContainer>
+              <SocialLink href="#"><FaFacebookF /></SocialLink>
+              <SocialLink href="#"><FaGooglePlusG /></SocialLink>
+              <SocialLink href="#"><FaLinkedinIn /></SocialLink>
+            </SocialContainer>
+            <Span>or use your email for registration</Span>
+            <Input type="text" placeholder="Name" />
+            <Input type="email" placeholder="Email" />
+            <Input type="password" placeholder="Password" />
+            <Button>Sign Up</Button>
           </Form>
         </div>
+
+        {/* Iniciar sesión */}
         <div className="form-container sign-in-container">
           <Form onSubmit={handleSignIn}>
-            <Title>Sign In</Title>
+            <Title>Sign in</Title>
             <SocialContainer>
               <SocialLink href="#"><FaFacebookF /></SocialLink>
               <SocialLink href="#"><FaGooglePlusG /></SocialLink>
               <SocialLink href="#"><FaLinkedinIn /></SocialLink>
             </SocialContainer>
             <Span>or use your account</Span>
+            {/* Inputs de email y contraseña */}
             <Input
               type="email"
               placeholder="Email"
@@ -399,16 +411,27 @@ const LoginForm: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
             <Anchor href="#">Forgot your password?</Anchor>
             <Button type="submit">Sign In</Button>
+            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
           </Form>
         </div>
+
+        {/* Paneles de Overlay */}
         <div className="overlay-container">
+          <div className="overlay">
+            <div className="overlay-panel overlay-left">
+              <Title>Welcome Back!</Title>
+              <Paragraph>To keep connected with us please login with your personal info</Paragraph>
+              <Button onClick={() => setRightPanelActive(false)}>Sign In</Button>
+            </div>
+            <div className="overlay-panel overlay-right">
+              <Title>Hello, Friend!</Title>
+              <Paragraph>Enter your personal details and start your journey with us</Paragraph>
+              <Button onClick={() => setRightPanelActive(true)}>Sign Up</Button>
+            </div>
+          </div>
         </div>
-        <ToggleButton $ghost onClick={toggleForm}>
-          {rightPanelActive ? 'Sign In' : 'Sign Up'}
-        </ToggleButton>
       </Container>
     </>
   );
