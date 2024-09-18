@@ -2,8 +2,16 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import TypeSelector from '@/app/componets/typeselector/typeselector';
 import CartComponent from '@/app/componets/cartIcon/cart.components';
+import Image from 'next/image';
 
 // Styled components
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+`;
+
 const Card = styled.div`
   width: 16rem;
   padding: 1rem;
@@ -91,7 +99,39 @@ const ProductGrid = styled.div`
   margin: 2rem 0;
 `;
 
-// Types
+const SearchBar = styled.input`
+  padding: 0.75rem;
+  margin: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  width: 300px;
+  max-width: 100%;
+
+  @media (min-width: 768px) {
+    width: 400px;
+  }
+`;
+
+const SearchContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
+`;
+
+const Notification = styled.div<{ isVisible: boolean }>`
+  display: ${({ isVisible }) => (isVisible ? 'flex' : 'none')};
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #4caf50;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.3s ease;
+`;
+
 interface Product {
   id: number;
   name: string;
@@ -99,6 +139,8 @@ interface Product {
   description: string;
   weightKG: number;
   quantity: number;
+  typeOfProduct: boolean; 
+  imagePath: string; 
 }
 
 interface CartItem {
@@ -108,16 +150,20 @@ interface CartItem {
   description: string;
   weight: number;
   quantity: number;
+  typeOfProduct: boolean; 
+  imagePath: string; 
 }
 
 const ProductPage: React.FC = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [productType, setProductType] = useState<'dog' | 'cat' | 'all'>('all');
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedWeight, setSelectedWeight] = useState<{ [key: string]: number }>({});
   const [products, setProducts] = useState<Product[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [notificationVisible, setNotificationVisible] = useState(false);
+  const [notificationProduct, setNotificationProduct] = useState<CartItem | null>(null);
 
-  // Fetch products from the API
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -144,15 +190,20 @@ const ProductPage: React.FC = () => {
     const newItem: CartItem = {
       ...product,
       id: Date.now(),
-      quantity: 1
+      quantity: 1,
     };
     setCart(prevCart => [...prevCart, newItem]);
+    setNotificationProduct(newItem); // Guardar el producto agregado
+    setNotificationVisible(true); // Mostrar el mensaje de confirmación
+    setTimeout(() => {
+      setNotificationVisible(false); // Ocultar el mensaje después de 3 segundos
+    }, 3000);
   };
 
   const handleWeightSelect = (productName: string, weight: number) => {
     setSelectedWeight(prevState => ({
       ...prevState,
-      [productName]: weight
+      [productName]: weight,
     }));
   };
 
@@ -173,6 +224,14 @@ const ProductPage: React.FC = () => {
     });
   };
 
+  const filteredProducts = products.filter(product => {
+    const matchesType = productType === 'all' ||
+      (productType === 'dog' && product.typeOfProduct) ||
+      (productType === 'cat' && !product.typeOfProduct);
+    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesType && matchesSearch;
+  });
+
   return (
     <>
       {error && <div>{error}</div>}
@@ -181,23 +240,32 @@ const ProductPage: React.FC = () => {
         onRemoveItem={handleRemoveFromCart}
         onUpdateQuantity={handleUpdateQuantity}
       />
-      <TypeSelector onTypeChange={setProductType} />
-      <ProductGrid>
-        {products
-          .filter(product => 
-            productType === 'all' ||
-            (productType === 'dog' && product.name.toLowerCase().includes('dog')) ||
-            (productType === 'cat' && product.name.toLowerCase().includes('cat'))
-          )
-          .map((product) => {
+      <Container>
+        <SearchContainer>
+          <TypeSelector onTypeChange={setProductType} />
+          <SearchBar 
+            type="text" 
+            placeholder="Buscar producto..." 
+            value={searchTerm} 
+            onChange={e => setSearchTerm(e.target.value)} 
+          />
+        </SearchContainer>
+        <ProductGrid>
+          {filteredProducts.map(product => {
             const selectedWeightValue = selectedWeight[product.name] || product.weightKG;
-            const productPrice = product.price;
 
             return (
               <Card key={product.id}>
+                <Image 
+                  src={product.imagePath.startsWith('/') ? product.imagePath : `/${product.imagePath}`} 
+                  alt={product.name}
+                  width={400} 
+                  height={300} 
+                  layout="responsive" 
+                />
                 <ProductName>{product.name}</ProductName>
                 <PriceContainer>
-                  <DiscountedPrice>${productPrice.toLocaleString()}</DiscountedPrice>
+                  <DiscountedPrice>${product.price.toLocaleString()}</DiscountedPrice>
                   <OriginalPrice>${product.price.toLocaleString()}</OriginalPrice>
                 </PriceContainer>
                 <WeightSelector>
@@ -212,14 +280,21 @@ const ProductPage: React.FC = () => {
                   name: product.name, 
                   price: product.price, 
                   description: product.description, 
-                  weight: product.weightKG 
+                  weight: product.weightKG, 
+                  imagePath: product.imagePath,
+                  typeOfProduct: product.typeOfProduct 
                 })}>
-                  Add to Cart
+                  Añadir al Carrito
                 </AddToCartButton>
               </Card>
             );
           })}
-      </ProductGrid>
+        </ProductGrid>
+      </Container>
+      
+      <Notification isVisible={notificationVisible}>
+        Producto agregado: {notificationProduct?.name}
+      </Notification>
     </>
   );
 };
