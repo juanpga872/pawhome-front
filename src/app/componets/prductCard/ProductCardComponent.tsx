@@ -1,17 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import TypeSelector from '@/app/componets/typeselector/typeselector';
-import CartComponent from '@/app/componets/cartIcon/cart.components';
-import Image from 'next/image';
+import CartComponent, { CartItemType } from '@/app/componets/cartIcon/cart.components';
 
 // Styled components
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2rem;
-`;
-
 const Card = styled.div`
   width: 16rem;
   padding: 1rem;
@@ -92,44 +84,24 @@ const AddToCartButton = styled.button`
   }
 `;
 
+const ProductImage = styled.img`
+  width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+`;
+
+const Description = styled.p`
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 1rem;
+`;
+
 const ProductGrid = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   margin: 2rem 0;
-`;
-
-const SearchBar = styled.input`
-  padding: 0.75rem;
-  margin: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 0.5rem;
-  width: 300px;
-  max-width: 100%;
-
-  @media (min-width: 768px) {
-    width: 400px;
-  }
-`;
-
-const SearchContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 1rem;
-`;
-
-const Notification = styled.div<{ isVisible: boolean }>`
-  display: ${({ isVisible }) => (isVisible ? 'flex' : 'none')};
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #4caf50;
-  color: white;
-  padding: 10px;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  transition: opacity 0.3s ease;
 `;
 
 interface Product {
@@ -138,66 +110,60 @@ interface Product {
   price: number;
   description: string;
   weightKG: number;
-  quantity: number;
-  typeOfProduct: boolean; 
-  imagePath: string; 
-}
-
-interface CartItem {
-  id: number;
-  name: string;
-  price: number;
-  description: string;
-  weight: number;
-  quantity: number;
-  typeOfProduct: boolean; 
-  imagePath: string; 
+  imagePath: string;
+  isDog: boolean; // Campo para indicar si es un perro
 }
 
 const ProductPage: React.FC = () => {
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cart, setCart] = useState<CartItemType[]>([]);
   const [productType, setProductType] = useState<'dog' | 'cat' | 'all'>('all');
-  const [searchTerm, setSearchTerm] = useState('');
   const [selectedWeight, setSelectedWeight] = useState<{ [key: string]: number }>({});
   const [products, setProducts] = useState<Product[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [notificationVisible, setNotificationVisible] = useState(false);
-  const [notificationProduct, setNotificationProduct] = useState<CartItem | null>(null);
+
+  // Fetch products from the API
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch('https://powhome.azurewebsites.net/api/v1/Products');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data: any[] = await response.json();
+
+      const transformedData = data.map(product => ({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        description: product.description,
+        weightKG: product.weightKG,
+        imagePath: product.imagePath,
+        isDog: product.typeOfProduct === true // Ajuste aquí
+      }));
+
+      setProducts(transformedData);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      setError('Error al obtener los productos');
+    }
+  };
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch('https://powhome.azurewebsites.net/api/v1/Products', {
-          method: 'GET',
-        });
-
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-        const data: Product[] = await response.json();
-        setProducts(data);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-        setError('Error al obtener los productos');
-      }
-    };
-
     fetchProducts();
+
+    const intervalId = setInterval(() => {
+      fetchProducts();
+    }, 5000);
+
+    return () => clearInterval(intervalId); // Cleanup interval on unmount
   }, []);
 
-  const handleAddToCart = (product: Omit<CartItem, 'id' | 'quantity'>) => {
-    const newItem: CartItem = {
+  const handleAddToCart = (product: Omit<CartItemType, 'id'>) => {
+    const newItem: CartItemType = {
       ...product,
       id: Date.now(),
       quantity: 1,
     };
     setCart(prevCart => [...prevCart, newItem]);
-    setNotificationProduct(newItem); // Guardar el producto agregado
-    setNotificationVisible(true); // Mostrar el mensaje de confirmación
-    setTimeout(() => {
-      setNotificationVisible(false); // Ocultar el mensaje después de 3 segundos
-    }, 3000);
   };
 
   const handleWeightSelect = (productName: string, weight: number) => {
@@ -211,26 +177,20 @@ const ProductPage: React.FC = () => {
     setCart(prevCart => prevCart.filter((_, i) => i !== index));
   };
 
-  const handleUpdateQuantity = (index: number, delta: number) => {
+  const handleUpdateQuantity = (id: number, newQuantity: number) => {
     setCart(prevCart => {
       const newCart = [...prevCart];
-      const newQuantity = newCart[index].quantity + delta;
-      if (newQuantity <= 0) {
-        newCart.splice(index, 1);
-      } else {
-        newCart[index].quantity = newQuantity;
+      const index = newCart.findIndex(item => item.id === id);
+      if (index > -1) {
+        if (newQuantity <= 0) {
+          newCart.splice(index, 1);
+        } else {
+          newCart[index].quantity = newQuantity;
+        }
       }
       return newCart;
     });
   };
-
-  const filteredProducts = products.filter(product => {
-    const matchesType = productType === 'all' ||
-      (productType === 'dog' && product.typeOfProduct) ||
-      (productType === 'cat' && !product.typeOfProduct);
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesType && matchesSearch;
-  });
 
   return (
     <>
@@ -240,34 +200,26 @@ const ProductPage: React.FC = () => {
         onRemoveItem={handleRemoveFromCart}
         onUpdateQuantity={handleUpdateQuantity}
       />
-      <Container>
-        <SearchContainer>
-          <TypeSelector onTypeChange={setProductType} />
-          <SearchBar 
-            type="text" 
-            placeholder="Buscar producto..." 
-            value={searchTerm} 
-            onChange={e => setSearchTerm(e.target.value)} 
-          />
-        </SearchContainer>
-        <ProductGrid>
-          {filteredProducts.map(product => {
+      <TypeSelector onTypeChange={setProductType} />
+      <ProductGrid>
+        {products
+          .filter(product =>
+            productType === 'all' ||
+            (productType === 'dog' && product.isDog) ||
+            (productType === 'cat' && !product.isDog)
+          )
+          .map((product) => {
             const selectedWeightValue = selectedWeight[product.name] || product.weightKG;
 
             return (
               <Card key={product.id}>
-                <Image 
-                  src={product.imagePath.startsWith('/') ? product.imagePath : `/${product.imagePath}`} 
-                  alt={product.name}
-                  width={400} 
-                  height={300} 
-                  layout="responsive" 
-                />
+                <ProductImage src={product.imagePath} alt={product.name} />
                 <ProductName>{product.name}</ProductName>
                 <PriceContainer>
                   <DiscountedPrice>${product.price.toLocaleString()}</DiscountedPrice>
                   <OriginalPrice>${product.price.toLocaleString()}</OriginalPrice>
                 </PriceContainer>
+                <Description>{product.description}</Description>
                 <WeightSelector>
                   <WeightButton
                     selected={selectedWeightValue === product.weightKG}
@@ -276,25 +228,19 @@ const ProductPage: React.FC = () => {
                     {product.weightKG} KG
                   </WeightButton>
                 </WeightSelector>
-                <AddToCartButton onClick={() => handleAddToCart({ 
-                  name: product.name, 
-                  price: product.price, 
-                  description: product.description, 
-                  weight: product.weightKG, 
+                <AddToCartButton onClick={() => handleAddToCart({
+                  name: product.name,
+                  price: product.price,
+                  weight: selectedWeightValue,
+                  quantity: 1,
                   imagePath: product.imagePath,
-                  typeOfProduct: product.typeOfProduct 
                 })}>
-                  Añadir al Carrito
+                  Add to Cart
                 </AddToCartButton>
               </Card>
             );
           })}
-        </ProductGrid>
-      </Container>
-      
-      <Notification isVisible={notificationVisible}>
-        Producto agregado: {notificationProduct?.name}
-      </Notification>
+      </ProductGrid>
     </>
   );
 };
