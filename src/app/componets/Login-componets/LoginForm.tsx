@@ -323,76 +323,85 @@ const Footer = styled.footer`
   }
 `; 
 
-const LoginForm: React.FC = () => {
-  const [rightPanelActive, setRightPanelActive] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [isAdmin, setIsAdmin] = useState(false); // Estado para controlar si el usuario es admin
-  const [errorMessage, setErrorMessage] = useState('');
-  const [registerMessage, setRegisterMessage] = useState('');
 
-  // Función para manejar el login
+  interface DecodedToken {
+    sub: string;
+    role: string;
+  }
+  
+  const LoginForm: React.FC = () => {
+    const [rightPanelActive, setRightPanelActive] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
+    const [phone, setPhone] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [registerMessage, setRegisterMessage] = useState('');
 
-  const decodeBase64 = (str: string) => {
-    // Decodifica la cadena en Base64 y la convierte en una cadena de texto
-    return Buffer.from(str, 'base64').toString('utf8');
-  };
-  
-  const parseJwt = (token: string) => {
-    // Divide el token en sus tres partes
-    const parts = token.split('.');
-    
-    if (parts.length !== 3) {
-      throw new Error('Invalid JWT token');
-    }
-  
-    // Decodifica la parte del payload (segunda parte del token)
-    const payload = parts[1];
-    return JSON.parse(decodeBase64(payload));
-  };
-  
-  const handleSignIn = async (e: React.FormEvent) => {
-    e.preventDefault();
-  
-    try {
-      const response = await fetch('https://powhome.azurewebsites.net/api/Auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-  
-      if (response.ok) {
-        const data = await response.json();
-        const { token } = data;
-  
-        // Decodifica el token manualmente
-        const decodedToken = parseJwt(token);
-  
-        // Extrae la propiedad isAdmin del token decodificado
-        const { isAdmin } = decodedToken;
-  
-        // Guarda el token en localStorage
-        localStorage.setItem('token', token);
-  
-        // Verifica si el usuario es admin y redirige a la página correspondiente
-        if (!isAdmin) {
-          window.location.href = '/admin';
-        } else {
-          window.location.href = '/';
-        }
-      } else {
-        const errorData = await response.json();
-        setErrorMessage(errorData.message || 'Invalid email or password');
+
+    const decodeJwtToken = (token: string) => {
+      try {
+        // Divide el token en sus partes
+        const base64Url = token.split('.')[1];
+        // Reemplaza caracteres especiales
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        // Decodifica base64 a una cadena JSON
+        const jsonPayload = decodeURIComponent(
+          atob(base64)
+            .split('')
+            .map(function (c) {
+              return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            })
+            .join('')
+        );
+        // Parsear JSON y devolver
+        return JSON.parse(jsonPayload);
+      } catch (error) {
+        console.error('Error decoding JWT:', error);
+        return null;
       }
-    } catch (error) {
-      console.error('Error during sign-in:', error);
-      setErrorMessage('An error occurred while trying to sign in');
-    }
-  };
+    };
+  
+    // Función para manejar el login
+    const handleSignIn = async (e: React.FormEvent) => {
+      e.preventDefault();
+    
+      try {
+        const response = await axios.post('https://powhome.azurewebsites.net/api/Auth/login', {
+          email,
+          password
+        });
+    
+        if (response.status === 200) {
+          const { token } = response.data;
+    
+          const decodedToken = decodeJwtToken(token);
+          if (decodedToken) {
+            const { sub: userEmail, role } = decodedToken;
+    
+            // Store token in localStorage
+            localStorage.setItem('token', token);
+    
+            if (role === 'Admin') {
+              // Store email if the user is an admin
+              localStorage.setItem('adminEmail', userEmail);
+              window.location.href = '/admin';
+            } else {
+              window.location.href = '/';
+            }
+          } else {
+            setErrorMessage('Invalid token');
+          }
+        } else {
+          setErrorMessage('Invalid email or password');
+        }
+      } catch (error) {
+        console.error('Error during sign-in:', error);
+        setErrorMessage('An error occurred while trying to sign in');
+      }
+    };
+    
+  
 
   // Función para manejar el registro
   const handleRegister = async (e: React.FormEvent) => {
@@ -405,12 +414,11 @@ const LoginForm: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          id: 
           name,
           phone,
           email,
           password,
-          isAdmin, 
+          isAdmin: false, // Aquí debes manejar la lógica de si el usuario debe ser admin
         }),
       });
 
