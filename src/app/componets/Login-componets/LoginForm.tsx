@@ -1,10 +1,10 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import styled, { createGlobalStyle, keyframes } from 'styled-components';
-import { FaFacebookF, FaGooglePlusG, FaLinkedinIn, FaArrowLeft } from 'react-icons/fa';
+import { FaFacebookF, FaGooglePlusG, FaArrowLeft } from 'react-icons/fa';
 import jwtDecode from 'jwt-decode';
-
-
+import LoginButton from './buttonGoogle'; // Asegúrate de tener el botón de Google
+import FacebookLoginButton from './buttonfacebook'; // Asegúrate de crear un botón para Facebook
 
 const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
@@ -67,7 +67,7 @@ const StyledIcon = styled(FaArrowLeft)<{ rightPanelActive: boolean }>`
   font-size: 24px;
   position: absolute;
   top: 20px;
-  left: 20px;  /* Cambiado de 'right' a 'left' */
+  left: 20px; 
   cursor: pointer;
   z-index: 1100;
   transition: transform 0.3s ease;
@@ -251,15 +251,6 @@ const ToggleButton = styled(Button)`
   border: none;
   z-index: 1000;
   margin: 0;
-
-  @media (max-width: 768px) {
-    display: block; /* Mantener visible solo en pantallas pequeñas */
-  }
-
-  /* Hacerlo visible siempre */
-  @media (min-width: 768px) {
-    display: block; /* O cambiar a 'none' si quieres ocultarlo en pantallas grandes */
-  }
 `;
 
 const Form = styled.form`
@@ -288,6 +279,10 @@ const Input = styled.input`
 
 const SocialContainer = styled.div`
   margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap:2rem
 `;
 
 const SocialLink = styled.a`
@@ -329,30 +324,10 @@ const LoginForm: React.FC = () => {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
-  const [isAdmin, setIsAdmin] = useState(false); // Estado para controlar si el usuario es admin
+  const [isAdmin, setIsAdmin] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [registerMessage, setRegisterMessage] = useState('');
 
-  // Función para manejar el login
-
-  const decodeBase64 = (str: string) => {
-    // Decodifica la cadena en Base64 y la convierte en una cadena de texto
-    return Buffer.from(str, 'base64').toString('utf8');
-  };
-  
-  const parseJwt = (token: string) => {
-    // Divide el token en sus tres partes
-    const parts = token.split('.');
-    
-    if (parts.length !== 3) {
-      throw new Error('Invalid JWT token');
-    }
-  
-    // Decodifica la parte del payload (segunda parte del token)
-    const payload = parts[1];
-    return JSON.parse(decodeBase64(payload));
-  };
-  
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
   
@@ -368,17 +343,11 @@ const LoginForm: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         const { token } = data;
-  
-        // Decodifica el token manualmente
         const decodedToken = parseJwt(token);
-  
-        // Extrae la propiedad isAdmin del token decodificado
         const { isAdmin } = decodedToken;
-  
-        // Guarda el token en localStorage
+
         localStorage.setItem('token', token);
   
-        // Verifica si el usuario es admin y redirige a la página correspondiente
         if (!isAdmin) {
           window.location.href = '/admin';
         } else {
@@ -394,7 +363,6 @@ const LoginForm: React.FC = () => {
     }
   };
 
-  // Función para manejar el registro
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -405,17 +373,15 @@ const LoginForm: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          id: 
           name,
           phone,
           email,
           password,
-          isAdmin, 
+          isAdmin,
         }),
       });
 
       if (response.ok) {
-        const data = await response.json();
         setRegisterMessage('Registration successful! Please log in.');
         setErrorMessage('');
       } else {
@@ -427,6 +393,19 @@ const LoginForm: React.FC = () => {
     }
   };
 
+  const parseJwt = (token: string) => {
+    const parts = token.split('.');
+    if (parts.length !== 3) {
+      throw new Error('Invalid JWT token');
+    }
+    const payload = parts[1];
+    return JSON.parse(decodeBase64(payload));
+  };
+
+  const decodeBase64 = (str: string) => {
+    return Buffer.from(str, 'base64').toString('utf8');
+  };
+
   const toggleForm = () => {
     setRightPanelActive(!rightPanelActive);
   };
@@ -435,80 +414,40 @@ const LoginForm: React.FC = () => {
     <>
       <GlobalStyle />
       <Container rightPanelActive={rightPanelActive}>
-        {/* Registro */}
         <div className="form-container sign-up-container">
           <Form onSubmit={handleRegister}>
             <Title>Create Account</Title>
             <SocialContainer>
-              <SocialLink href="#"><FaFacebookF /></SocialLink>
-              <SocialLink href="#"><FaGooglePlusG /></SocialLink>
-              <SocialLink href="#"><FaLinkedinIn /></SocialLink>
+              <LoginButton />
+              <FacebookLoginButton /> {/* Asegúrate de tener un botón para Facebook */}
             </SocialContainer>
             <Span>or use your email for registration</Span>
-            {/* Campos de registro */}
-            <Input
-              type="text"
-              placeholder="Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-            <Input
-              type="text"
-              placeholder="Phone"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              required
-            />
-            <Input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <Input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <Input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
+            <Input type="text" placeholder="Phone" value={phone} onChange={(e) => setPhone(e.target.value)} required />
+            <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
             <Button type="submit">Sign Up</Button>
             {registerMessage && <p style={{ color: 'green' }}>{registerMessage}</p>}
             {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
           </Form>
         </div>
 
-        {/* Iniciar sesión */}
         <div className="form-container sign-in-container">
           <Form onSubmit={handleSignIn}>
             <Title>Sign in</Title>
             <SocialContainer>
-              <SocialLink href="#"><FaFacebookF /></SocialLink>
-              <SocialLink href="#"><FaGooglePlusG /></SocialLink>
-              <SocialLink href="#"><FaLinkedinIn /></SocialLink>
+              <LoginButton />
+              <FacebookLoginButton /> 
             </SocialContainer>
             <Span>or use your account</Span>
-            <Input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <Input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
             <Anchor href="#">Forgot your password?</Anchor>
             <Button type="submit">Sign In</Button>
             {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
           </Form>
         </div>
 
-        {/* Paneles de Overlay */}
         <div className="overlay-container">
           <div className="overlay">
             <div className="overlay-panel overlay-left">
@@ -529,4 +468,3 @@ const LoginForm: React.FC = () => {
 };
 
 export default LoginForm;
-
