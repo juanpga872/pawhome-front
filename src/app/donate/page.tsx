@@ -12,6 +12,7 @@ import Donations from '../componets/donationsCarpet/donationseccion';
 import ApadrinaUnPerrito from '../componets/donationsCarpet/apadrinar';
 import RightsAndDuties from '../componets/donationsCarpet/derechosYdeberes'; // Import the RightsAndDuties component
 import PlanPage from '../componets/donationsCarpet/plans';
+import DonationComponent from '@/app/componets/donationsCarpet/payu'
 
 const DonationSection = styled.section`
   position: relative; /* Establece el contexto para el video */
@@ -84,6 +85,7 @@ export default function Donate() {
 
           <DonationPage />
           <Donations />
+          <DonationComponent/>
           <ApadrinaUnPerrito />
           <RightsAndDuties /> 
           <PlanPage/> 
