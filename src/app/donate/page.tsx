@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -13,14 +14,20 @@ import RightsAndDuties from '../componets/donationsCarpet/derechosYdeberes'; // 
 import PlanPage from '../componets/donationsCarpet/plans';
 
 const DonationSection = styled.section`
+  position: relative; /* Establece el contexto para el video */
   padding: 50px 20px;
   background-color: #e9ecef;
   text-align: center;
+  overflow: hidden; /* Asegura que el video no se salga de los bordes */
+  z-index: -1;
 `;
 
 const SectionTitle = styled.h2`
   font-size: 2.5rem;
   margin-bottom: 20px;
+  color: white; /* El color blanco para que el texto sea visible sobre el video */
+  position: relative;
+  z-index: 1; /* Eleva el título por encima del video */
 `;
 
 const CardsContainer = styled.div`
@@ -28,6 +35,8 @@ const CardsContainer = styled.div`
   flex-wrap: wrap;
   justify-content: center;
   gap: 20px;
+  position: relative;
+  z-index: 1; /* Asegúrate de que las tarjetas estén sobre el video */
 `;
 
 const DonateButton = styled.button`
@@ -38,6 +47,8 @@ const DonateButton = styled.button`
   border: none;
   cursor: pointer;
   border-radius: 5px;
+  position: relative;
+  z-index: 1; /* Botón también por encima del video */
 
   &:hover {
     background-color: #FF69B4;
@@ -61,7 +72,7 @@ export default function Donate() {
       setLoading(false);
     }, 2000);
 
-    return () => clearTimeout(timer); // Clean up the timer if the component unmounts
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -70,6 +81,7 @@ export default function Donate() {
         <PawPrintLoader />
       ) : (
         <div>
+
           <DonationPage />
           <Donations />
           <ApadrinaUnPerrito />

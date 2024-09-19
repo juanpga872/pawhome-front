@@ -2,6 +2,9 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import styled, { createGlobalStyle, keyframes } from 'styled-components';
 import { FaFacebookF, FaGooglePlusG, FaLinkedinIn, FaArrowLeft } from 'react-icons/fa';
+import jwtDecode from 'jwt-decode';
+
+
 
 const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
@@ -239,9 +242,8 @@ const Button = styled.button<{ $ghost?: boolean }>`
 `;
 
 const ToggleButton = styled(Button)`
-  display: none; /* Hidden by default */
   position: absolute;
-  bottom: 20px; /* Adjust as needed */
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
   background-color: #FF416C;
@@ -251,7 +253,12 @@ const ToggleButton = styled(Button)`
   margin: 0;
 
   @media (max-width: 768px) {
-    display: block; /* Visible only on small screens */
+    display: block; /* Mantener visible solo en pantallas pequeñas */
+  }
+
+  /* Hacerlo visible siempre */
+  @media (min-width: 768px) {
+    display: block; /* O cambiar a 'none' si quieres ocultarlo en pantallas grandes */
   }
 `;
 
@@ -316,51 +323,115 @@ const Footer = styled.footer`
   }
 `; 
 
-const LoginForm: React.FC = () => {
-  const [rightPanelActive, setRightPanelActive] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleGoHome = () => {
-    window.location.href = '/'; 
-  };
-
-  // Función que maneja el inicio de sesión
-  const handleSignIn = async (e: React.FormEvent) => {
-    e.preventDefault();
+  interface DecodedToken {
+    sub: string;
+    role: string;
+  }
   
+  const LoginForm: React.FC = () => {
+    const [rightPanelActive, setRightPanelActive] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
+    const [phone, setPhone] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [registerMessage, setRegisterMessage] = useState('');
+
+
+    const decodeJwtToken = (token: string) => {
+      try {
+        // Divide el token en sus partes
+        const base64Url = token.split('.')[1];
+        // Reemplaza caracteres especiales
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        // Decodifica base64 a una cadena JSON
+        const jsonPayload = decodeURIComponent(
+          atob(base64)
+            .split('')
+            .map(function (c) {
+              return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            })
+            .join('')
+        );
+        // Parsear JSON y devolver
+        return JSON.parse(jsonPayload);
+      } catch (error) {
+        console.error('Error decoding JWT:', error);
+        return null;
+      }
+    };
+  
+    // Función para manejar el login
+    const handleSignIn = async (e: React.FormEvent) => {
+      e.preventDefault();
+    
+      try {
+        const response = await axios.post('https://powhome.azurewebsites.net/api/Auth/login', {
+          email,
+          password
+        });
+    
+        if (response.status === 200) {
+          const { token } = response.data;
+    
+          const decodedToken = decodeJwtToken(token);
+          if (decodedToken) {
+            const { sub: userEmail, role } = decodedToken;
+    
+            // Store token in localStorage
+            localStorage.setItem('token', token);
+    
+            if (role === 'Admin') {
+              // Store email if the user is an admin
+              localStorage.setItem('adminEmail', userEmail);
+              window.location.href = '/admin';
+            } else {
+              window.location.href = '/';
+            }
+          } else {
+            setErrorMessage('Invalid token');
+          }
+        } else {
+          setErrorMessage('Invalid email or password');
+        }
+      } catch (error) {
+        console.error('Error during sign-in:', error);
+        setErrorMessage('An error occurred while trying to sign in');
+      }
+    };
+    
+  
+
+  // Función para manejar el registro
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+
     try {
-      // Solicitud POST para el login usando fetch
-      const response = await fetch('https://powhome.azurewebsites.net/api/Auth/login', {
+      const response = await fetch('https://powhome.azurewebsites.net/api/v1/Users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          name,
+          phone,
           email,
           password,
+          isAdmin: false, // Aquí debes manejar la lógica de si el usuario debe ser admin
         }),
       });
-  
-      // Verificar si la respuesta fue exitosa
+
       if (response.ok) {
         const data = await response.json();
-        const { token } = data;
-  
-        // Guarda el token en localStorage
-        localStorage.setItem('token', token);
-        console.log('Token saved:', token);
-        // Redirige a la página principal o dashboard
-        window.location.href = '/';
+        setRegisterMessage('Registration successful! Please log in.');
+        setErrorMessage('');
       } else {
-        // Manejo de errores basado en el código de estado
         const errorData = await response.json();
-        setErrorMessage(errorData.message || 'Invalid email or password');
+        setErrorMessage(errorData.message || 'Failed to register');
       }
     } catch (error) {
-      // Manejo de errores de red
-      setErrorMessage('An error occurred while trying to sign in');
+      setErrorMessage('An error occurred while trying to register');
     }
   };
 
@@ -371,16 +442,56 @@ const LoginForm: React.FC = () => {
   return (
     <>
       <GlobalStyle />
-      <StyledIcon rightPanelActive={rightPanelActive} onClick={handleGoHome} />
       <Container rightPanelActive={rightPanelActive}>
+        {/* Registro */}
         <div className="form-container sign-up-container">
-          <Form>
+          <Form onSubmit={handleRegister}>
             <Title>Create Account</Title>
+            <SocialContainer>
+              <SocialLink href="#"><FaFacebookF /></SocialLink>
+              <SocialLink href="#"><FaGooglePlusG /></SocialLink>
+              <SocialLink href="#"><FaLinkedinIn /></SocialLink>
+            </SocialContainer>
+            <Span>or use your email for registration</Span>
+            {/* Campos de registro */}
+            <Input
+              type="text"
+              placeholder="Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+            <Input
+              type="text"
+              placeholder="Phone"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              required
+            />
+            <Input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <Button type="submit">Sign Up</Button>
+            {registerMessage && <p style={{ color: 'green' }}>{registerMessage}</p>}
+            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
           </Form>
         </div>
+
+        {/* Iniciar sesión */}
         <div className="form-container sign-in-container">
           <Form onSubmit={handleSignIn}>
-            <Title>Sign In</Title>
+            <Title>Sign in</Title>
             <SocialContainer>
               <SocialLink href="#"><FaFacebookF /></SocialLink>
               <SocialLink href="#"><FaGooglePlusG /></SocialLink>
@@ -399,16 +510,27 @@ const LoginForm: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
             <Anchor href="#">Forgot your password?</Anchor>
             <Button type="submit">Sign In</Button>
+            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
           </Form>
         </div>
+
+        {/* Paneles de Overlay */}
         <div className="overlay-container">
+          <div className="overlay">
+            <div className="overlay-panel overlay-left">
+              <Title>Welcome Back!</Title>
+              <Paragraph>To keep connected with us please login with your personal info</Paragraph>
+              <Button onClick={() => setRightPanelActive(false)}>Sign In</Button>
+            </div>
+            <div className="overlay-panel overlay-right">
+              <Title>Hello, Friend!</Title>
+              <Paragraph>Enter your personal details and start your journey with us</Paragraph>
+              <Button onClick={() => setRightPanelActive(true)}>Sign Up</Button>
+            </div>
+          </div>
         </div>
-        <ToggleButton $ghost onClick={toggleForm}>
-          {rightPanelActive ? 'Sign In' : 'Sign Up'}
-        </ToggleButton>
       </Container>
     </>
   );

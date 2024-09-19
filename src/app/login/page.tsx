@@ -1,5 +1,5 @@
 "use client"
-
+import Link from 'next/link';
 import styled from 'styled-components';
 import LoginForm from '../componets/Login-componets/LoginForm'; // Asegúrate de que la ruta sea correcta
 
@@ -26,8 +26,9 @@ const LoginSection = () => {
   return (
     <SectionWrapper>
 
-
+      <Link href="/">
       <Logo src="/icons/logo.png" alt="Logo" />
+      </Link>
       <Title>Hello, welcome to pawHome</Title>
       <LoginForm />
     </SectionWrapper>

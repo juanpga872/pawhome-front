@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { DogAdoptionButton } from '@/app/componets/ui/Button/button.ui';
 const HeroSectionWrapper = styled.section`
-  position: relative; 
   background: url('https://gacetinmadrid.com/wp-content/uploads/2019/03/mascota.jpg') no-repeat center center;
   background-size: cover; 
   object-fit: contain;
@@ -20,7 +19,7 @@ const HeroText = styled.div`
   padding: 20px;
   border-radius: 10px;
   position: relative; 
-  z-index: 1; 
+  z-index: 0; 
   font-size: 3vh;
   display: flex;
   flex-direction: column; 

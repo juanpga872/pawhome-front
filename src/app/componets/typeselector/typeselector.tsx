@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import Image from 'next/image'; // Importa el componente Image de Next.js
 
 // Contenedor del selector
 const SelectorContainer = styled.div`
@@ -35,8 +36,6 @@ const SelectorButton = styled.button<{ active: boolean }>`
   width: 8rem;
   height: 4rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  background-color: ${({ active }) => (active ? '#5F00F8FF' : '#9333ea')};
-  color: white;
 
   &:hover {
     background-color: ${({ active }) => (active ? '#6600FFFF' : '#7e22ce')};
@@ -75,11 +74,21 @@ const TypeSelector: React.FC<TypeSelectorProps> = ({ onTypeChange }) => {
           <span>All</span>
         </SelectorButton>
         <SelectorButton active={selectedType === 'dog'} onClick={() => handleTypeChange('dog')}>
-          <img src="/icons/icon-dog.avif" alt="dog" />
+          <Image 
+            src="/icons/icon-dog.avif" 
+            alt="dog" 
+            width={40} // Ajusta el tamaño según sea necesario
+            height={40} // Ajusta el tamaño según sea necesario
+          />
           <span>Dog</span>
         </SelectorButton>
         <SelectorButton active={selectedType === 'cat'} onClick={() => handleTypeChange('cat')}>
-          <img src="/icons/icon-cat.avif" alt="cat" />
+          <Image 
+            src="/icons/icon-cat.avif" 
+            alt="cat" 
+            width={40} // Ajusta el tamaño según sea necesario
+            height={40} // Ajusta el tamaño según sea necesario
+          />
           <span>Cat</span>
         </SelectorButton>
       </ButtonContainer>
