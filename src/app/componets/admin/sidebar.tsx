@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import styled from 'styled-components';
-import { LayoutGrid, ShoppingCart, BarChart2, Package, Archive, Tag } from 'lucide-react';
+import { LayoutGrid, ShoppingCart, BarChart2, Package, Archive, UserCheck } from 'lucide-react'; // Changed to UserCheck for psychology
 
 const SidebarContainer = styled.div`
   width: 256px;
@@ -55,13 +55,35 @@ const MenuItemLabel = styled.span`
   font-size: 14px;
 `;
 
+const SocialLinks = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: auto;
+  font-size: 12px;
+`;
 
+const SocialLink = styled.a`
+  color: white;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
 
 const ContentArea = styled.div`
   flex-grow: 1;
   background-color: #f3f4f6;
   padding: 24px;
+  overflow-y: auto;
 `;
+
+// Dynamically imported content components
+const DashboardContent = lazy(() => import('./DashboardContent'));
+const OrderContent = lazy(() => import('./OrderContent'));
+const StatisticContent = lazy(() => import('./StatisticContent'));
+const ProductContent = lazy(() => import('./ProductContent'));
+const StockContent = lazy(() => import('./StockContent'));
+const PsychologicalTestContent = lazy(() => import('./test')); // Assuming you have this component
 
 interface MenuItemProps {
   icon: React.ReactNode;
@@ -78,21 +100,23 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ icon, label, isActive, onC
 );
 
 const Sidebar: React.FC = () => {
-  const [activeItem, setActiveItem] = useState('Order');
+  const [activeItem, setActiveItem] = useState('Dashboard');
 
   const menuItems = [
-    { icon: <LayoutGrid/>, label: 'Dashboard' },
-    { icon: <ShoppingCart />, label: 'Order' },
-    { icon: <BarChart2 />, label: 'Statistic' },
-    { icon: <Package />, label: 'Product' },
-    { icon: <Archive />, label: 'Stock' },
-    { icon: <Tag />, label: 'Offer' },
+    { icon: <LayoutGrid />, label: 'Dashboard', component: DashboardContent },
+    { icon: <ShoppingCart />, label: 'Order', component: OrderContent },
+    { icon: <BarChart2 />, label: 'Statistic', component: StatisticContent },
+    { icon: <Package />, label: 'Product', component: ProductContent },
+    { icon: <Archive />, label: 'Stock', component: StockContent },
+    { icon: <UserCheck />, label: 'Psychological Test', component: PsychologicalTestContent }, // Updated
   ];
+
+  const ActiveComponent = menuItems.find(item => item.label === activeItem)?.component || DashboardContent;
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
       <SidebarContainer>
-        <Title>PAW HOME</Title>
+        <Title>eProduct</Title>
         <Navigation>
           {menuItems.map((item) => (
             <MenuItemComponent
@@ -106,8 +130,9 @@ const Sidebar: React.FC = () => {
         </Navigation>
       </SidebarContainer>
       <ContentArea>
-        <h2>{activeItem}</h2>
-        <p>This is the content area for {activeItem}. It changes dynamically based on the selected menu item.</p>
+        <Suspense fallback={<div>Loading...</div>}>
+          <ActiveComponent />
+        </Suspense>
       </ContentArea>
     </div>
   );
