@@ -1,4 +1,3 @@
-// Pets.tsx
 import React, { useState, useEffect } from 'react';
 import PawPrintLoader from '@/app/componets/preloader/preloader';
 import PetCard from '@/app/componets/foster-componets/PetCard';
@@ -10,7 +9,7 @@ import { FaSearch } from 'react-icons/fa';
 type Pet = {
   id: number;
   name: string;
-  image: string;
+  imagePath: string; // Cambiado a 'imagePath'
   breed: string;
   birthDate: string; 
   description: string;
@@ -105,7 +104,7 @@ export default function Pets() {
           </PetsContainer>
 
           {modalOpen && selectedPet && (
-            <Modali pet={selectedPet} onClose={closeModal} onAdopt={() => handleAdopt(selectedPet.id)} />
+            <Modali pet={selectedPet} onClose={closeModal} />
           )}
         </Container>
       )}

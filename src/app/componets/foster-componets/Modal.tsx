@@ -2,34 +2,40 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { ArrowLeft, Heart } from 'lucide-react';
 
-// Define el tipo Pet con todas las propiedades necesarias
 type Pet = {
   id: number;
   name: string;
+  imagePath: string; // Cambiado a 'imagePath'
   breed: string;
-  birthDate: string; // Fecha en formato 'YYYY-MM-DD'
+  birthDate: string; 
   description: string;
-  sex: boolean; // true for male, false for female
+  sex: boolean;
   size: string;
   location: string;
-  specie: boolean; // true for dog, false for cat
-  image: string;
+  specie: boolean; 
 };
 
 interface ModaliProps {
   pet: Pet;
   onClose: () => void;
-  onAdopt: (petId: number) => void;
 }
 
-const Modali: React.FC<ModaliProps> = ({ pet, onClose, onAdopt }) => {
+const Modali: React.FC<ModaliProps> = ({ pet, onClose }) => {
   const [isFavorite, setIsFavorite] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showAdoptionModal, setShowAdoptionModal] = useState(false);
+  const [adoptionData, setAdoptionData] = useState({
+    id: 0,
+    name: '',
+    address: '',
+    phone: '',
+    email: 'user@example.com'
+  });
 
   const handleFavoriteClick = () => {
     setIsFavorite(!isFavorite);
   };
 
-  // Convert birthDate to a readable string
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
@@ -37,53 +43,131 @@ const Modali: React.FC<ModaliProps> = ({ pet, onClose, onAdopt }) => {
 
   const birthDate = formatDate(pet.birthDate);
 
+  const isLoggedIn = () => {
+    const token = localStorage.getItem('token');
+    return token !== null;
+  };
+
+  const handleAdoptClick = () => {
+    if (!isLoggedIn()) {
+      setShowLoginModal(true);
+      return;
+    }
+    setShowAdoptionModal(true);
+  };
+
+  const handleAdoptionSubmit = async () => {
+    try {
+      const response = await fetch('https://powhome.azurewebsites.net/api/v1/AdoptionCenter', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(adoptionData)
+      });
+      if (response.ok) {
+        alert('Petición de adopción aceptada!'); // Mensaje actualizado
+        setShowAdoptionModal(false);
+      } else {
+        alert('Error al adoptar. Intenta de nuevo.');
+      }
+    } catch (error) {
+      console.error('Error al enviar los datos de adopción:', error);
+    }
+  };
+
   return (
-    <ModalOverlay>
-      <ModalContent>
-        <ImageContainer>
-          <PetImage src={pet.image || 'https://via.placeholder.com/300'} alt={pet.name} />
-          <IconButton onClick={onClose} style={{ left: '1rem' }}>
-            <ArrowLeft size={24} />
-          </IconButton>
-          <HeartIcon onClick={handleFavoriteClick} isFavorite={isFavorite} />
-        </ImageContainer>
-        <ContentContainer>
-          <HeaderRow>
-            <PetName>{pet.name}</PetName>
-            <Distance>{pet.location}</Distance>
-          </HeaderRow>
-          <InfoGrid>
-            <InfoItem>
-              <InfoLabel>Breed</InfoLabel>
-              <InfoValue>{pet.breed}</InfoValue>
-            </InfoItem>
-            <InfoItem>
-              <InfoLabel>Birth Date</InfoLabel>
-              <InfoValue>{birthDate}</InfoValue>
-            </InfoItem>
-            <InfoItem>
-              <InfoLabel>Size</InfoLabel>
-              <InfoValue>{pet.size}</InfoValue>
-            </InfoItem>
-            <InfoItem>
-              <InfoLabel>Sex</InfoLabel>
-              <InfoValue>{pet.sex ? 'Male' : 'Female'}</InfoValue>
-            </InfoItem>
-            <InfoItem>
-              <InfoLabel>Description</InfoLabel>
-              <InfoValue className="description">{pet.description}</InfoValue>
-            </InfoItem>
-            <InfoItem>
-              <InfoLabel>Specie</InfoLabel>
-              <InfoValue>{pet.specie ? 'Dog' : 'Cat'}</InfoValue>
-            </InfoItem>
-          </InfoGrid>
-          <ActionButtons>
-            <Button onClick={() => onAdopt(pet.id)}>Adopt Me</Button>
-          </ActionButtons>
-        </ContentContainer>
-      </ModalContent>
-    </ModalOverlay>
+    <>
+      <ModalOverlay>
+        <ModalContent>
+          <ImageContainer>
+            <PetImage src={pet.imagePath || 'https://via.placeholder.com/300'} alt={pet.name} />
+            <IconButton onClick={onClose} style={{ left: '1rem' }}>
+              <ArrowLeft size={24} />
+            </IconButton>
+            <HeartIcon onClick={handleFavoriteClick} isFavorite={isFavorite} />
+          </ImageContainer>
+          <ContentContainer>
+            <HeaderRow>
+              <PetName>{pet.name}</PetName>
+              <Distance>{pet.location}</Distance>
+            </HeaderRow>
+            <InfoGrid>
+              <InfoItem>
+                <InfoLabel>Breed</InfoLabel>
+                <InfoValue>{pet.breed}</InfoValue>
+              </InfoItem>
+              <InfoItem>
+                <InfoLabel>Birth Date</InfoLabel>
+                <InfoValue>{birthDate}</InfoValue>
+              </InfoItem>
+              <InfoItem>
+                <InfoLabel>Size</InfoLabel>
+                <InfoValue>{pet.size}</InfoValue>
+              </InfoItem>
+              <InfoItem>
+                <InfoLabel>Sex</InfoLabel>
+                <InfoValue>{pet.sex ? 'Male' : 'Female'}</InfoValue>
+              </InfoItem>
+              <InfoItem>
+                <InfoLabel>Description</InfoLabel>
+                <InfoValue className="description">{pet.description}</InfoValue>
+              </InfoItem>
+              <InfoItem>
+                <InfoLabel>Specie</InfoLabel>
+                <InfoValue>{pet.specie ? 'Dog' : 'Cat'}</InfoValue>
+              </InfoItem>
+            </InfoGrid>
+            <ActionButtons>
+              <Button onClick={handleAdoptClick}>Adopt Me</Button>
+            </ActionButtons>
+          </ContentContainer>
+        </ModalContent>
+      </ModalOverlay>
+
+      {showLoginModal && (
+        <LoginModal>
+          <LoginModalContent>
+            <h2>Necesitas iniciar sesión</h2>
+            <p>Por favor, inicie sesión para adoptar una mascota.</p>
+            <Button onClick={() => window.location.href = '/login'}>Iniciar sesión</Button>
+            <CloseButton onClick={() => setShowLoginModal(false)}>Cerrar</CloseButton>
+          </LoginModalContent>
+        </LoginModal>
+      )}
+
+      {showAdoptionModal && (
+        <AdoptionModal>
+          <AdoptionModalContent>
+            <h2>Información de Adopción</h2>
+            <InputField>
+              <Label>ID:</Label>
+              <Input type="number" value={adoptionData.id} onChange={(e) => setAdoptionData({ ...adoptionData, id: Number(e.target.value) })} />
+            </InputField>
+            <InputField>
+              <Label>Name:</Label>
+              <Input type="text" value={adoptionData.name} onChange={(e) => setAdoptionData({ ...adoptionData, name: e.target.value })} />
+            </InputField>
+            <InputField>
+              <Label>Address:</Label>
+              <Input type="text" value={adoptionData.address} onChange={(e) => setAdoptionData({ ...adoptionData, address: e.target.value })} />
+            </InputField>
+            <InputField>
+              <Label>Phone:</Label>
+              <Input type="text" value={adoptionData.phone} onChange={(e) => setAdoptionData({ ...adoptionData, phone: e.target.value })} />
+            </InputField>
+            <InputField>
+              <Label>Email:</Label>
+              <Input type="email" value={adoptionData.email} onChange={(e) => setAdoptionData({ ...adoptionData, email: e.target.value })} />
+            </InputField>
+            <ActionButtons>
+              <Button onClick={handleAdoptionSubmit}>Submit</Button>
+              <CloseButton onClick={() => setShowAdoptionModal(false)}>Cerrar</CloseButton>
+            </ActionButtons>
+          </AdoptionModalContent>
+        </AdoptionModal>
+      )}
+    </>
   );
 };
 
@@ -177,7 +261,7 @@ const InfoLabel = styled.p`
 
 const InfoValue = styled.p`
   font-weight: 600;
-  
+
   &.description {
     margin-left: 5rem; 
   }
@@ -202,6 +286,50 @@ const Button = styled.button`
 
   &:hover {
     background-color: #5a54d1;
+  }
+`;
+
+const LoginModal = styled(ModalOverlay)`
+  background-color: rgba(0, 0, 0, 0.5);
+`;
+
+const LoginModalContent = styled(ModalContent)`
+  max-width: 20rem;
+  text-align: center;
+`;
+
+const AdoptionModal = styled(ModalOverlay)`
+  background-color: rgba(0, 0, 0, 0.5);
+`;
+
+const AdoptionModalContent = styled(ModalContent)`
+  max-width: 25rem;
+  text-align: left;
+  padding: 2rem;
+`;
+
+const InputField = styled.div`
+  margin-bottom: 1rem;
+`;
+
+const Label = styled.label`
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+`;
+
+const CloseButton = styled(Button)`
+  background-color: #ff4757;
+  
+  &:hover {
+    background-color: #e84118;
   }
 `;
 
