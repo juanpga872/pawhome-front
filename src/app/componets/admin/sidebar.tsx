@@ -1,6 +1,6 @@
 import React, { useState, lazy, Suspense } from 'react';
 import styled from 'styled-components';
-import { LayoutGrid, ShoppingCart, BarChart2, Package, Archive, Tag } from 'lucide-react';
+import { LayoutGrid, ShoppingCart, BarChart2, Package, Archive, UserCheck } from 'lucide-react'; // Changed to UserCheck for psychology
 
 const SidebarContainer = styled.div`
   width: 256px;
@@ -77,13 +77,13 @@ const ContentArea = styled.div`
   overflow-y: auto;
 `;
 
-// Componentes de contenido importados dinámicamente
+// Dynamically imported content components
 const DashboardContent = lazy(() => import('./DashboardContent'));
 const OrderContent = lazy(() => import('./OrderContent'));
 const StatisticContent = lazy(() => import('./StatisticContent'));
 const ProductContent = lazy(() => import('./ProductContent'));
 const StockContent = lazy(() => import('./StockContent'));
-const OfferContent = lazy(() => import('./OfferContent'));
+const PsychologicalTestContent = lazy(() => import('./test')); // Assuming you have this component
 
 interface MenuItemProps {
   icon: React.ReactNode;
@@ -108,7 +108,7 @@ const Sidebar: React.FC = () => {
     { icon: <BarChart2 />, label: 'Statistic', component: StatisticContent },
     { icon: <Package />, label: 'Product', component: ProductContent },
     { icon: <Archive />, label: 'Stock', component: StockContent },
-    { icon: <Tag />, label: 'Offer', component: OfferContent },
+    { icon: <UserCheck />, label: 'Psychological Test', component: PsychologicalTestContent }, // Updated
   ];
 
   const ActiveComponent = menuItems.find(item => item.label === activeItem)?.component || DashboardContent;
@@ -128,7 +128,6 @@ const Sidebar: React.FC = () => {
             />
           ))}
         </Navigation>
-
       </SidebarContainer>
       <ContentArea>
         <Suspense fallback={<div>Loading...</div>}>
