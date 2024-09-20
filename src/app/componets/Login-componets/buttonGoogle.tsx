@@ -26,7 +26,7 @@ const Button = styled.button`
   svg {
     width: 100%;
     height: 100%;
-    color: #4285F4; // Color del icono de Google
+    color: #4285F4; 
   }
 `;
 
@@ -45,7 +45,6 @@ const LoginButton: React.FC = () => {
   const auth = getAuth(app);
 
   const callLoginGoogle = async () => {
-
     Swal.fire({
       title: 'Cargando...',
       allowOutsideClick: false,
@@ -53,31 +52,36 @@ const LoginButton: React.FC = () => {
         Swal.showLoading();
       },
     });
-
     try {
+      console.log('antes de entrar');
+      
       const result = await signInWithPopup(auth, provider);
       const credential = GoogleAuthProvider.credentialFromResult(result);
+            
       if (credential) {
+        console.log('entra con google'+ credential);
+        
         const token = credential.accessToken;
         const user = result.user;
-
         const displayName = user.displayName;
 
         console.log('Token:', token);
         console.log('Nombre:', displayName);
 
-      
+   
+
         Swal.close();
         Swal.fire({
           title: `Bienvenido a PawHome, ${displayName}!`,
-          imageUrl: '/icons/logo.png', 
+          imageUrl: '/icons/logo.png',
           imageWidth: 100,
           imageHeight: 100,
           icon: 'success',
           willClose: () => {
+          
             window.location.href = '/'; 
           },
-          background: 'linear-gradient(to right, #F25FFFFF, #CE7BFEFF)', 
+          background: 'linear-gradient(to right, #F25FFFFF, #CE7BFEFF)',
           customClass: {
             popup: 'custom-popup'
           }
@@ -85,7 +89,7 @@ const LoginButton: React.FC = () => {
       }
     } catch (error) {
       console.error('Error:', error);
-      Swal.close(); // Cierra el loading alert en caso de error
+      Swal.close();
       Swal.fire({
         title: 'Error',
         text: 'Hubo un problema con el inicio de sesión.',
