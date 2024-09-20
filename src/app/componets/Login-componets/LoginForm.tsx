@@ -192,6 +192,7 @@ const Container = styled.div<{ rightPanelActive: boolean }>`
       display: none;
     }
   }
+    
 `;
 
 const Title = styled.h1`
@@ -242,15 +243,20 @@ const Button = styled.button<{ $ghost?: boolean }>`
 `;
 
 const ToggleButton = styled(Button)`
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #FF416C;
-  color: #FFFFFF;
-  border: none;
-  z-index: 1000;
-  margin: 0;
+  display: none; // Oculta el botón por defecto
+
+  @media (max-width: 768px) {
+    display: block; // Muestra el botón en dispositivos móviles
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #FF416C;
+    color: #FFFFFF;
+    border: none;
+    z-index: 1000;
+    margin: 0;
+  }
 `;
 
 const Form = styled.form`
@@ -462,8 +468,11 @@ const Footer = styled.footer`
             <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
             <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
             <Button type="submit">Sign Up</Button>
-            {registerMessage && <p style={{ color: 'green' }}>{registerMessage}</p>}
-            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+            <br />
+            <br />
+            <ToggleButton onClick={toggleForm}>
+          {rightPanelActive ? 'Sign In' : 'Sign Up'}
+        </ToggleButton>
           </Form>
         </div>
 
@@ -479,6 +488,9 @@ const Footer = styled.footer`
             <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
             <Anchor href="#">Forgot your password?</Anchor>
             <Button type="submit">Sign In</Button>
+            <ToggleButton onClick={toggleForm}>
+          {rightPanelActive ? 'Sign In' : 'Sign Up'}
+        </ToggleButton>
             {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
           </Form>
         </div>
@@ -494,6 +506,7 @@ const Footer = styled.footer`
               <Title>Hello, Friend!</Title>
               <Paragraph>Enter your personal details and start your journey with us</Paragraph>
               <Button onClick={() => setRightPanelActive(true)}>Sign Up</Button>
+              
             </div>
           </div>
         </div>

@@ -81,7 +81,7 @@ const Sidebar: React.FC = () => {
   const [activeItem, setActiveItem] = useState('Order');
 
   const menuItems = [
-    { icon: <LayoutGrid />, label: 'Dashboard' },
+    { icon: <LayoutGrid/>, label: 'Dashboard' },
     { icon: <ShoppingCart />, label: 'Order' },
     { icon: <BarChart2 />, label: 'Statistic' },
     { icon: <Package />, label: 'Product' },
