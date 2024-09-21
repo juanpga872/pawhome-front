@@ -5,18 +5,18 @@ import { ArrowLeft, Heart } from 'lucide-react';
 type Pet = {
   id: number;
   name: string;
-  imagePath: string; // Cambiado a 'imagePath'
+  imagePath: string;
   breed: string;
-  birthDate: string; 
+  birthDate: string;
   description: string;
   sex: boolean;
   size: string;
   location: string;
-  specie: boolean; 
+  specie: boolean;
 };
 
 interface ModaliProps {
-  pet: Pet;
+  pet: Pet; 
   onClose: () => void;
 }
 
@@ -66,7 +66,7 @@ const Modali: React.FC<ModaliProps> = ({ pet, onClose }) => {
         body: JSON.stringify(adoptionData)
       });
       if (response.ok) {
-        alert('Petición de adopción aceptada!'); // Mensaje actualizado
+        alert('Petición de adopción aceptada!');
         setShowAdoptionModal(false);
       } else {
         alert('Error al adoptar. Intenta de nuevo.');
@@ -185,9 +185,25 @@ const ModalContent = styled.div`
   background-color: white;
   border-radius: 1.5rem;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  max-width: 24rem;
+  max-width: 90%;
   width: 100%;
   overflow: hidden;
+
+  @media (min-width: 576px) {
+    max-width: 80%;
+  }
+
+  @media (min-width: 768px) {
+    max-width: 60%;
+  }
+
+  @media (min-width: 992px) {
+    max-width: 50%;
+  }
+
+  @media (min-width: 1200px) {
+    max-width: 40%;
+  }
 `;
 
 const ImageContainer = styled.div`
@@ -196,7 +212,8 @@ const ImageContainer = styled.div`
 
 const PetImage = styled.img`
   width: 100%;
-  height: 16rem;
+  height: auto;
+  max-height: 16rem;
   object-fit: cover;
 `;
 
@@ -256,15 +273,10 @@ const InfoItem = styled.div`
 
 const InfoLabel = styled.p`
   color: #6B7280;
-  font-size: 0.875rem;
 `;
 
 const InfoValue = styled.p`
-  font-weight: 600;
-
-  &.description {
-    margin-left: 5rem; 
-  }
+  font-weight: bold;
 `;
 
 const ActionButtons = styled.div`
@@ -289,48 +301,63 @@ const Button = styled.button`
   }
 `;
 
-const LoginModal = styled(ModalOverlay)`
+const LoginModal = styled.div`
+  position: fixed;
+  inset: 0;
   background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
-const LoginModalContent = styled(ModalContent)`
-  max-width: 20rem;
+const LoginModalContent = styled.div`
+  background-color: white;
+  padding: 2rem;
+  border-radius: 1rem;
   text-align: center;
 `;
 
-const AdoptionModal = styled(ModalOverlay)`
-  background-color: rgba(0, 0, 0, 0.5);
+const CloseButton = styled.button`
+  background-color: transparent;
+  border: none;
+  color: #6B7280;
+  cursor: pointer;
+  margin-top: 1rem;
 `;
 
-const AdoptionModalContent = styled(ModalContent)`
-  max-width: 25rem;
-  text-align: left;
+const AdoptionModal = styled.div`
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const AdoptionModalContent = styled.div`
+  background-color: white;
   padding: 2rem;
+  border-radius: 1rem;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
 `;
 
 const InputField = styled.div`
+  display: flex;
+  flex-direction: column;
   margin-bottom: 1rem;
 `;
 
 const Label = styled.label`
-  display: block;
-  margin-bottom: 0.5rem;
   font-weight: bold;
+  margin-bottom: 0.5rem;
 `;
 
 const Input = styled.input`
-  width: 100%;
   padding: 0.5rem;
   border: 1px solid #ccc;
-  border-radius: 5px;
-`;
-
-const CloseButton = styled(Button)`
-  background-color: #ff4757;
-  
-  &:hover {
-    background-color: #e84118;
-  }
+  border-radius: 4px;
 `;
 
 export default Modali;

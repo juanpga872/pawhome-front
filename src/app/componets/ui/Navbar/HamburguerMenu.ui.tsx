@@ -2,9 +2,9 @@ import React, { useState, useEffect, MouseEvent } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-import Image from 'next/image'; // Importa el componente Image de Next.js
+import Image from 'next/image';
 
-// Animations
+// Animaciones
 const slideIn = keyframes`
   from {
     transform: translateX(-100%);
@@ -23,27 +23,7 @@ const slideOut = keyframes`
   }
 `;
 
-const fadeIn = keyframes`
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-`;
-
-const fadeOut = keyframes`
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-`;
-
-// Styles
-
-
+// Estilos
 const MenuWrapper = styled.div<{ isOpen: boolean }>`
   position: fixed;
   top: 0;
@@ -63,14 +43,14 @@ const MenuWrapper = styled.div<{ isOpen: boolean }>`
 `;
 
 const MenuItems = styled.div`
-  flex: 1; 
+  flex: 1;
 `;
 
 const IconContainer = styled.div`
-  margin-top: auto; 
+  margin-top: auto;
   display: flex;
   flex-direction: column;
-  gap: 16px; 
+  gap: 16px;
 `;
 
 const MenuItem = styled.a`
@@ -81,15 +61,11 @@ const MenuItem = styled.a`
   color: #333;
   display: flex;
   align-items: center;
-  gap: 10px; 
+  gap: 10px;
   transition: background-color 0.2s ease, color 0.2s ease;
   &:hover {
     background-color: #f0f0f0;
     color: pink;
-  }
-
-  svg {
-    font-size: 20px; 
   }
 `;
 
@@ -99,7 +75,6 @@ const CloseButton = styled.div`
   cursor: pointer;
   padding: 16px;
   transition: color 0.2s ease;
-
   &:hover {
     color: #ff0000;
   }
@@ -112,7 +87,6 @@ const HamburgerWrapper = styled.div`
   top: 5px;
   left: 16px;
   z-index: 30;
-
   @media (max-width: 800px) {
     display: block;
   }
@@ -135,6 +109,7 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ onClick }) => (
 
 const App: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
   const handleClickOutside = (event: MouseEvent) => {
     const target = event.target as Node;
@@ -150,6 +125,11 @@ const App: React.FC = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside as any);
   }, []);
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    // Aquí puedes redirigir a la página de inicio o hacer otra acción
+  };
+
   return (
     <div>
       <HamburgerMenu onClick={() => setIsMenuOpen(!isMenuOpen)} />
@@ -164,10 +144,17 @@ const App: React.FC = () => {
           <MenuItem href="/food">Food</MenuItem>
         </MenuItems>
         <IconContainer>
-          <MenuItem href="/login">
-            <FontAwesomeIcon icon={faUser} />
-            Login
-          </MenuItem>
+          {!token ? (
+            <MenuItem href="/login">
+              <FontAwesomeIcon icon={faUser} />
+              Login
+            </MenuItem>
+          ) : (
+            <MenuItem href="#" onClick={handleLogout}>
+              <FontAwesomeIcon icon={faUser} />
+              Logout
+            </MenuItem>
+          )}
         </IconContainer>
       </MenuWrapper>
     </div>
