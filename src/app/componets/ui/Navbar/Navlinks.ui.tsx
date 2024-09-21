@@ -43,16 +43,37 @@ const NavLinksList = styled.ul<NavLinksProps>`
 `;
 
 const NavLinks: React.FC<NavLinksProps> = ({ isOpen }) => {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+
+  // Función para manejar el cierre de sesión
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user'); // Si guardas más datos en localStorage, los puedes eliminar aquí
+    window.location.reload(); // Recarga la página para reflejar el cambio
+  };
+
   return (
     <NavLinksList isOpen={isOpen}>
       <NavLink href="/donate">donar and sponsor</NavLink>
       <NavLink href="/foster">adopt</NavLink>
       <NavLink href="/food">Food</NavLink>
-      <NavLink href="/login">
-        <FontAwesomeIcon icon={faUser} />
-      </NavLink>
-    </NavLinksList>
+      
+      {/* Si no hay token en localStorage, muestra el enlace de login */}
+      {!token && (
+        <NavLink href="/login">
+          <FontAwesomeIcon icon={faUser} />
+        </NavLink>
+      )}
 
+      {/* Si hay token, muestra el botón para cerrar sesión */}
+      {token && (
+        <NavLink href='#'>
+          <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer' }}>
+            Cerrar sesión
+          </button>
+        </NavLink>
+      )}
+    </NavLinksList>
   );
 };
 

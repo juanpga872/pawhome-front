@@ -6,7 +6,7 @@ const StyledNavLink = styled.li`
   margin: 0 20px;
   
   a {
-    color: #fff; 
+    color: #fff;
     text-decoration: none;
     font-size: 1rem;
     padding: 12px 20px;
@@ -17,7 +17,7 @@ const StyledNavLink = styled.li`
 
     &:hover, &:focus {
       background: rgba(255, 255, 255, 0.2);
-      color: #FF69B4; // Cambiar color al hacer hover
+      color: #FF69B4;
     }
 
     svg {
@@ -26,10 +26,18 @@ const StyledNavLink = styled.li`
   }
 `;
 
-const NavLink: React.FC<{ href: string; children: React.ReactNode }> = ({ href, children }) => {
+interface NavLinkProps {
+  href: string;
+  children: React.ReactNode;
+  onClick?: () => void; // Agregar onClick opcional
+}
+
+const NavLink: React.FC<NavLinkProps> = ({ href, children, onClick }) => {
   return (
     <StyledNavLink>
-      <Link href={href}>{children}</Link>
+      <Link href={href} passHref>
+        <a onClick={onClick}>{children}</a> {/* Pasar el onClick aquí */}
+      </Link>
     </StyledNavLink>
   );
 };
