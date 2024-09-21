@@ -1,10 +1,10 @@
 import React, { useState, lazy, Suspense } from 'react';
 import styled from 'styled-components';
-import { LayoutGrid, ShoppingCart, BarChart2, Package, Archive, UserCheck } from 'lucide-react'; // Changed to UserCheck for psychology
+import { LayoutGrid, ShoppingCart, BarChart2, Package, Mail, UserCheck } from 'lucide-react';
 
 const SidebarContainer = styled.div`
   width: 256px;
-  background-color: #2563eb;
+  background-color: #9225EBFF;
   color: white;
   padding: 24px;
   display: flex;
@@ -45,7 +45,7 @@ const MenuItem = styled.div<{ isActive: boolean }>`
   `
       : `
     &:hover {
-      background-color: #3b82f6;
+      background-color: #BB3BF6FF;
     }
   `}
 `;
@@ -53,21 +53,6 @@ const MenuItem = styled.div<{ isActive: boolean }>`
 const MenuItemLabel = styled.span`
   margin-left: 12px;
   font-size: 14px;
-`;
-
-const SocialLinks = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-top: auto;
-  font-size: 12px;
-`;
-
-const SocialLink = styled.a`
-  color: white;
-  text-decoration: none;
-  &:hover {
-    text-decoration: underline;
-  }
 `;
 
 const ContentArea = styled.div`
@@ -83,7 +68,7 @@ const OrderContent = lazy(() => import('./petsContent'));
 const StatisticContent = lazy(() => import('./StatisticContent'));
 const ProductContent = lazy(() => import('./ProductContent'));
 const StockContent = lazy(() => import('./StockContent'));
-const PsychologicalTestContent = lazy(() => import('./test')); // Assuming you have this component
+const PsychologicalTestContent = lazy(() => import('./test')); 
 
 interface MenuItemProps {
   icon: React.ReactNode;
@@ -103,12 +88,12 @@ const Sidebar: React.FC = () => {
   const [activeItem, setActiveItem] = useState('Dashboard');
 
   const menuItems = [
-    { icon: <LayoutGrid />, label: 'Dashboard', component: DashboardContent },
+    { icon: <LayoutGrid />, label: 'requests', component: DashboardContent },
     { icon: <ShoppingCart />, label: 'Order', component: OrderContent },
-    { icon: <BarChart2 />, label: 'Statistic', component: StatisticContent },
+    { icon: <UserCheck />, label: 'User', component: StatisticContent }, // Cambiado a UserCheck
     { icon: <Package />, label: 'Product', component: ProductContent },
-    { icon: <Archive />, label: 'Stock', component: StockContent },
-    { icon: <UserCheck />, label: 'Psychological Test', component: PsychologicalTestContent }, // Updated
+    { icon: <Mail />, label: 'Post', component: StockContent },
+    { icon: <UserCheck />, label: 'Psychological Test', component: PsychologicalTestContent }, // Actualizado
   ];
 
   const ActiveComponent = menuItems.find(item => item.label === activeItem)?.component || DashboardContent;
