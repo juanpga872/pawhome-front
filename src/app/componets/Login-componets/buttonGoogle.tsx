@@ -57,18 +57,19 @@ const LoginButton: React.FC = () => {
       
       const result = await signInWithPopup(auth, provider);
       const credential = GoogleAuthProvider.credentialFromResult(result);
-            
+      
       if (credential) {
-        console.log('entra con google'+ credential);
+        console.log('entra con google', credential);
         
-        const token = credential.accessToken;
+        const token = credential.accessToken ?? ""; // Asigna un valor vacío si es undefined
         const user = result.user;
-        const displayName = user.displayName;
+        const displayName = user.displayName ?? "Usuario"; // Asigna "Usuario" si es undefined
 
-        console.log('Token:', token);
-        console.log('Nombre:', displayName);
 
-   
+
+        // Guardar en localStorage
+        localStorage.setItem('token', token);
+
 
         Swal.close();
         Swal.fire({
@@ -78,7 +79,6 @@ const LoginButton: React.FC = () => {
           imageHeight: 100,
           icon: 'success',
           willClose: () => {
-          
             window.location.href = '/'; 
           },
           background: 'linear-gradient(to right, #F25FFFFF, #CE7BFEFF)',
