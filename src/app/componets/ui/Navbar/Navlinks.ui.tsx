@@ -69,7 +69,7 @@ const NavLinks: React.FC<NavLinksProps> = ({ isOpen }) => {
       {token && (
         <NavLink href='#'>
           <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer' }}>
-            Cerrar sesión
+            log out
           </button>
         </NavLink>
       )}

@@ -1,4 +1,4 @@
-import axios from 'axios';
+
 import React, { useState } from 'react';
 import styled, { createGlobalStyle, keyframes } from 'styled-components';
 import { FaFacebookF, FaGooglePlusG, FaArrowLeft } from 'react-icons/fa';
@@ -79,7 +79,7 @@ const StyledIcon = styled(FaArrowLeft)<{ rightPanelActive: boolean }>`
   }
 `;
 
-const Container = styled.div<{ rightPanelActive: boolean }>`
+const Container = styled.div<{ $rightPanelActive: boolean }>`
   background-color: #FF7897D8;
   border-radius: 10px;
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
@@ -100,17 +100,17 @@ const Container = styled.div<{ rightPanelActive: boolean }>`
     left: 0;
     width: 50%;
     z-index: 2;
-    transform: ${props => props.rightPanelActive ? 'translateX(100%)' : 'translateX(0)'};
-    animation: ${props => props.rightPanelActive ? slideOutToLeft : slideInFromRight} 0.6s ease-in-out;
+    transform: ${props => props.$rightPanelActive ? 'translateX(100%)' : 'translateX(0)'};
+    animation: ${props => props.$rightPanelActive ? slideOutToLeft : slideInFromRight} 0.6s ease-in-out;
   }
 
   .sign-up-container {
     left: 0;
     width: 50%;
-    opacity: ${props => props.rightPanelActive ? '1' : '0'};
-    z-index: ${props => props.rightPanelActive ? '5' : '1'};
-    transform: ${props => props.rightPanelActive ? 'translateX(100%)' : 'translateX(0)'};
-    animation: ${props => props.rightPanelActive ? slideInFromRight : slideOutToLeft} 0.6s ease-in-out;
+    opacity: ${props => props.$rightPanelActive ? '1' : '0'};
+    z-index: ${props => props.$rightPanelActive ? '5' : '1'};
+    transform: ${props => props.$rightPanelActive ? 'translateX(100%)' : 'translateX(0)'};
+    animation: ${props => props.$rightPanelActive ? slideInFromRight : slideOutToLeft} 0.6s ease-in-out;
   }
 
   .overlay-container {
@@ -122,7 +122,7 @@ const Container = styled.div<{ rightPanelActive: boolean }>`
     overflow: hidden;
     transition: transform 0.6s ease-in-out;
     z-index: 100;
-    transform: ${props => props.rightPanelActive ? 'translateX(-100%)' : 'translateX(0)'};
+    transform: ${props => props.$rightPanelActive ? 'translateX(-100%)' : 'translateX(0)'};
   }
 
   .overlay {
@@ -132,7 +132,7 @@ const Container = styled.div<{ rightPanelActive: boolean }>`
     left: -100%;
     height: 100%;
     width: 200%;
-    transform: ${props => props.rightPanelActive ? 'translateX(50%)' : 'translateX(0)'};
+    transform: ${props => props.$rightPanelActive ? 'translateX(50%)' : 'translateX(0)'};
     transition: transform 0.6s ease-in-out;
   }
 
@@ -150,12 +150,12 @@ const Container = styled.div<{ rightPanelActive: boolean }>`
   }
 
   .overlay-left {
-    transform: ${props => props.rightPanelActive ? 'translateX(0)' : 'translateX(-20%)'};
+    transform: ${props => props.$rightPanelActive ? 'translateX(0)' : 'translateX(-20%)'};
   }
 
   .overlay-right {
     right: 0;
-    transform: ${props => props.rightPanelActive ? 'translateX(20%)' : 'translateX(0)'};
+    transform: ${props => props.$rightPanelActive ? 'translateX(20%)' : 'translateX(0)'};
   }
 
   @media (max-width: 768px) {
@@ -178,13 +178,13 @@ const Container = styled.div<{ rightPanelActive: boolean }>`
     }
 
     .sign-in-container {
-      animation: ${props => props.rightPanelActive ? slideOutToRight : slideInFromLeft} 0.6s ease-in-out;
-      display: ${props => props.rightPanelActive ? 'none' : 'block'};
+      animation: ${props => props.$rightPanelActive ? slideOutToRight : slideInFromLeft} 0.6s ease-in-out;
+      display: ${props => props.$rightPanelActive ? 'none' : 'block'};
     }
 
     .sign-up-container {
-      animation: ${props => props.rightPanelActive ? slideInFromLeft : slideOutToRight} 0.6s ease-in-out;
-      display: ${props => props.rightPanelActive ? 'block' : 'none'};
+      animation: ${props => props.$rightPanelActive ? slideInFromLeft : slideOutToRight} 0.6s ease-in-out;
+      display: ${props => props.$rightPanelActive ? 'block' : 'none'};
     }
 
     .overlay-container {
@@ -367,93 +367,92 @@ const Footer = styled.footer`
       e.preventDefault();
     
       try {
-        const response = await axios.post('https://powhome.azurewebsites.net/api/Auth/login', {
-          email,
-          password
+        const response = await fetch('https://powhome.azurewebsites.net/api/Auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
         });
     
-        if (response.status === 200) {
-          const { token } = response.data;
+        if (response.ok) {
+          const data = await response.json();
+          const { token } = data;
     
           const decodedToken = decodeJwtToken(token);
           if (decodedToken) {
             const { sub: userEmail, role } = decodedToken;
     
-            // Store token in localStorage
+            // Almacenar el token en localStorage
             localStorage.setItem('token', token);
     
             if (role === 'Admin') {
-              // Store email if the user is an admin
+              // Almacenar el email si el usuario es admin
               localStorage.setItem('adminEmail', userEmail);
               window.location.href = '/admin';
             } else {
               window.location.href = '/';
             }
           } else {
-            setErrorMessage('Invalid token');
+            setErrorMessage('Token inválido');
           }
         } else {
-          setErrorMessage('Invalid email or password');
+          setErrorMessage('Email o contraseña incorrectos');
         }
       } catch (error) {
         console.error('Error during sign-in:', error);
-        setErrorMessage('An error occurred while trying to sign in');
+        setErrorMessage('Ocurrió un error al intentar iniciar sesión');
       }
     };
-    
   
 
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    try {
-      const response = await fetch('https://powhome.azurewebsites.net/api/v1/Users', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name,
-          phone,
-          email,
-          password,
-          isAdmin: false, // Aquí debes manejar la lógica de si el usuario debe ser admin
-        }),
-      });
-
-      if (response.ok) {
-        setRegisterMessage('Registration successful! Please log in.');
-        setErrorMessage('');
-      } else {
-        const errorData = await response.json();
-        setErrorMessage(errorData.message || 'Failed to register');
+    const handleRegister = async (e: React.FormEvent) => {
+      e.preventDefault();
+      
+      console.log("Registering user with:", { name, phone, email, password });
+    
+      try {
+        const response = await fetch('https://powhome.azurewebsites.net/api/v1/Users', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name,
+            phone,
+            email,
+            password,
+            isAdmin: false,
+          }),
+        });
+    
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Registration successful:', data);
+          setRegisterMessage('Registration successful! Please log in.');
+          setErrorMessage('');
+        } else {
+          const errorData = await response.json();
+          console.log('Error during registration:', errorData);
+          setErrorMessage(errorData.message || 'Failed to register');
+        }
+      } catch (error) {
+        console.log('Request failed with error:', error);
+        setErrorMessage('An error occurred while trying to register');
       }
-    } catch (error) {
-      setErrorMessage('An error occurred while trying to register');
-    }
-  };
-
-  const parseJwt = (token: string) => {
-    const parts = token.split('.');
-    if (parts.length !== 3) {
-      throw new Error('Invalid JWT token');
-    }
-    const payload = parts[1];
-    return JSON.parse(decodeBase64(payload));
-  };
-
-  const decodeBase64 = (str: string) => {
-    return Buffer.from(str, 'base64').toString('utf8');
-  };
-
-  const toggleForm = () => {
-    setRightPanelActive(!rightPanelActive);
-  };
+    };
+  
+    const toggleForm = () => {
+      setRightPanelActive(!rightPanelActive);
+    };
 
   return (
     <>
       {/* <GlobalStyle /> */}
-      <Container rightPanelActive={rightPanelActive}>
+      <Container $rightPanelActive={rightPanelActive}>
         <div className="form-container sign-up-container">
           <Form onSubmit={handleRegister}>
             <Title>Create Account</Title>
