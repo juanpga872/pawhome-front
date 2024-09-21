@@ -21,15 +21,22 @@ interface ModaliProps {
 }
 
 const Modali: React.FC<ModaliProps> = ({ pet, onClose }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showAdoptionModal, setShowAdoptionModal] = useState(false);
-  const [adoptionData, setAdoptionData] = useState({
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
+  const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
+  const [showAdoptionModal, setShowAdoptionModal] = useState<boolean>(false);
+  const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
+  const [adoptionData, setAdoptionData] = useState<{
+    id: number;
+    name: string;
+    address: string;
+    phone: string;
+    email: string;
+  }>({
     id: 0,
     name: '',
     address: '',
     phone: '',
-    email: 'user@example.com'
+    email: ''
   });
 
   const handleFavoriteClick = () => {
@@ -66,8 +73,8 @@ const Modali: React.FC<ModaliProps> = ({ pet, onClose }) => {
         body: JSON.stringify(adoptionData)
       });
       if (response.ok) {
-        alert('Petición de adopción aceptada!');
         setShowAdoptionModal(false);
+        setShowSuccessModal(true);
       } else {
         alert('Error al adoptar. Intenta de nuevo.');
       }
@@ -141,31 +148,37 @@ const Modali: React.FC<ModaliProps> = ({ pet, onClose }) => {
           <AdoptionModalContent>
             <h2>Información de Adopción</h2>
             <InputField>
-              <Label>ID:</Label>
-              <Input type="number" value={adoptionData.id} onChange={(e) => setAdoptionData({ ...adoptionData, id: Number(e.target.value) })} />
-            </InputField>
-            <InputField>
               <Label>Name:</Label>
-              <Input type="text" value={adoptionData.name} onChange={(e) => setAdoptionData({ ...adoptionData, name: e.target.value })} />
+              <Input type="text" value={adoptionData.name} onChange={(e) => setAdoptionData({ ...adoptionData, name: e.target.value })} required />
             </InputField>
             <InputField>
               <Label>Address:</Label>
-              <Input type="text" value={adoptionData.address} onChange={(e) => setAdoptionData({ ...adoptionData, address: e.target.value })} />
+              <Input type="text" value={adoptionData.address} onChange={(e) => setAdoptionData({ ...adoptionData, address: e.target.value })} required />
             </InputField>
             <InputField>
               <Label>Phone:</Label>
-              <Input type="text" value={adoptionData.phone} onChange={(e) => setAdoptionData({ ...adoptionData, phone: e.target.value })} />
+              <Input type="text" value={adoptionData.phone} onChange={(e) => setAdoptionData({ ...adoptionData, phone: e.target.value })} required />
             </InputField>
             <InputField>
               <Label>Email:</Label>
-              <Input type="email" value={adoptionData.email} onChange={(e) => setAdoptionData({ ...adoptionData, email: e.target.value })} />
+              <Input type="email" value={adoptionData.email} onChange={(e) => setAdoptionData({ ...adoptionData, email: e.target.value })} required />
             </InputField>
             <ActionButtons>
               <Button onClick={handleAdoptionSubmit}>Submit</Button>
-              <CloseButton onClick={() => setShowAdoptionModal(false)}>Cerrar</CloseButton>
+              <StyledCloseButton onClick={() => setShowAdoptionModal(false)}>Cerrar</StyledCloseButton>
             </ActionButtons>
           </AdoptionModalContent>
         </AdoptionModal>
+      )}
+
+      {showSuccessModal && (
+        <SuccessModal>
+          <SuccessModalContent>
+            <h2>¡Petición de adopción enviada!</h2>
+            <p>Gracias por tu interés en adoptar a {pet.name}. Nos pondremos en contacto contigo pronto.</p>
+            <Button onClick={() => setShowSuccessModal(false)}>Cerrar</Button>
+          </SuccessModalContent>
+        </SuccessModal>
       )}
     </>
   );
@@ -176,7 +189,7 @@ const ModalOverlay = styled.div`
   inset: 0;
   background-color: rgba(229, 231, 235, 0.8);
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   padding: 1rem;
 `;
@@ -187,22 +200,27 @@ const ModalContent = styled.div`
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   max-width: 90%;
   width: 100%;
-  overflow: hidden;
+  max-height: 90vh;
+  overflow-y: auto;
 
   @media (min-width: 576px) {
     max-width: 80%;
   }
 
   @media (min-width: 768px) {
-    max-width: 60%;
+    max-width: 70%; 
   }
 
   @media (min-width: 992px) {
-    max-width: 50%;
+    max-width: 60%; 
+  }
+
+  @media (min-width: 1075px) {
+    max-width: 50%; 
   }
 
   @media (min-width: 1200px) {
-    max-width: 40%;
+    max-width: 40%; 
   }
 `;
 
@@ -283,6 +301,7 @@ const ActionButtons = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 1rem;
+  gap: 1rem;
 `;
 
 const Button = styled.button`
@@ -298,6 +317,15 @@ const Button = styled.button`
 
   &:hover {
     background-color: #5a54d1;
+  }
+`;
+
+const StyledCloseButton = styled(Button)`
+  background-color: #e2e8f0; /* Color de fondo para el botón "Cerrar" */
+  color: #4a5568; /* Color del texto para el botón "Cerrar" */
+  
+  &:hover {
+    background-color: #cbd5e1; /* Color de fondo en hover */
   }
 `;
 
@@ -358,6 +386,24 @@ const Input = styled.input`
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 4px;
+`;
+
+const SuccessModal = styled.div`
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const SuccessModalContent = styled.div`
+  background-color: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
 `;
 
 export default Modali;
