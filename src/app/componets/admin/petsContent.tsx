@@ -235,6 +235,7 @@ const AnimalsPage: React.FC = () => {
     }
   
     try {
+      
       await createAnimal(formData);
       const updatedAnimals = await getAnimals();
       setAnimals(updatedAnimals);

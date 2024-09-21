@@ -6,23 +6,23 @@ import jwtDecode from 'jwt-decode';
 import LoginButton from './buttonGoogle'; // Asegúrate de tener el botón de Google
 import FacebookLoginButton from './buttonfacebook'; // Asegúrate de crear un botón para Facebook
 
-const GlobalStyle = createGlobalStyle`
-  @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+// const GlobalStyle = createGlobalStyle`
+//   @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
   
-  * {
-    box-sizing: border-box;
-  }
+//   * {
+//     box-sizing: border-box;
+//   }
   
-  body {
-    background: #FFFFFFFF;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    font-family: 'Montserrat', sans-serif;
-    height: 100vh;
-  }
-`;
+//   body {
+//     background: #FFFFFFFF;
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     flex-direction: column;
+//     font-family: 'Montserrat', sans-serif;
+//     height: 100vh;
+//   }
+// `;
 
 // Keyframes for animations
 const slideInFromRight = keyframes`
@@ -142,7 +142,6 @@ const Container = styled.div<{ rightPanelActive: boolean }>`
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    padding: 0 40px;
     text-align: center;
     top: 0;
     height: 100%;
@@ -453,7 +452,7 @@ const Footer = styled.footer`
 
   return (
     <>
-      <GlobalStyle />
+      {/* <GlobalStyle /> */}
       <Container rightPanelActive={rightPanelActive}>
         <div className="form-container sign-up-container">
           <Form onSubmit={handleRegister}>
