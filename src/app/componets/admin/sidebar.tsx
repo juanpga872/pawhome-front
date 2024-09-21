@@ -79,7 +79,7 @@ const ContentArea = styled.div`
 
 // Dynamically imported content components
 const DashboardContent = lazy(() => import('./DashboardContent'));
-const OrderContent = lazy(() => import('./OrderContent'));
+const OrderContent = lazy(() => import('./petsContent'));
 const StatisticContent = lazy(() => import('./StatisticContent'));
 const ProductContent = lazy(() => import('./ProductContent'));
 const StockContent = lazy(() => import('./StockContent'));
