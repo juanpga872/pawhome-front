@@ -138,23 +138,24 @@ const Index = styled.span`
 const DonationComponent: React.FC = () => {
   return (
     <Container id="donation-section">
-      <Title>Donar con</Title>
-      <Logo src="/icons/payuu.png" alt="PayU Logo" />
-      <DonationGrid>
-        {donations.map((donation, index) => (
-          <DonationButton key={index} href={donation.href}>
-            <CircleWrapper>
-              <DogImage src={donation.image} alt={`Dog ${index + 1}`} />
-              <Index>{index + 1}</Index>
-              <DonationInfo>
-                <DonationLabel>Donar</DonationLabel>
-                <DonationAmount>${donation.amount.toLocaleString()} COP</DonationAmount>
-              </DonationInfo>
-            </CircleWrapper>
-          </DonationButton>
-        ))}
-      </DonationGrid>
-    </Container>
+    <Title>Donar con</Title>
+    <Logo src="/icons/payuu.png" alt="PayU Logo" />
+    <DonationGrid>
+      {donations.map((donation, index) => (
+        <DonationButton key={index} href={donation.href}>
+          <CircleWrapper>
+            <DogImage src={donation.image} alt={`Dog ${index + 1}`} />
+            <Index>{index + 1}</Index>
+            <DonationInfo>
+              <DonationLabel>Donar</DonationLabel>
+              <DonationAmount>${donation.amount.toLocaleString()} COP</DonationAmount>
+            </DonationInfo>
+          </CircleWrapper>
+        </DonationButton>
+      ))}
+    </DonationGrid>
+  </Container>
+  
   );
 };
 
