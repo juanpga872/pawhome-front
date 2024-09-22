@@ -1,6 +1,6 @@
 import React, { useState, lazy, Suspense } from 'react';
 import styled from 'styled-components';
-import { LayoutGrid, ShoppingCart, BarChart2, Package, Mail, UserCheck } from 'lucide-react';
+import { LayoutGrid, ShoppingCart, BarChart2, Package, Mail, UserCheck, LogOut } from 'lucide-react';
 
 const SidebarContainer = styled.div`
   width: 256px;
@@ -68,7 +68,7 @@ const OrderContent = lazy(() => import('./petsContent'));
 const StatisticContent = lazy(() => import('./StatisticContent'));
 const ProductContent = lazy(() => import('./ProductContent'));
 const StockContent = lazy(() => import('./StockContent'));
-const PsychologicalTestContent = lazy(() => import('./test')); 
+const PsychologicalTestContent = lazy(() => import('./test'));
 
 interface MenuItemProps {
   icon: React.ReactNode;
@@ -84,19 +84,41 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ icon, label, isActive, onC
   </MenuItem>
 );
 
+// Componente de botón de cierre de sesión
+const LogoutButton = styled.button`
+  margin-top: auto;
+  padding: 12px;
+  background-color: #d5006d;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+
+  &:hover {
+    background-color: #c51162;
+  }
+`;
+
 const Sidebar: React.FC = () => {
   const [activeItem, setActiveItem] = useState('Dashboard');
 
   const menuItems = [
     { icon: <LayoutGrid />, label: 'requests', component: DashboardContent },
     { icon: <ShoppingCart />, label: 'Order', component: OrderContent },
-    { icon: <UserCheck />, label: 'User', component: StatisticContent }, // Cambiado a UserCheck
+    { icon: <UserCheck />, label: 'User', component: StatisticContent },
     { icon: <Package />, label: 'Product', component: ProductContent },
     { icon: <Mail />, label: 'Post', component: StockContent },
-    { icon: <UserCheck />, label: 'Psychological Test', component: PsychologicalTestContent }, // Actualizado
+    { icon: <UserCheck />, label: 'Psychological Test', component: PsychologicalTestContent },
   ];
 
   const ActiveComponent = menuItems.find(item => item.label === activeItem)?.component || DashboardContent;
+
+  const handleLogout = () => {
+    localStorage.clear(); // Borra todo el local storage
+    // Aquí puedes agregar lógica adicional para cerrar sesión, como redireccionar a la página de inicio de sesión.
+    console.log("Sesión cerrada");
+  };
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
@@ -113,6 +135,10 @@ const Sidebar: React.FC = () => {
             />
           ))}
         </Navigation>
+        <LogoutButton onClick={handleLogout}>
+          <LogOut size={24} />
+          Cerrar Sesión
+        </LogoutButton>
       </SidebarContainer>
       <ContentArea>
         <Suspense fallback={<div>Loading...</div>}>
@@ -124,3 +150,4 @@ const Sidebar: React.FC = () => {
 };
 
 export default Sidebar;
+
