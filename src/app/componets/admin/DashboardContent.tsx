@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import emailjs from 'emailjs-com';
 import styled from 'styled-components';
-import { FaPaw, FaTrash } from 'react-icons/fa'; // Huellita y papelera
-
+import { FaPaw, FaTrash } from 'react-icons/fa'; 
 interface AdoptionCenter {
   id: number;
   name: string;

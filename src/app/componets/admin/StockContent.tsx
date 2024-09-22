@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Heart, MessageCircle, Send, Bookmark, X, MoreHorizontal, PlusCircle } from 'lucide-react';
+import { AiOutlineHeart, AiOutlineMessage, AiOutlineSend, AiOutlineBook, AiOutlineClose, AiOutlineMore, AiOutlinePlusCircle } from 'react-icons/ai';
 import ReactAvatar from 'react-avatar';
 
 const Container = styled.div`
@@ -214,7 +214,7 @@ const StoryViewer: React.FC<StoryViewerProps> = ({ story, onClose }) => {
               <StoryUsername>{story.username}</StoryUsername>
             </StoryUser>
             <StoryActions>
-              <X color="white" size={24} onClick={onClose} style={{ cursor: 'pointer' }} />
+              <AiOutlineClose color="white" size={24} onClick={onClose} style={{ cursor: 'pointer' }} />
             </StoryActions>
           </StoryHeader>
           <StoryCentralContent>
@@ -341,17 +341,17 @@ export default function InstagramPost() {
           <PostHeader>
             <ProfileImage src={post.imageUrl} alt="Profile" />
             <Username style={{ fontSize: '16px', fontWeight: '600' }}>{post.username}</Username>
-            <MoreHorizontal color="black" size={24} style={{ marginLeft: 'auto', cursor: 'pointer' }} />
+            <AiOutlineMore color="black" size={24} style={{ marginLeft: 'auto', cursor: 'pointer' }} />
           </PostHeader>
           <PostImage src={post.imageUrl} alt="Post image" />
           <ActionsContainer>
             <ActionGroup>
-              <Heart size={28} onClick={() => handleLike(post.id)} style={{ cursor: 'pointer' }} />
+              <AiOutlineHeart size={28} onClick={() => handleLike(post.id)} style={{ cursor: 'pointer' }} />
               {likes[post.id] > 0 && <LikeCount>{likes[post.id]}</LikeCount>}
-              <MessageCircle size={28} />
-              <Send size={28} />
+              <AiOutlineMessage size={28} />
+              <AiOutlineSend size={28} />
             </ActionGroup>
-            <Bookmark size={28} />
+            <AiOutlineBook size={28} /> {/* Cambiado aquí */}
           </ActionsContainer>
           <PostContent>
             <p style={{ fontWeight: '600', marginBottom: '8px' }}>Liked by kyla_kayaks and others</p>
@@ -367,7 +367,7 @@ export default function InstagramPost() {
         <StoryViewer story={activeStory} onClose={() => setActiveStory(null)} />
       )}
 
-      <PlusCircle 
+      <AiOutlinePlusCircle 
         size={60} 
         color="#e1306c" 
         style={{ position: 'absolute', bottom: '16px', right: '16px', cursor: 'pointer' }} 

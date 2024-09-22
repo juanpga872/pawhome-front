@@ -1,7 +1,6 @@
 import React, { useState, useEffect, MouseEvent } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { MdPerson } from 'react-icons/md'; // Importa el ícono de usuario de react-icons
 import Image from 'next/image';
 
 // Animaciones
@@ -146,12 +145,12 @@ const App: React.FC = () => {
         <IconContainer>
           {!token ? (
             <MenuItem href="/login">
-              <FontAwesomeIcon icon={faUser} />
+              <MdPerson />
               Login
             </MenuItem>
           ) : (
             <MenuItem href="#" onClick={handleLogout}>
-              <FontAwesomeIcon icon={faUser} />
+              <MdPerson />
               Logout
             </MenuItem>
           )}
@@ -162,3 +161,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+

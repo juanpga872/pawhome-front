@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { ArrowLeft, Heart } from 'lucide-react';
+import { AiOutlineArrowLeft, AiFillHeart } from 'react-icons/ai';
 
 type Pet = {
   id: number;
@@ -90,7 +90,7 @@ const Modali: React.FC<ModaliProps> = ({ pet, onClose }) => {
           <ImageContainer>
             <PetImage src={pet.imagePath || 'https://via.placeholder.com/300'} alt={pet.name} />
             <IconButton onClick={onClose} style={{ left: '1rem' }}>
-              <ArrowLeft size={24} />
+              <AiOutlineArrowLeft size={24} />
             </IconButton>
             <HeartIcon onClick={handleFavoriteClick} isFavorite={isFavorite} />
           </ImageContainer>
@@ -245,7 +245,7 @@ const IconButton = styled.button`
   cursor: pointer;
 `;
 
-const HeartIcon = styled(Heart)<{ isFavorite: boolean }>`
+const HeartIcon = styled(AiFillHeart)<{ isFavorite: boolean }>`
   position: absolute;
   top: 1rem;
   right: 1rem;

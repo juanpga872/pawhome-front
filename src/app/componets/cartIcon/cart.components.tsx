@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShoppingCart, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { MdShoppingCart, MdDelete } from 'react-icons/md'; // Importa los iconos de react-icons
 
 // Estilos
 
@@ -303,7 +302,7 @@ const CartComponent: React.FC<{
   return (
     <FloatingCartContainer>
       <CartIcon onClick={openModal}>
-        <FontAwesomeIcon icon={faShoppingCart} size="lg" />
+        <MdShoppingCart size="24" color="white" />
         {hasItems && <CartCount>{cartItems.length}</CartCount>}
       </CartIcon>
 
@@ -329,7 +328,7 @@ const CartComponent: React.FC<{
                       </QuantityButton>
                       <QuantityCounter>{item.quantity}</QuantityCounter>
                       <RemoveButton onClick={() => handleRemoveItem(index)}>
-                        <FontAwesomeIcon icon={faTrash} />
+                        <MdDelete size="16" />
                       </RemoveButton>
                     </QuantityControl>
                   </CartItemCard>
@@ -337,7 +336,7 @@ const CartComponent: React.FC<{
               </CartItemsList>
             ) : (
               <EmptyCartMessageContainer>
-                <EmptyCartIcon icon={faShoppingCart} size="3x" />
+                <EmptyCartIcon size="3x" />
                 <EmptyCartText>¡Tu carrito está vacío!</EmptyCartText>
                 <StartShoppingButton onClick={() => window.location.href = '/products'}>
                   Comienza a comprar
@@ -409,7 +408,7 @@ const EmptyCartMessageContainer = styled.div`
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
-const EmptyCartIcon = styled(FontAwesomeIcon)`
+const EmptyCartIcon = styled(MdShoppingCart)`
   color: #ad57d2; 
 `;
 
