@@ -1,4 +1,3 @@
-
 import React from 'react';
 import styled from 'styled-components';
 
@@ -31,6 +30,22 @@ const Title = styled.h1`
   color: #333;
   font-size: 2.5rem;
   margin-bottom: 10px;
+
+  @media (max-width: 1200px) {
+    font-size: 2rem;
+  }
+
+  @media (max-width: 992px) {
+    font-size: 1.75rem;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+  }
+
+  @media (max-width: 576px) {
+    font-size: 1.25rem;
+  }
 `;
 
 const Logo = styled.img`
@@ -52,8 +67,8 @@ const DonationButton = styled.a`
   padding: 0;
   cursor: pointer;
   position: relative;
-  width: 220px;
-  height: 220px;
+  width: 100%; // Cambiado para ocupar el 100% del contenedor
+  aspect-ratio: 1; // Mantiene una proporción cuadrada
   transition: transform 0.3s ease;
   text-decoration: none;
   color: inherit;

@@ -113,6 +113,7 @@ const AdoptionTable: React.FC = () => {
     
     uniqueSelected.forEach((id) => {
       const adoption = adoptions.find(adoption => adoption.id === id);
+      console.log('Adopción encontrada:', adoption); // Debugging
       if (adoption) {
         const templateParams = {
           to_email: adoption.email,

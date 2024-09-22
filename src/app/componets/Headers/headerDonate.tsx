@@ -134,7 +134,7 @@ const DonationPage = () => {
         <source src="/video/donate.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
-      <Title>Adopt and Donate</Title>
+      <Title>sponsor and Donate</Title>
       <Subtitle>Our official donation channels</Subtitle>
       <ContactInfo>
         <ContactItem>
@@ -155,7 +155,7 @@ const DonationPage = () => {
         </ContactItem>
       </ContactInfo>
       <DonateOptions>
-      <Button as="a" href="#donation-section">DONATE WITH PAYU</Button>
+      <Button>DONATE WITH PAYU</Button>
         <Button>DONATE WITH PAYPAL</Button>
       </DonateOptions>
     </Container>
