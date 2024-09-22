@@ -1,6 +1,6 @@
 import React, { useState, lazy, Suspense } from 'react';
 import styled from 'styled-components';
-import { LayoutGrid, ShoppingCart, BarChart2, Package, Mail, UserCheck, LogOut } from 'lucide-react';
+import { FaTh, FaShoppingCart, FaUserCheck, FaBox, FaEnvelope, FaSignOutAlt } from 'react-icons/fa';
 
 const SidebarContainer = styled.div`
   width: 256px;
@@ -62,7 +62,7 @@ const ContentArea = styled.div`
   overflow-y: auto;
 `;
 
-// Dynamically imported content components
+// Importación dinámica de los componentes de contenido
 const DashboardContent = lazy(() => import('./DashboardContent'));
 const OrderContent = lazy(() => import('./petsContent'));
 const StatisticContent = lazy(() => import('./StatisticContent'));
@@ -104,12 +104,12 @@ const Sidebar: React.FC = () => {
   const [activeItem, setActiveItem] = useState('Dashboard');
 
   const menuItems = [
-    { icon: <LayoutGrid />, label: 'requests', component: DashboardContent },
-    { icon: <ShoppingCart />, label: 'Order', component: OrderContent },
-    { icon: <UserCheck />, label: 'User', component: StatisticContent },
-    { icon: <Package />, label: 'Product', component: ProductContent },
-    { icon: <Mail />, label: 'Post', component: StockContent },
-    { icon: <UserCheck />, label: 'Psychological Test', component: PsychologicalTestContent },
+    { icon: <FaTh />, label: 'requests', component: DashboardContent },
+    { icon: <FaShoppingCart />, label: 'Order', component: OrderContent },
+    { icon: <FaUserCheck />, label: 'User', component: StatisticContent },
+    { icon: <FaBox />, label: 'Product', component: ProductContent },
+    { icon: <FaEnvelope />, label: 'Post', component: StockContent },
+    { icon: <FaUserCheck />, label: 'Psychological Test', component: PsychologicalTestContent },
   ];
 
   const ActiveComponent = menuItems.find(item => item.label === activeItem)?.component || DashboardContent;
@@ -136,7 +136,7 @@ const Sidebar: React.FC = () => {
           ))}
         </Navigation>
         <LogoutButton onClick={handleLogout}>
-          <LogOut size={24} />
+          <FaSignOutAlt size={24} />
           Cerrar Sesión
         </LogoutButton>
       </SidebarContainer>
@@ -150,4 +150,3 @@ const Sidebar: React.FC = () => {
 };
 
 export default Sidebar;
-
