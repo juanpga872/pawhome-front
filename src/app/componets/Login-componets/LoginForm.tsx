@@ -451,7 +451,6 @@ const Footer = styled.footer`
 
   return (
     <>
-      {/* <GlobalStyle /> */}
       <Container $rightPanelActive={rightPanelActive}>
         <div className="form-container sign-up-container">
           <Form onSubmit={handleRegister}>

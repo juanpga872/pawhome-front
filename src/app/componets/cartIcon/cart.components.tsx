@@ -326,7 +326,7 @@ const CartComponent: React.FC<{
     if (!token) {
       alert('Por favor, inicia sesión para continuar.');
       return;
-    
+    }
     closeModal(); // Cierra el modal del carrito si todo está bien
   };
 

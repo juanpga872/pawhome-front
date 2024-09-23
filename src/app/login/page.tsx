@@ -1,7 +1,8 @@
-"use client"
+"use client";
 import Link from 'next/link';
 import styled from 'styled-components';
-import LoginForm from '../componets/Login-componets/LoginForm'; // Asegúrate de que la ruta sea correcta
+import LoginForm from '@/app/componets/Login-componets/LoginForm';
+import Head from 'next/head';
 
 const SectionWrapper = styled.section`
   display: flex;
@@ -25,9 +26,11 @@ const Title = styled.h1`
 const LoginSection = () => {
   return (
     <SectionWrapper>
-
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </Head>
       <Link href="/">
-      <Logo src="/icons/logo.png" alt="Logo" />
+        <Logo src="/icons/logo.png" alt="Logo" />
       </Link>
       <Title>Hello, welcome to pawHome</Title>
       <LoginForm />
