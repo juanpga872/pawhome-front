@@ -1,9 +1,11 @@
 "use client";
+
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import LoginForm from '../componets/Login-componets/LoginForm'; 
 import PawPrintLoader from '@/app/componets/preloader/preloader'; 
+
 
 const SectionWrapper = styled.section`
   display: flex;
@@ -36,6 +38,7 @@ const LoginSection = () => {
   }, []);
 
   return (
+
     <>
       {loading ? (
         <PawPrintLoader />
@@ -49,6 +52,18 @@ const LoginSection = () => {
         </SectionWrapper>
       )}
     </>
+
+    <SectionWrapper>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </Head>
+      <Link href="/">
+        <Logo src="/icons/logo.png" alt="Logo" />
+      </Link>
+      <Title>Hello, welcome to pawHome</Title>
+      <LoginForm />
+    </SectionWrapper>
+
   );
 };
 
