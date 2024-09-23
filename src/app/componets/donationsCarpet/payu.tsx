@@ -138,7 +138,7 @@ const Index = styled.span`
 const DonationComponent: React.FC = () => {
   return (
     <Container id="donation-section">
-    <Title>Donar con</Title>
+    <Title>Donate</Title>
     <Logo src="/icons/payuu.png" alt="PayU Logo" />
     <DonationGrid>
       {donations.map((donation, index) => (
