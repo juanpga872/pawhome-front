@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
 import styled from 'styled-components';
-import{DogAdoptionButton} from '@/app/componets/ui/Button/button.ui'
+import { DogAdoptionButton } from '@/app/componets/ui/Button/button.ui';
 
 const Section = styled.section`
   background: url('https://www.fundaciontepa.org/wp-content/uploads/2020/09/fonddo-cabecera-adopta.jpg') no-repeat center center;
@@ -38,9 +38,14 @@ const ContainerInformation = styled.div`
   flex-direction: column; 
   align-items: center;
   gap: 20px;
+  position: relative; 
+  z-index: 2; 
+
+  /* Reduce z-index on hover */
+  &:hover {
+    z-index: 1; /* Lower the z-index when hovered */
+  }
 `;
-
-
 
 export default function Header() {
   return (
@@ -48,11 +53,11 @@ export default function Header() {
       <Container>
         <ContainerInformation>
           <Title>
-            <h1>Adopciones</h1>
-            <p>Encuentra tu alma gemela</p>
+            <h1>Adoptions</h1>
+            <p>Find your soulmate</p>
           </Title>
           <Buttons>
-      <DogAdoptionButton href='/donate'>Donate</DogAdoptionButton>
+            <DogAdoptionButton href='/donate'>Donate</DogAdoptionButton>
           </Buttons>
         </ContainerInformation>
       </Container>

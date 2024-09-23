@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
-import { MdShoppingCart, MdDelete } from 'react-icons/md';
 
-// Estilos
+import { MdShoppingCart, MdDelete } from 'react-icons/md'; // Import icons from react-icons
+
+
 const FloatingCartContainer = styled.div`
   position: fixed;
   bottom: 20px;
@@ -234,6 +235,7 @@ const CheckoutButton = styled.button`
   }
 `;
 
+
 const CouponContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -251,6 +253,7 @@ const CouponInput = styled.input`
   border-radius: 5px;
   outline: none;
   transition: border-color 0.3s;
+
 
   &:focus {
     border-color: #731d97;
@@ -288,7 +291,7 @@ export type CartItemType = {
   imagePath: string;
 };
 
-// Componente del carrito
+
 const CartComponent: React.FC<{
   cartItems: CartItemType[];
   onRemoveItem: (index: number) => void;
@@ -347,12 +350,105 @@ const CartComponent: React.FC<{
     };
   }, [isModalOpen]);
 
+
+  const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const discountedTotal = discountApplied ? total * 0.9 : total; // 10% discount
+  const hasItems = cartItems.length > 0;
+
+  const handleRemoveItem = (index: number) => {
+    if (cartItems.length === 1) {
+      setIsConfirmDeleteOpen(true);
+    } else {
+      onRemoveItem(index);
+      setIsProductRemovedOpen(true);
+      setTimeout(() => setIsProductRemovedOpen(false), 2000);
+    }
+  };
+
+  const confirmDeleteAll = () => {
+    cartItems.forEach((_, index) => onRemoveItem(index));
+    setIsConfirmDeleteOpen(false);
+  };
+
+  const applyDiscount = () => {
+    if (discountCode === 'riwi') {
+      setDiscountApplied(true);
+    }
+  };
+
+
   return (
     <FloatingCartContainer>
       <CartIcon onClick={openModal}>
         <MdShoppingCart size="24" color="white" />
         {hasItems && <CartCount>{cartItems.length}</CartCount>}
       </CartIcon>
+
+
+      <Modal ref={modalRef} isOpen={isModalOpen}>
+        <ModalContent hasItems={hasItems}>
+          <CartTitle>Your Cart</CartTitle>
+          <ScrollableContent>
+            {hasItems ? (
+              <CartItemsList>
+                {cartItems.map((item, index) => (
+                  <CartItemCard key={item.id} isHighlighted={index % 2 === 0}>
+                    <ProductImageContainer>
+                      <ProductImage src={item.imagePath} alt={item.name} />
+                      <CartItemDetails>
+                        <ProductName>{item.name}</ProductName>
+                        <ProductPrice>${item.price.toFixed(2)}</ProductPrice>
+                        <ProductWeight>Weight: {item.weight} KG</ProductWeight>
+                      </CartItemDetails>
+                    </ProductImageContainer>
+                    <QuantityControl>
+                      <QuantityButton onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}>
+                        +
+                      </QuantityButton>
+                      <QuantityCounter>{item.quantity}</QuantityCounter>
+                      <RemoveButton onClick={() => handleRemoveItem(index)}>
+                        <MdDelete size="16" />
+                      </RemoveButton>
+                    </QuantityControl>
+                  </CartItemCard>
+                ))}
+              </CartItemsList>
+            ) : (
+              <EmptyCartMessageContainer>
+                <EmptyCartIcon size="3x" />
+                <EmptyCartText>Your cart is empty!</EmptyCartText>
+                <StartShoppingButton onClick={() => window.location.href = '/products'}>
+                  Start Shopping
+                </StartShoppingButton>
+              </EmptyCartMessageContainer>
+            )}
+          </ScrollableContent>
+
+          {hasItems && (
+            <FixedBottomContent>
+              <CartTotalContainer>
+                <span>Total:</span>
+                <span>${discountedTotal.toFixed(2)}</span>
+              </CartTotalContainer>
+              <input
+                type="text"
+                value={discountCode}
+                onChange={(e) => setDiscountCode(e.target.value)}
+                placeholder="Discount Code"
+              />
+              <button onClick={applyDiscount}>Apply</button>
+              <CheckoutButton onClick={closeModal}>Checkout</CheckoutButton>
+            </FixedBottomContent>
+          )}
+        </ModalContent>
+      </Modal>
+
+      {isProductRemovedOpen && (
+        <CenteredModal isOpen={isProductRemovedOpen}>
+          <ModalContent hasItems={true}>
+            <CartTitle>Product Removed</CartTitle>
+            <ScrollableContent>
+              <p>The product has been removed from the cart.</p>
 
       <ModalOverlay isOpen={isModalOpen}>
         <Modal ref={modalRef}>
@@ -392,7 +488,25 @@ const CartComponent: React.FC<{
                   </StartShoppingButton>
                 </EmptyCartMessageContainer>
               )}
+
             </ScrollableContent>
+
+
+      {isConfirmDeleteOpen && (
+        <CenteredModal isOpen={isConfirmDeleteOpen}>
+          <ModalContent hasItems={true}>
+            <CartTitle>Attention!</CartTitle>
+            <ScrollableContent>
+              <p>Are you sure you want to remove all items from your cart?</p>
+            </ScrollableContent>
+            <FixedBottomContent>
+              <button onClick={confirmDeleteAll} style={{ marginRight: '10px', padding: '10px', backgroundColor: '#ff4136', color: 'white', border: 'none', borderRadius: '5px' }}>
+                Yes, remove all
+              </button>
+              <button onClick={() => setIsConfirmDeleteOpen(false)} style={{ padding: '10px', backgroundColor: '#ad57d2', color: 'white', border: 'none', borderRadius: '5px' }}>
+                No, go back
+              </button>
+            </FixedBottomContent>
 
             {hasItems && (
               <FixedBottomContent>
@@ -412,6 +526,7 @@ const CartComponent: React.FC<{
                 <CheckoutButton onClick={checkLogin}>Finalizar compra</CheckoutButton>
               </FixedBottomContent>
             )}
+
           </ModalContent>
         </Modal>
       </ModalOverlay>
@@ -424,7 +539,9 @@ export default CartComponent;
 const EmptyCartMessageContainer = styled.div`
   text-align: center;
   padding: 40px 20px;
-  background-color: #f9f9f9;
+
+  background-color: #f9f9f9; 
+
   border-radius: 8px;
   margin: 20px 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -440,6 +557,18 @@ const EmptyCartText = styled.p`
   margin: 10px 0;
 `;
 
+
+const StartShoppingLink = styled.a`
+  color: #ad57d2;
+  text-decoration: underline;
+  font-size: 16px;
+  transition: color 0.3s;
+
+  &:hover {
+    color: #731d97; /* Color on hover */
+  }
+`;
+
 const StartShoppingButton = styled.button`
   background-color: #ad57d2;
   color: white;
@@ -451,6 +580,8 @@ const StartShoppingButton = styled.button`
   transition: background-color 0.3s;
 
   &:hover {
+
     background-color: #731d97; 
+
   }
 `;

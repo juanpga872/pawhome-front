@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import styled, { createGlobalStyle, keyframes } from 'styled-components';
 import { FaFacebookF, FaGooglePlusG, FaArrowLeft } from 'react-icons/fa';
@@ -6,25 +5,25 @@ import jwtDecode from 'jwt-decode';
 import LoginButton from './buttonGoogle'; // Asegúrate de tener el botón de Google
 import FacebookLoginButton from './buttonfacebook'; // Asegúrate de crear un botón para Facebook
 
-// const GlobalStyle = createGlobalStyle`
-//   @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+const GlobalStyle = createGlobalStyle`
+  @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
   
-//   * {
-//     box-sizing: border-box;
-//   }
+  * {
+    box-sizing: border-box;
+  }
   
-//   body {
-//     background: #FFFFFFFF;
-//     display: flex;
-//     justify-content: center;
-//     align-items: center;
-//     flex-direction: column;
-//     font-family: 'Montserrat', sans-serif;
-//     height: 100vh;
-//   }
-// `;
+  body {
+    background: #FFFFFFFF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-family: 'Montserrat', sans-serif;
+    height: 100vh;
+  }
+`;
 
-// Keyframes for animations
+// Animaciones
 const slideInFromRight = keyframes`
   from {
     transform: translateX(100%);
@@ -191,7 +190,6 @@ const Container = styled.div<{ $rightPanelActive: boolean }>`
       display: none;
     }
   }
-    
 `;
 
 const Title = styled.h1`
@@ -242,12 +240,12 @@ const Button = styled.button<{ $ghost?: boolean }>`
 `;
 
 const ToggleButton = styled(Button)`
-  display: none; // Oculta el botón por defecto
+  display: none;
 
   @media (max-width: 768px) {
-    display: block; // Muestra el botón en dispositivos móviles
+    display: block;
     position: fixed;
-    bottom: 20px;
+    bottom: -1px;
     left: 50%;
     transform: translateX(-50%);
     background-color: #FF416C;
@@ -255,6 +253,7 @@ const ToggleButton = styled(Button)`
     border: none;
     z-index: 1000;
     margin: 0;
+    padin:1rem
   }
 `;
 
@@ -287,19 +286,7 @@ const SocialContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap:2rem
-`;
-
-const SocialLink = styled.a`
-  border: 1px solid #FFFFFFFF;
-  border-radius: 50%;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0 5px;
-  height: 40px;
-  width: 40px;
-  color: #000000FF;
+  gap: 2rem;
 `;
 
 const Footer = styled.footer`
@@ -312,152 +299,44 @@ const Footer = styled.footer`
   right: 0;
   text-align: center;
   z-index: 999;
-  
-  p {
-    margin: 10px 0;
-  }
-  
-  a {
-    color: #3c97bf;
-    text-decoration: none;
-  }
-`; 
+  padding: 10px 0;
+`;
 
+const LoginPage = () => {
+  const [rightPanelActive, setRightPanelActive] = useState(false);
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  interface DecodedToken {
-    sub: string;
-    role: string;
-  }
-  
-  const LoginForm: React.FC = () => {
-    const [rightPanelActive, setRightPanelActive] = useState(false);
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [name, setName] = useState('');
-    const [phone, setPhone] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
-    const [registerMessage, setRegisterMessage] = useState('');
+  const toggleForm = () => {
+    setRightPanelActive(!rightPanelActive);
+  };
 
+  const handleRegister = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Aquí puedes añadir la lógica para el registro
+  };
 
-    const decodeJwtToken = (token: string) => {
-      try {
-        // Divide el token en sus partes
-        const base64Url = token.split('.')[1];
-        // Reemplaza caracteres especiales
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        // Decodifica base64 a una cadena JSON
-        const jsonPayload = decodeURIComponent(
-          atob(base64)
-            .split('')
-            .map(function (c) {
-              return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            })
-            .join('')
-        );
-        // Parsear JSON y devolver
-        return JSON.parse(jsonPayload);
-      } catch (error) {
-        console.error('Error decoding JWT:', error);
-        return null;
-      }
-    };
-  
-    // Función para manejar el login
-    const handleSignIn = async (e: React.FormEvent) => {
-      e.preventDefault();
-    
-      try {
-        const response = await fetch('https://powhome.azurewebsites.net/api/Auth/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email,
-            password,
-          }),
-        });
-    
-        if (response.ok) {
-          const data = await response.json();
-          const { token } = data;
-    
-          const decodedToken = decodeJwtToken(token);
-          if (decodedToken) {
-            const { sub: userEmail, role } = decodedToken;
-    
-            // Almacenar el token en localStorage
-            localStorage.setItem('token', token);
-    
-            if (role === 'Admin') {
-              // Almacenar el email si el usuario es admin
-              localStorage.setItem('adminEmail', userEmail);
-              window.location.href = '/admin';
-            } else {
-              window.location.href = '/';
-            }
-          } else {
-            setErrorMessage('Token inválido');
-          }
-        } else {
-          setErrorMessage('Email o contraseña incorrectos');
-        }
-      } catch (error) {
-        console.error('Error during sign-in:', error);
-        setErrorMessage('Ocurrió un error al intentar iniciar sesión');
-      }
-    };
-  
-
-    const handleRegister = async (e: React.FormEvent) => {
-      e.preventDefault();
-      
-      console.log("Registering user with:", { name, phone, email, password });
-    
-      try {
-        const response = await fetch('https://powhome.azurewebsites.net/api/v1/Users', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            name,
-            phone,
-            email,
-            password,
-            isAdmin: false,
-          }),
-        });
-    
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Registration successful:', data);
-          setRegisterMessage('Registration successful! Please log in.');
-          setErrorMessage('');
-        } else {
-          const errorData = await response.json();
-          console.log('Error during registration:', errorData);
-          setErrorMessage(errorData.message || 'Failed to register');
-        }
-      } catch (error) {
-        console.log('Request failed with error:', error);
-        setErrorMessage('An error occurred while trying to register');
-      }
-    };
-  
-    const toggleForm = () => {
-      setRightPanelActive(!rightPanelActive);
-    };
+  const handleSignIn = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Aquí puedes añadir la lógica para el inicio de sesión
+  };
 
   return (
     <>
+
+      <GlobalStyle />
+      <StyledIcon rightPanelActive={rightPanelActive} onClick={toggleForm} />
+
       <Container $rightPanelActive={rightPanelActive}>
         <div className="form-container sign-up-container">
           <Form onSubmit={handleRegister}>
             <Title>Create Account</Title>
             <SocialContainer>
               <LoginButton />
-              <FacebookLoginButton /> {/* Asegúrate de tener un botón para Facebook */}
+              <FacebookLoginButton />
             </SocialContainer>
             <Span>or use your email for registration</Span>
             <Input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
@@ -465,11 +344,9 @@ const Footer = styled.footer`
             <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
             <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
             <Button type="submit">Sign Up</Button>
-            <br />
-            <br />
             <ToggleButton onClick={toggleForm}>
-          {rightPanelActive ? 'Sign In' : 'Sign Up'}
-        </ToggleButton>
+              {rightPanelActive ? 'Sign In' : 'Sign Up'}
+            </ToggleButton>
           </Form>
         </div>
 
@@ -478,7 +355,7 @@ const Footer = styled.footer`
             <Title>Sign in</Title>
             <SocialContainer>
               <LoginButton />
-              <FacebookLoginButton /> 
+              <FacebookLoginButton />
             </SocialContainer>
             <Span>or use your account</Span>
             <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -486,8 +363,8 @@ const Footer = styled.footer`
             <Anchor href="#">Forgot your password?</Anchor>
             <Button type="submit">Sign In</Button>
             <ToggleButton onClick={toggleForm}>
-          {rightPanelActive ? 'Sign In' : 'Sign Up'}
-        </ToggleButton>
+              {rightPanelActive ? 'Sign In' : 'Sign Up'}
+            </ToggleButton>
             {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
           </Form>
         </div>
@@ -503,13 +380,16 @@ const Footer = styled.footer`
               <Title>Hello, Friend!</Title>
               <Paragraph>Enter your personal details and start your journey with us</Paragraph>
               <Button onClick={() => setRightPanelActive(true)}>Sign Up</Button>
-              
             </div>
           </div>
         </div>
       </Container>
+      <Footer>
+        © {new Date().getFullYear()} Your Company. All rights reserved.
+      </Footer>
     </>
   );
 };
 
-export default LoginForm;
+export default LoginPage;
+

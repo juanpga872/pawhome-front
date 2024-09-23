@@ -1,9 +1,9 @@
 import React, { useState, useEffect, MouseEvent } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { MdPerson } from 'react-icons/md'; // Importa el ícono de usuario de react-icons
+import { MdPerson } from 'react-icons/md'; // Import the user icon from react-icons
 import Image from 'next/image';
 
-// Animaciones
+// Animations
 const slideIn = keyframes`
   from {
     transform: translateX(-100%);
@@ -22,7 +22,7 @@ const slideOut = keyframes`
   }
 `;
 
-// Estilos
+// Styles
 const MenuWrapper = styled.div<{ isOpen: boolean }>`
   position: fixed;
   top: 0;
@@ -34,7 +34,7 @@ const MenuWrapper = styled.div<{ isOpen: boolean }>`
   transform: translateX(${({ isOpen }) => (isOpen ? '0' : '-100%')});
   transition: transform 0.3s ease-in-out;
   animation: ${({ isOpen }) => (isOpen ? slideIn : slideOut)} 0.3s ease-in-out;
-  z-index: 2;
+  z-index: 1000; /* Higher z-index to stay on top */
   display: flex;
   flex-direction: column;
   padding: 16px;
@@ -85,7 +85,7 @@ const HamburgerWrapper = styled.div`
   position: fixed;
   top: 5px;
   left: 16px;
-  z-index: 30;
+  z-index: 2000; /* Ensure this is above other elements */
   @media (max-width: 800px) {
     display: block;
   }
@@ -126,7 +126,6 @@ const App: React.FC = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    // Aquí puedes redirigir a la página de inicio o hacer otra acción
   };
 
   return (
@@ -138,8 +137,8 @@ const App: React.FC = () => {
           <MenuItem href="/">
             <Image src="/icons/logo.png" alt="Logo" width={100} height={100} />
           </MenuItem>
-          <MenuItem href="/donate">Donate</MenuItem>
-          <MenuItem href="/foster">Foster</MenuItem>
+          <MenuItem href="/donate">Donate and sponsor</MenuItem>
+          <MenuItem href="/foster">Adopt</MenuItem>
           <MenuItem href="/food">Food</MenuItem>
         </MenuItems>
         <IconContainer>
@@ -161,4 +160,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-
