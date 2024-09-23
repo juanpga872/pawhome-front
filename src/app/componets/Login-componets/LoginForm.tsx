@@ -379,7 +379,7 @@ const LoginPage = () => {
             <div className="overlay-panel overlay-right">
               <Title>Hello, Friend!</Title>
               <Paragraph>Enter your personal details and start your journey with us</Paragraph>
-              <Button onClick={() => setRightPanelActive(true)}>Sign Up</Button>
+              <Button onClick={() => setRightPanelActive(true)}>register</Button>
             </div>
           </div>
         </div>

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import LoginForm from '../componets/Login-componets/LoginForm'; 
 import PawPrintLoader from '@/app/componets/preloader/preloader'; 
-
+import Head from 'next/head'; // Import Head for SEO purposes
 
 const SectionWrapper = styled.section`
   display: flex;
@@ -38,8 +38,11 @@ const LoginSection = () => {
   }, []);
 
   return (
-
     <>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </Head>
+      
       {loading ? (
         <PawPrintLoader />
       ) : (
@@ -52,20 +55,7 @@ const LoginSection = () => {
         </SectionWrapper>
       )}
     </>
-
-    <SectionWrapper>
-      <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      </Head>
-      <Link href="/">
-        <Logo src="/icons/logo.png" alt="Logo" />
-      </Link>
-      <Title>Hello, welcome to pawHome</Title>
-      <LoginForm />
-    </SectionWrapper>
-
   );
 };
 
 export default LoginSection;
-
