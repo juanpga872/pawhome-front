@@ -6,23 +6,23 @@ import jwtDecode from 'jwt-decode';
 import LoginButton from './buttonGoogle'; // Asegúrate de tener el botón de Google
 import FacebookLoginButton from './buttonfacebook'; // Asegúrate de crear un botón para Facebook
 
-// const GlobalStyle = createGlobalStyle`
-//   @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+const GlobalStyle = createGlobalStyle`
+  @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
   
-//   * {
-//     box-sizing: border-box;
-//   }
+  * {
+    box-sizing: border-box;
+  }
   
-//   body {
-//     background: #FFFFFFFF;
-//     display: flex;
-//     justify-content: center;
-//     align-items: center;
-//     flex-direction: column;
-//     font-family: 'Montserrat', sans-serif;
-//     height: 100vh;
-//   }
-// `;
+  body {
+    background: #FFFFFFFF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-family: 'Montserrat', sans-serif;
+    height: 100vh;
+  }
+`;
 
 // Keyframes for animations
 const slideInFromRight = keyframes`
