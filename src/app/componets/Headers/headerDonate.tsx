@@ -156,7 +156,7 @@ const DonationPage = () => {
       </ContactInfo>
       <DonateOptions>
       <Button>DONATE WITH PAYU</Button>
-        <Button>DONATE WITH PAYPAL</Button>
+      <a href="/paypal"><Button>DONATE WITH PAYPAL</Button></a>
       </DonateOptions>
     </Container>
   );

@@ -140,6 +140,7 @@ const App: React.FC = () => {
           <MenuItem href="/donate">Donate and sponsor</MenuItem>
           <MenuItem href="/foster">Adopt</MenuItem>
           <MenuItem href="/food">Food</MenuItem>
+          <MenuItem href="/post">Post</MenuItem>
         </MenuItems>
         <IconContainer>
           {!token ? (

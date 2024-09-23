@@ -1,11 +1,12 @@
+'use client';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { AiOutlineHeart, AiOutlineMessage, AiOutlineSend, AiOutlineBook, AiOutlineClose, AiOutlineMore, AiOutlinePlusCircle } from 'react-icons/ai';
+import { AiOutlineHeart, AiOutlineMessage, AiOutlineSend, AiOutlineBook, AiOutlineMore, AiOutlinePlusCircle } from 'react-icons/ai';
 import ReactAvatar from 'react-avatar';
 
 const Container = styled.div`
   max-width: 600px;
-  margin: 0 auto;
+  margin: 0 auto; /* Sin margin superior */
   background-color: white;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   position: relative;
@@ -73,98 +74,33 @@ const PostContent = styled.div`
   padding: 0 16px 16px;
 `;
 
+const CommentSection = styled.div`
+  padding: 0 16px;
+`;
+
+const CommentInput = styled.input`
+  width: 100%;
+  padding: 8px;
+  margin-top: 8px;
+  border: 1px solid #dbdbdb;
+  border-radius: 4px;
+`;
+
+const Comment = styled.p`
+  font-size: 14px;
+  margin: 4px 0;
+`;
+
 const LikeCount = styled.span`
   font-size: 14px;
   margin-left: -8px;
 `;
 
-const StoryViewerContainer = styled.div`
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 50;
-  backdrop-filter: blur(5px);
-`;
-
-const StoryContent = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
-  max-width: 400px;
-  margin: 0 auto;
-  border-radius: 20px;
-  overflow: hidden;
-`;
-
-const StoryOverlay = styled.div`
+const AddImageButton = styled.label`
   position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 16px;
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 20px;
-`;
-
-const StoryHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const StoryUser = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`;
-
-const StoryUsername = styled.span`
-  color: white;
-  font-weight: 600;
-`;
-
-const StoryActions = styled.div`
-  display: flex;
-  gap: 16px;
-`;
-
-const StoryCentralContent = styled.div`
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const StoryImage = styled.img`
-  width: 100%;
-  height: auto;
-  border-radius: 20px;
-`;
-
-const StoryBottom = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-`;
-
-const StoryBottomItem = styled.div`
-  width: 80px;
-  height: 32px;
-  background-color: white;
-  border-radius: 16px;
-`;
-
-const ProgressBar = styled.div<{ width: number }>`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  height: 4px;
-  background-color: #e1306c;
-  width: ${({ width }) => width}%;
-  transition: width 0.1s;
+  top: 50px; /* Ajustar según el espacio que desees desde la parte superior */
+  right: 16px;
+  cursor: pointer;
 `;
 
 interface Story {
@@ -181,117 +117,34 @@ const initialStories: Story[] = [
   { id: 5, username: 'jaded_emi', imageUrl: '/icons/catfond.jpg' },
 ];
 
-interface StoryViewerProps {
-  story: Story;
-  onClose: () => void;
-}
-
-const StoryViewer: React.FC<StoryViewerProps> = ({ story, onClose }) => {
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          onClose();
-          return 100;
-        }
-        return prev + 1; // Aumenta el progreso
-      });
-    }, 100); // Ajusta la velocidad de la barra
-
-    return () => clearInterval(interval); // Limpia el intervalo al desmontar
-  }, [onClose]);
-
-  return (
-    <StoryViewerContainer>
-      <StoryContent>
-        <StoryOverlay>
-          <StoryHeader>
-            <StoryUser>
-              <ReactAvatar name={story.username} size="32" round={true} />
-              <StoryUsername>{story.username}</StoryUsername>
-            </StoryUser>
-            <StoryActions>
-              <AiOutlineClose color="white" size={24} onClick={onClose} style={{ cursor: 'pointer' }} />
-            </StoryActions>
-          </StoryHeader>
-          <StoryCentralContent>
-            <StoryImage src={story.imageUrl} alt={`${story.username}'s story`} />
-          </StoryCentralContent>
-          <StoryBottom>
-            <StoryBottomItem />
-            <StoryBottomItem />
-          </StoryBottom>
-        </StoryOverlay>
-        <ProgressBar width={progress} />
-      </StoryContent>
-    </StoryViewerContainer>
-  );
-};
-
-const ModalContainer = styled.div`
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-  backdrop-filter: blur(5px);
-`;
-
-const ModalContent = styled.div`
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  text-align: center;
-`;
-
-const CloseButton = styled.button`
-  margin-top: 10px;
-`;
-
-const SessionModal: React.FC<{ onClose: () => void }> = ({ onClose }) => (
-  <ModalContainer>
-    <ModalContent>
-      <h2>¡Debes iniciar sesión!</h2>
-      <p>Por favor, inicia sesión para continuar.</p>
-      <CloseButton onClick={onClose}>Cerrar</CloseButton>
-    </ModalContent>
-  </ModalContainer>
-);
-
-export default function InstagramPost() {
-  const [activeStory, setActiveStory] = useState<Story | null>(null);
-  const [posts, setPosts] = useState<Story[]>([]);
+const InstagramPost: React.FC = () => {
+  const [posts, setPosts] = useState<Story[]>(() => {
+    const savedPosts = localStorage.getItem('posts');
+    return savedPosts ? JSON.parse(savedPosts) : [];
+  });
   const [likes, setLikes] = useState<{ [key: number]: number }>({});
-  const [showModal, setShowModal] = useState(false); // Estado para mostrar el modal
+  const [comments, setComments] = useState<{ [key: number]: string[] }>({});
+  const [newComment, setNewComment] = useState<{ [key: number]: string }>({});
 
-  const addPost = (imageUrl: string) => {
-    const newPost: Story = {
-      id: posts.length + 1,
-      username: 'princess_peace',
-      imageUrl,
-    };
-    setPosts((prevPosts) => [...prevPosts, newPost]);
-    setLikes((prevLikes) => ({ ...prevLikes, [newPost.id]: 0 }));
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files && files[0]) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const newPost: Story = {
+          id: posts.length + 1,
+          username: 'princess_peace',
+          imageUrl: reader.result as string,
+        };
+        setPosts((prevPosts) => {
+          const updatedPosts = [...prevPosts, newPost];
+          localStorage.setItem('posts', JSON.stringify(updatedPosts));
+          return updatedPosts;
+        });
+      };
+      reader.readAsDataURL(files[0]);
+    }
   };
-
-  const burnExamplePosts = () => {
-    const exampleUrls = [
-      'https://s1.elespanol.com/2022/04/05/actualidad/662693884_223269248_1024x576.jpg',
-      'https://as01.epimg.net/diarioas/imagenes/2022/05/29/actualidad/1653826510_995351_1653826595_noticia_normal.jpg',
-      'https://c.files.bbci.co.uk/48DD/production/_107435681_perro1.jpg',
-    ];
-
-    exampleUrls.forEach(url => addPost(url));
-  };
-
-  useEffect(() => {
-    burnExamplePosts();
-  }, []);
 
   const handleLike = (postId: number) => {
     setLikes((prevLikes) => ({
@@ -300,34 +153,53 @@ export default function InstagramPost() {
     }));
   };
 
-  const isValidUrl = (urlString: string) => {
-    try {
-      new URL(urlString);
-      return true;
-    } catch (_) {
-      return false;
+  const handleCommentChange = (postId: number, value: string) => {
+    setNewComment((prev) => ({
+      ...prev,
+      [postId]: value,
+    }));
+  };
+
+  const handleCommentSubmit = (postId: number) => {
+    if (newComment[postId]) {
+      setComments((prevComments) => ({
+        ...prevComments,
+        [postId]: [...(prevComments[postId] || []), newComment[postId]],
+      }));
+      setNewComment((prev) => ({
+        ...prev,
+        [postId]: '',
+      }));
+      // Guardar comentarios en localStorage
+      localStorage.setItem('comments', JSON.stringify({
+        ...comments,
+        [postId]: [...(comments[postId] || []), newComment[postId]],
+      }));
     }
   };
 
-  const handleImageInput = () => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      const imageUrl = prompt('Introduce la URL de la nueva imagen:');
-      if (imageUrl && isValidUrl(imageUrl)) {
-        addPost(imageUrl);
-      } else {
-        alert('Por favor, introduce una URL válida.');
-      }
-    } else {
-      setShowModal(true); // Mostrar modal si no hay token
+  useEffect(() => {
+    const savedComments = localStorage.getItem('comments');
+    if (savedComments) {
+      setComments(JSON.parse(savedComments));
     }
-  };
+  }, []);
 
   return (
     <Container>
+      <AddImageButton htmlFor="imageUpload">
+        <AiOutlinePlusCircle size={30} color="#e1306c" />
+      </AddImageButton>
+      <input 
+        type="file" 
+        accept="image/*" 
+        style={{ display: 'none' }} 
+        id="imageUpload" 
+        onChange={handleImageUpload}
+      />
       <StoriesContainer>
         {initialStories.map((story) => (
-          <StoryWrapper key={story.id} onClick={() => setActiveStory(story)}>
+          <StoryWrapper key={story.id}>
             <AvatarWrapper>
               <ReactAvatar name={story.username} size="64" round={true} />
             </AvatarWrapper>
@@ -351,7 +223,7 @@ export default function InstagramPost() {
               <AiOutlineMessage size={28} />
               <AiOutlineSend size={28} />
             </ActionGroup>
-            <AiOutlineBook size={28} /> {/* Cambiado aquí */}
+            <AiOutlineBook size={28} />
           </ActionsContainer>
           <PostContent>
             <p style={{ fontWeight: '600', marginBottom: '8px' }}>Liked by kyla_kayaks and others</p>
@@ -360,21 +232,29 @@ export default function InstagramPost() {
               <span style={{ color: '#00376b' }}> #weekendvibes</span>
             </p>
           </PostContent>
+
+          <CommentSection>
+            {comments[post.id] && comments[post.id].map((comment, index) => (
+              <Comment key={index}>
+                <span style={{ fontWeight: '600' }}>{post.username}</span> {comment}
+              </Comment>
+            ))}
+            <CommentInput
+              type="text"
+              placeholder="Add a comment..."
+              value={newComment[post.id] || ''}
+              onChange={(e) => handleCommentChange(post.id, e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  handleCommentSubmit(post.id);
+                }
+              }}
+            />
+          </CommentSection>
         </div>
       ))}
-
-      {activeStory && (
-        <StoryViewer story={activeStory} onClose={() => setActiveStory(null)} />
-      )}
-
-      <AiOutlinePlusCircle 
-        size={60} 
-        color="#e1306c" 
-        style={{ position: 'absolute', bottom: '16px', right: '16px', cursor: 'pointer' }} 
-        onClick={handleImageInput}
-      />
-
-      {showModal && <SessionModal onClose={() => setShowModal(false)} />}
     </Container>
   );
-}
+};
+
+export default InstagramPost;

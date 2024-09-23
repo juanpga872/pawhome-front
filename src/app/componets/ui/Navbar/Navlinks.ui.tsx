@@ -54,6 +54,7 @@ const NavLinks: React.FC<NavLinksProps> = ({ isOpen }) => {
       <NavLink href="/donate">donate and sponsor</NavLink>
       <NavLink href="/foster">adopt</NavLink>
       <NavLink href="/food">Food</NavLink>
+      <NavLink href="/post">post</NavLink>
       
       {/* Si no hay token en localStorage, muestra el enlace de login */}
       {!token && (
