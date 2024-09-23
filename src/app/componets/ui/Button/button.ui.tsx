@@ -12,8 +12,6 @@ export const DogAdoptionButton = styled.a`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.6); /* Soft shadow */
   transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition on hover */
   text-decoration: none;
-  z-index: 20; 
-
   &:hover {
     background-color: #FF1493; /* Darker pink */
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* More pronounced shadow on hover */

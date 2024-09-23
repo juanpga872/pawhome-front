@@ -147,7 +147,7 @@ const DonationComponent: React.FC = () => {
             <DogImage src={donation.image} alt={`Dog ${index + 1}`} />
             <Index>{index + 1}</Index>
             <DonationInfo>
-              <DonationLabel>Donar</DonationLabel>
+              <DonationLabel>donate</DonationLabel>
               <DonationAmount>${donation.amount.toLocaleString()} COP</DonationAmount>
             </DonationInfo>
           </CircleWrapper>
