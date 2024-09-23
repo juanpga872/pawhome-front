@@ -155,12 +155,12 @@ const DonationPage = () => {
         </ContactItem>
       </ContactInfo>
       <DonateOptions>
-<<<<<<< HEAD
+
       <Button>DONATE WITH PAYU</Button>
       <a href="/paypal"><Button>DONATE WITH PAYPAL</Button></a>
-=======
+
         <Button>DONATE WITH PAYPAL</Button>
->>>>>>> d3d558c919e731c55722487dad3f2a36607e50a3
+
       </DonateOptions>
     </Container>
   );
