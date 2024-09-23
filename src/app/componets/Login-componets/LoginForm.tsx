@@ -326,8 +326,10 @@ const LoginPage = () => {
 
   return (
     <>
+
       <GlobalStyle />
       <StyledIcon rightPanelActive={rightPanelActive} onClick={toggleForm} />
+
       <Container $rightPanelActive={rightPanelActive}>
         <div className="form-container sign-up-container">
           <Form onSubmit={handleRegister}>

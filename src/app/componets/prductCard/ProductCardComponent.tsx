@@ -102,6 +102,28 @@ const ProductGrid = styled.div`
   flex-wrap: wrap;
   justify-content: center;
   margin: 2rem 0;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+  }
+`;
+
+const ResponsiveCard = styled(Card)`
+  @media (max-width: 768px) {
+    width: 100%;
+    margin-left: 0;
+    margin-bottom: 1rem;
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    width: calc(50% - 1rem);
+    margin-left: 0.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    width: 16rem;
+  }
 `;
 
 interface Product {
@@ -111,17 +133,23 @@ interface Product {
   description: string;
   weightKG: number;
   imagePath: string;
-  isDog: boolean; // Campo para indicar si es un perro
+  isDog: boolean;
 }
 
 const ProductPage: React.FC = () => {
-  const [cart, setCart] = useState<CartItemType[]>([]);
+  const [cart, setCart] = useState<CartItemType[]>(() => {
+    const savedCart = localStorage.getItem('cart');
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
   const [productType, setProductType] = useState<'dog' | 'cat' | 'all'>('all');
   const [selectedWeight, setSelectedWeight] = useState<{ [key: string]: number }>({});
   const [products, setProducts] = useState<Product[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch products from the API
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart]);
+
   const fetchProducts = async () => {
     try {
       const response = await fetch('https://powhome.azurewebsites.net/api/v1/Products');
@@ -137,7 +165,7 @@ const ProductPage: React.FC = () => {
         description: product.description,
         weightKG: product.weightKG,
         imagePath: product.imagePath,
-        isDog: product.typeOfProduct === true // Ajuste aquí
+        isDog: product.typeOfProduct === true
       }));
 
       setProducts(transformedData);
@@ -154,7 +182,7 @@ const ProductPage: React.FC = () => {
       fetchProducts();
     }, 5000);
 
-    return () => clearInterval(intervalId); // Cleanup interval on unmount
+    return () => clearInterval(intervalId);
   }, []);
 
   const handleAddToCart = (product: Omit<CartItemType, 'id'>) => {
@@ -212,7 +240,7 @@ const ProductPage: React.FC = () => {
             const selectedWeightValue = selectedWeight[product.name] || product.weightKG;
 
             return (
-              <Card key={product.id}>
+              <ResponsiveCard key={product.id}>
                 <ProductImage src={product.imagePath} alt={product.name} />
                 <ProductName>{product.name}</ProductName>
                 <PriceContainer>
@@ -228,16 +256,18 @@ const ProductPage: React.FC = () => {
                     {product.weightKG} KG
                   </WeightButton>
                 </WeightSelector>
-                <AddToCartButton onClick={() => handleAddToCart({
-                  name: product.name,
-                  price: product.price,
-                  weight: selectedWeightValue,
-                  quantity: 1,
-                  imagePath: product.imagePath,
-                })}>
+                <AddToCartButton onClick={() => {
+                  handleAddToCart({
+                    name: product.name,
+                    price: product.price,
+                    weight: selectedWeightValue,
+                    quantity: 1,
+                    imagePath: product.imagePath,
+                  });
+                }}>
                   Add to Cart
                 </AddToCartButton>
-              </Card>
+              </ResponsiveCard>
             );
           })}
       </ProductGrid>

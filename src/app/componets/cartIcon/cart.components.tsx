@@ -1,14 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
+
 import { MdShoppingCart, MdDelete } from 'react-icons/md'; // Import icons from react-icons
 
-// Styles
 
 const FloatingCartContainer = styled.div`
   position: fixed;
   bottom: 20px;
   right: 20px;
   z-index: 1000;
+
+  @media (max-width: 768px) {
+    bottom: 10px;
+    right: 10px;
+  }
 `;
 
 const CartIcon = styled.div`
@@ -40,8 +45,19 @@ const CartCount = styled.span`
   right: 0;
 `;
 
-const Modal = styled.div<{ isOpen: boolean }>`
-  display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
+const ModalOverlay = styled.div<{ isOpen: boolean }>`
+  display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+`;
+
+const Modal = styled.div`
+  display: flex;
   flex-direction: column;
   position: fixed;
   top: 0;
@@ -52,14 +68,10 @@ const Modal = styled.div<{ isOpen: boolean }>`
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
   z-index: 1000;
   transition: transform 0.3s ease-in-out;
-`;
 
-const CenteredModal = styled(Modal)`
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 300px;
-  height: auto;
+  @media (max-width: 768px) {
+    width: 90%;
+  }
 `;
 
 const ModalContent = styled.div<{ hasItems: boolean }>`
@@ -223,8 +235,53 @@ const CheckoutButton = styled.button`
   }
 `;
 
-// Type for cart items
 
+const CouponContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
+const CouponInput = styled.input`
+  padding: 10px;
+  border: 1px solid #ad57d2;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.3s;
+
+
+  &:focus {
+    border-color: #731d97;
+  }
+
+  &::placeholder {
+    color: #bbb;
+  }
+`;
+
+const ApplyButton = styled.button`
+  background-color: #ad57d2;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+  transition: background-color 0.3s, transform 0.3s;
+
+  &:hover {
+    background-color: #731d97;
+    transform: scale(1.05);
+  }
+`;
+
+// Tipo para los ítems del carrito
 export type CartItemType = {
   id: number;
   name: string;
@@ -234,16 +291,13 @@ export type CartItemType = {
   imagePath: string;
 };
 
-// Cart component
 
 const CartComponent: React.FC<{
   cartItems: CartItemType[];
   onRemoveItem: (index: number) => void;
   onUpdateQuantity: (id: number, newQuantity: number) => void;
-}> = ({ cartItems = [], onRemoveItem, onUpdateQuantity }) => {
+}> = ({ cartItems, onRemoveItem, onUpdateQuantity }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
-  const [isProductRemovedOpen, setIsProductRemovedOpen] = useState(false);
   const [discountCode, setDiscountCode] = useState('');
   const [discountApplied, setDiscountApplied] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -256,6 +310,29 @@ const CartComponent: React.FC<{
     setIsModalOpen(false);
   };
 
+  const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const discountedTotal = discountApplied ? total * 0.9 : total; // 10% de descuento
+  const hasItems = cartItems.length > 0;
+
+  const handleRemoveItem = (index: number) => {
+    onRemoveItem(index);
+  };
+
+  const applyDiscount = () => {
+    if (discountCode === 'riwi') {
+      setDiscountApplied(true);
+    }
+  };
+
+  const checkLogin = () => {
+    const token = localStorage.getItem('token'); // Verifica el token en localStorage
+    if (!token) {
+      alert('Por favor, inicia sesión para continuar.');
+      return;
+    }
+    closeModal(); // Cierra el modal del carrito si todo está bien
+  };
+
   const handleClickOutside = (event: MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
       closeModal();
@@ -264,15 +341,15 @@ const CartComponent: React.FC<{
 
   useEffect(() => {
     if (isModalOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      window.addEventListener('click', handleClickOutside);
     } else {
-      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('click', handleClickOutside);
     }
-
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('click', handleClickOutside);
     };
   }, [isModalOpen]);
+
 
   const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const discountedTotal = discountApplied ? total * 0.9 : total; // 10% discount
@@ -299,12 +376,14 @@ const CartComponent: React.FC<{
     }
   };
 
+
   return (
     <FloatingCartContainer>
       <CartIcon onClick={openModal}>
         <MdShoppingCart size="24" color="white" />
         {hasItems && <CartCount>{cartItems.length}</CartCount>}
       </CartIcon>
+
 
       <Modal ref={modalRef} isOpen={isModalOpen}>
         <ModalContent hasItems={hasItems}>
@@ -370,10 +449,48 @@ const CartComponent: React.FC<{
             <CartTitle>Product Removed</CartTitle>
             <ScrollableContent>
               <p>The product has been removed from the cart.</p>
+
+      <ModalOverlay isOpen={isModalOpen}>
+        <Modal ref={modalRef}>
+          <ModalContent hasItems={hasItems}>
+            <CartTitle>Tu carrito</CartTitle>
+            <ScrollableContent>
+              {hasItems ? (
+                <CartItemsList>
+                  {cartItems.map((item, index) => (
+                    <CartItemCard key={item.id} isHighlighted={index % 2 === 0}>
+                      <ProductImageContainer>
+                        <ProductImage src={item.imagePath} alt={item.name} />
+                        <CartItemDetails>
+                          <ProductName>{item.name}</ProductName>
+                          <ProductPrice>${item.price.toFixed(2)}</ProductPrice>
+                          <ProductWeight>Peso: {item.weight} KG</ProductWeight>
+                        </CartItemDetails>
+                      </ProductImageContainer>
+                      <QuantityControl>
+                        <QuantityButton onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}>
+                          +
+                        </QuantityButton>
+                        <QuantityCounter>{item.quantity}</QuantityCounter>
+                        <RemoveButton onClick={() => handleRemoveItem(index)}>
+                          <MdDelete size="16" />
+                        </RemoveButton>
+                      </QuantityControl>
+                    </CartItemCard>
+                  ))}
+                </CartItemsList>
+              ) : (
+                <EmptyCartMessageContainer>
+                  <EmptyCartIcon size="3x" />
+                  <EmptyCartText>¡Tu carrito está vacío!</EmptyCartText>
+                  <StartShoppingButton onClick={() => window.location.href = '/products'}>
+                    Comienza a comprar
+                  </StartShoppingButton>
+                </EmptyCartMessageContainer>
+              )}
+
             </ScrollableContent>
-          </ModalContent>
-        </CenteredModal>
-      )}
+
 
       {isConfirmDeleteOpen && (
         <CenteredModal isOpen={isConfirmDeleteOpen}>
@@ -390,9 +507,29 @@ const CartComponent: React.FC<{
                 No, go back
               </button>
             </FixedBottomContent>
+
+            {hasItems && (
+              <FixedBottomContent>
+                <CartTotalContainer>
+                  <span>Total:</span>
+                  <span>${discountedTotal.toFixed(2)}</span>
+                </CartTotalContainer>
+                <CouponContainer>
+                  <CouponInput
+                    type="text"
+                    value={discountCode}
+                    onChange={(e) => setDiscountCode(e.target.value)}
+                    placeholder="Código de descuento"
+                  />
+                  <ApplyButton onClick={applyDiscount}>Aplicar</ApplyButton>
+                </CouponContainer>
+                <CheckoutButton onClick={checkLogin}>Finalizar compra</CheckoutButton>
+              </FixedBottomContent>
+            )}
+
           </ModalContent>
-        </CenteredModal>
-      )}
+        </Modal>
+      </ModalOverlay>
     </FloatingCartContainer>
   );
 };
@@ -402,7 +539,9 @@ export default CartComponent;
 const EmptyCartMessageContainer = styled.div`
   text-align: center;
   padding: 40px 20px;
-  background-color: #f9f9f9; /* Light background color */
+
+  background-color: #f9f9f9; 
+
   border-radius: 8px;
   margin: 20px 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -417,6 +556,7 @@ const EmptyCartText = styled.p`
   color: #333;
   margin: 10px 0;
 `;
+
 
 const StartShoppingLink = styled.a`
   color: #ad57d2;
@@ -440,6 +580,8 @@ const StartShoppingButton = styled.button`
   transition: background-color 0.3s;
 
   &:hover {
-    background-color: #731d97; /* Color on hover */
+
+    background-color: #731d97; 
+
   }
 `;
