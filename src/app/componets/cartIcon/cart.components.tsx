@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
-import { MdShoppingCart, MdDelete } from 'react-icons/md'; // Importa los iconos de react-icons
+import { MdShoppingCart, MdDelete } from 'react-icons/md'; // Import icons from react-icons
 
-// Estilos
+// Styles
 
 const FloatingCartContainer = styled.div`
   position: fixed;
@@ -223,7 +223,7 @@ const CheckoutButton = styled.button`
   }
 `;
 
-// Tipo para los ítems del carrito
+// Type for cart items
 
 export type CartItemType = {
   id: number;
@@ -234,7 +234,7 @@ export type CartItemType = {
   imagePath: string;
 };
 
-// Componente del carrito
+// Cart component
 
 const CartComponent: React.FC<{
   cartItems: CartItemType[];
@@ -275,7 +275,7 @@ const CartComponent: React.FC<{
   }, [isModalOpen]);
 
   const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const discountedTotal = discountApplied ? total * 0.9 : total; // 10% de descuento
+  const discountedTotal = discountApplied ? total * 0.9 : total; // 10% discount
   const hasItems = cartItems.length > 0;
 
   const handleRemoveItem = (index: number) => {
@@ -308,7 +308,7 @@ const CartComponent: React.FC<{
 
       <Modal ref={modalRef} isOpen={isModalOpen}>
         <ModalContent hasItems={hasItems}>
-          <CartTitle>Tu carrito</CartTitle>
+          <CartTitle>Your Cart</CartTitle>
           <ScrollableContent>
             {hasItems ? (
               <CartItemsList>
@@ -319,7 +319,7 @@ const CartComponent: React.FC<{
                       <CartItemDetails>
                         <ProductName>{item.name}</ProductName>
                         <ProductPrice>${item.price.toFixed(2)}</ProductPrice>
-                        <ProductWeight>Peso: {item.weight} KG</ProductWeight>
+                        <ProductWeight>Weight: {item.weight} KG</ProductWeight>
                       </CartItemDetails>
                     </ProductImageContainer>
                     <QuantityControl>
@@ -337,9 +337,9 @@ const CartComponent: React.FC<{
             ) : (
               <EmptyCartMessageContainer>
                 <EmptyCartIcon size="3x" />
-                <EmptyCartText>¡Tu carrito está vacío!</EmptyCartText>
+                <EmptyCartText>Your cart is empty!</EmptyCartText>
                 <StartShoppingButton onClick={() => window.location.href = '/products'}>
-                  Comienza a comprar
+                  Start Shopping
                 </StartShoppingButton>
               </EmptyCartMessageContainer>
             )}
@@ -355,10 +355,10 @@ const CartComponent: React.FC<{
                 type="text"
                 value={discountCode}
                 onChange={(e) => setDiscountCode(e.target.value)}
-                placeholder="Código de descuento"
+                placeholder="Discount Code"
               />
-              <button onClick={applyDiscount}>Aplicar</button>
-              <CheckoutButton onClick={closeModal}>Finalizar compra</CheckoutButton>
+              <button onClick={applyDiscount}>Apply</button>
+              <CheckoutButton onClick={closeModal}>Checkout</CheckoutButton>
             </FixedBottomContent>
           )}
         </ModalContent>
@@ -367,9 +367,9 @@ const CartComponent: React.FC<{
       {isProductRemovedOpen && (
         <CenteredModal isOpen={isProductRemovedOpen}>
           <ModalContent hasItems={true}>
-            <CartTitle>Producto eliminado</CartTitle>
+            <CartTitle>Product Removed</CartTitle>
             <ScrollableContent>
-              <p>El producto ha sido eliminado del carrito.</p>
+              <p>The product has been removed from the cart.</p>
             </ScrollableContent>
           </ModalContent>
         </CenteredModal>
@@ -378,16 +378,16 @@ const CartComponent: React.FC<{
       {isConfirmDeleteOpen && (
         <CenteredModal isOpen={isConfirmDeleteOpen}>
           <ModalContent hasItems={true}>
-            <CartTitle>¡Atención!</CartTitle>
+            <CartTitle>Attention!</CartTitle>
             <ScrollableContent>
-              <p>¿Estás seguro que deseas eliminar todos los productos de tu carrito?</p>
+              <p>Are you sure you want to remove all items from your cart?</p>
             </ScrollableContent>
             <FixedBottomContent>
               <button onClick={confirmDeleteAll} style={{ marginRight: '10px', padding: '10px', backgroundColor: '#ff4136', color: 'white', border: 'none', borderRadius: '5px' }}>
-                Sí, eliminar todo
+                Yes, remove all
               </button>
               <button onClick={() => setIsConfirmDeleteOpen(false)} style={{ padding: '10px', backgroundColor: '#ad57d2', color: 'white', border: 'none', borderRadius: '5px' }}>
-                No, regresar
+                No, go back
               </button>
             </FixedBottomContent>
           </ModalContent>
@@ -402,7 +402,7 @@ export default CartComponent;
 const EmptyCartMessageContainer = styled.div`
   text-align: center;
   padding: 40px 20px;
-  background-color: #f9f9f9; /* Color de fondo claro */
+  background-color: #f9f9f9; /* Light background color */
   border-radius: 8px;
   margin: 20px 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -425,7 +425,7 @@ const StartShoppingLink = styled.a`
   transition: color 0.3s;
 
   &:hover {
-    color: #731d97; /* Color al pasar el mouse */
+    color: #731d97; /* Color on hover */
   }
 `;
 
@@ -440,6 +440,6 @@ const StartShoppingButton = styled.button`
   transition: background-color 0.3s;
 
   &:hover {
-    background-color: #731d97; /* Color al pasar el mouse */
+    background-color: #731d97; /* Color on hover */
   }
 `;

@@ -77,12 +77,12 @@ export default function Pets() {
       ) : (
         <Container id="pets-section">
           <Header>
-            <h1>Adopta una Mascota</h1>
+            <h1>Adopt a Pet</h1>
             <TypeSelector onTypeChange={handleFilterChange} />
             <SearchContainer>
               <SearchInput
                 type="text"
-                placeholder="Buscar por nombre..."
+                placeholder="Search by name..."
                 value={searchTerm}
                 onChange={handleSearchChange}
               />

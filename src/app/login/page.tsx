@@ -1,7 +1,9 @@
-"use client"
+"use client";
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
-import LoginForm from '../componets/Login-componets/LoginForm'; // Asegúrate de que la ruta sea correcta
+import LoginForm from '../componets/Login-componets/LoginForm'; 
+import PawPrintLoader from '@/app/componets/preloader/preloader'; 
 
 const SectionWrapper = styled.section`
   display: flex;
@@ -23,16 +25,32 @@ const Title = styled.h1`
 `;
 
 const LoginSection = () => {
-  return (
-    <SectionWrapper>
+  const [loading, setLoading] = useState(true);
 
-      <Link href="/">
-      <Logo src="/icons/logo.png" alt="Logo" />
-      </Link>
-      <Title>Hello, welcome to pawHome</Title>
-      <LoginForm />
-    </SectionWrapper>
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000); 
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <>
+      {loading ? (
+        <PawPrintLoader />
+      ) : (
+        <SectionWrapper>
+          <Link href="/">
+            <Logo src="/icons/logo.png" alt="Logo" />
+          </Link>
+          <Title>Hello, welcome to pawHome</Title>
+          <LoginForm />
+        </SectionWrapper>
+      )}
+    </>
   );
 };
 
 export default LoginSection;
+
