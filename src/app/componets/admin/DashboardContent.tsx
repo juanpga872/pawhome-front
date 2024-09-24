@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import emailjs from 'emailjs-com';
 import styled from 'styled-components';
 import { FaPaw, FaTrash } from 'react-icons/fa';
+import Swal from 'sweetalert2';
 
 interface AdoptionCenter {
   id: number;
@@ -108,37 +109,53 @@ const AdoptionTable: React.FC = () => {
     );
   };
 
-  const handleAccept = () => {
+  const handleAccept = async () => {
     const uniqueSelected = Array.from(new Set(selectedAdoptions));
-  
-    uniqueSelected.forEach((id) => {
+
+    // Mostrar el loader
+    Swal.fire({
+      title: 'Enviando correos...',
+      text: 'Por favor, espera un momento.',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    for (const id of uniqueSelected) {
       const adoption = adoptions.find(adoption => adoption.id === id);
-      console.log('Adopción encontrada:', adoption); 
+      
       if (adoption) {
         const templateParams = {
-          email_to_send: adoption.email, // Asegúrate de que este sea el correo del usuario
+          email_to_send: adoption.email,
           from_name: adoption.name,
           message: `¡Hola ${adoption.name}! Tu solicitud ha sido aceptada.`,
         };
-  
-        emailjs.send('service_2jv15nb', 'template_rmm9ils', templateParams, 'YR5J8VoxemSVTIQtW')
-          .then((response) => {
-            console.log('Correo enviado', response.status, response.text);
-            alert(`Correo enviado a ${adoption.email}`);
-          })
-          .catch((error) => {
-            console.error('Error al enviar correo', error);
-            alert('Error al enviar correo: ' + error.message);
+
+        try {
+          await emailjs.send('service_2jv15nb', 'template_rmm9ils', templateParams, 'YR5J8VoxemSVTIQtW');
+          console.log('Correo enviado');
+          await Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: `Correo enviado a ${adoption.email}`,
           });
+        } catch (error) {
+          console.error('Error al enviar correo', error);
+          await Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error al enviar correo: ' + (error as Error).message,
+          });
+        }
       } else {
-        console.error(`No se encontró la adopción con ID ${id}`); // Verifica si la adopción existe
+        console.error(`No se encontró la adopción con ID ${id}`);
       }
-    });
-  
-    // Limpiar la selección después de enviar correos
+    }
+
     setSelectedAdoptions([]);
+    Swal.close(); // Cierra el loader
   };
-  
 
   const handleDelete = async (id: number) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar esta solicitud?')) {
