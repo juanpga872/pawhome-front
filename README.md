@@ -1,6 +1,4 @@
 
-
-```markdown
 # Project Title: PawHome
 
 ## Theme
@@ -185,7 +183,8 @@ The following dependencies are used in the project:
 
 - **Juan Pablo Gómez Bustamante**  
   Email: gomezjuanzero@gmail.com  
-  LinkedIn: [gomezjuanzero](https://www.linkedin.com/in/gomezjuanzero)
+  LinkedIn: [gomezjuanzero]https://www.linkedin.com/in/juan-pablo-gomez-bustamante-a71475323/
+gomezzero
 
 ## Frontend Team Members
 - **José Miguel Barrientos Rivera**  
