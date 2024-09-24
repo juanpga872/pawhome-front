@@ -1,9 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
-import { MdShoppingCart, MdDelete } from 'react-icons/md'; // Importa los iconos de react-icons
+import { MdShoppingCart, MdDelete, MdClose } from 'react-icons/md'; // Importa los iconos
+
+// Tipo para los ítems del carrito
+export type CartItemType = {
+  id: number;
+  name: string;
+  price: number;
+  weight: number;
+  quantity: number;
+  imagePath: string;
+};
 
 // Estilos
-
 const FloatingCartContainer = styled.div`
   position: fixed;
   bottom: 20px;
@@ -52,14 +61,22 @@ const Modal = styled.div<{ isOpen: boolean }>`
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
   z-index: 1000;
   transition: transform 0.3s ease-in-out;
+  padding: 20px;
 `;
 
-const CenteredModal = styled(Modal)`
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 300px;
-  height: auto;
+const CloseButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 24px;
+  color: #ad57d2;
+
+  &:hover {
+    color: #731d97;
+  }
 `;
 
 const ModalContent = styled.div<{ hasItems: boolean }>`
@@ -223,29 +240,13 @@ const CheckoutButton = styled.button`
   }
 `;
 
-// Tipo para los ítems del carrito
-
-export type CartItemType = {
-  id: number;
-  name: string;
-  price: number;
-  weight: number;
-  quantity: number;
-  imagePath: string;
-};
-
 // Componente del carrito
-
 const CartComponent: React.FC<{
   cartItems: CartItemType[];
   onRemoveItem: (index: number) => void;
   onUpdateQuantity: (id: number, newQuantity: number) => void;
 }> = ({ cartItems = [], onRemoveItem, onUpdateQuantity }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
-  const [isProductRemovedOpen, setIsProductRemovedOpen] = useState(false);
-  const [discountCode, setDiscountCode] = useState('');
-  const [discountApplied, setDiscountApplied] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
 
   const openModal = () => {
@@ -275,29 +276,7 @@ const CartComponent: React.FC<{
   }, [isModalOpen]);
 
   const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const discountedTotal = discountApplied ? total * 0.9 : total; // 10% de descuento
   const hasItems = cartItems.length > 0;
-
-  const handleRemoveItem = (index: number) => {
-    if (cartItems.length === 1) {
-      setIsConfirmDeleteOpen(true);
-    } else {
-      onRemoveItem(index);
-      setIsProductRemovedOpen(true);
-      setTimeout(() => setIsProductRemovedOpen(false), 2000);
-    }
-  };
-
-  const confirmDeleteAll = () => {
-    cartItems.forEach((_, index) => onRemoveItem(index));
-    setIsConfirmDeleteOpen(false);
-  };
-
-  const applyDiscount = () => {
-    if (discountCode === 'riwi') {
-      setDiscountApplied(true);
-    }
-  };
 
   return (
     <FloatingCartContainer>
@@ -307,6 +286,9 @@ const CartComponent: React.FC<{
       </CartIcon>
 
       <Modal ref={modalRef} isOpen={isModalOpen}>
+        <CloseButton onClick={closeModal}>
+          <MdClose />
+        </CloseButton>
         <ModalContent hasItems={hasItems}>
           <CartTitle>Tu carrito</CartTitle>
           <ScrollableContent>
@@ -327,7 +309,7 @@ const CartComponent: React.FC<{
                         +
                       </QuantityButton>
                       <QuantityCounter>{item.quantity}</QuantityCounter>
-                      <RemoveButton onClick={() => handleRemoveItem(index)}>
+                      <RemoveButton onClick={() => onRemoveItem(index)}>
                         <MdDelete size="16" />
                       </RemoveButton>
                     </QuantityControl>
@@ -349,60 +331,24 @@ const CartComponent: React.FC<{
             <FixedBottomContent>
               <CartTotalContainer>
                 <span>Total:</span>
-                <span>${discountedTotal.toFixed(2)}</span>
+                <span>${total.toFixed(2)}</span>
               </CartTotalContainer>
-              <input
-                type="text"
-                value={discountCode}
-                onChange={(e) => setDiscountCode(e.target.value)}
-                placeholder="Código de descuento"
-              />
-              <button onClick={applyDiscount}>Aplicar</button>
               <CheckoutButton onClick={closeModal}>Finalizar compra</CheckoutButton>
             </FixedBottomContent>
           )}
         </ModalContent>
       </Modal>
-
-      {isProductRemovedOpen && (
-        <CenteredModal isOpen={isProductRemovedOpen}>
-          <ModalContent hasItems={true}>
-            <CartTitle>Producto eliminado</CartTitle>
-            <ScrollableContent>
-              <p>El producto ha sido eliminado del carrito.</p>
-            </ScrollableContent>
-          </ModalContent>
-        </CenteredModal>
-      )}
-
-      {isConfirmDeleteOpen && (
-        <CenteredModal isOpen={isConfirmDeleteOpen}>
-          <ModalContent hasItems={true}>
-            <CartTitle>¡Atención!</CartTitle>
-            <ScrollableContent>
-              <p>¿Estás seguro que deseas eliminar todos los productos de tu carrito?</p>
-            </ScrollableContent>
-            <FixedBottomContent>
-              <button onClick={confirmDeleteAll} style={{ marginRight: '10px', padding: '10px', backgroundColor: '#ff4136', color: 'white', border: 'none', borderRadius: '5px' }}>
-                Sí, eliminar todo
-              </button>
-              <button onClick={() => setIsConfirmDeleteOpen(false)} style={{ padding: '10px', backgroundColor: '#ad57d2', color: 'white', border: 'none', borderRadius: '5px' }}>
-                No, regresar
-              </button>
-            </FixedBottomContent>
-          </ModalContent>
-        </CenteredModal>
-      )}
     </FloatingCartContainer>
   );
 };
 
 export default CartComponent;
 
+// Estilos adicionales para mensajes vacíos
 const EmptyCartMessageContainer = styled.div`
   text-align: center;
   padding: 40px 20px;
-  background-color: #f9f9f9; /* Color de fondo claro */
+  background-color: #f9f9f9;
   border-radius: 8px;
   margin: 20px 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -418,17 +364,6 @@ const EmptyCartText = styled.p`
   margin: 10px 0;
 `;
 
-const StartShoppingLink = styled.a`
-  color: #ad57d2;
-  text-decoration: underline;
-  font-size: 16px;
-  transition: color 0.3s;
-
-  &:hover {
-    color: #731d97; /* Color al pasar el mouse */
-  }
-`;
-
 const StartShoppingButton = styled.button`
   background-color: #ad57d2;
   color: white;
@@ -440,6 +375,6 @@ const StartShoppingButton = styled.button`
   transition: background-color 0.3s;
 
   &:hover {
-    background-color: #731d97; /* Color al pasar el mouse */
+    background-color: #731d97; 
   }
 `;

@@ -4,6 +4,12 @@ import TypeSelector from '@/app/componets/typeselector/typeselector';
 import CartComponent, { CartItemType } from '@/app/componets/cartIcon/cart.components';
 
 // Styled components
+const Container = styled.div`
+  max-width: 1200px; /* Ajusta el ancho máximo según sea necesario */
+  margin: 0 auto; /* Centra el contenedor */
+  padding: 1rem; /* Agrega un poco de espacio interno */
+`;
+
 const Card = styled.div`
   width: 16rem;
   padding: 1rem;
@@ -22,7 +28,7 @@ const Card = styled.div`
 `;
 
 const ProductName = styled.h3`
-  font-size: 1.125rem;
+  font-size: 1rem; /* Reducido para pantallas pequeñas */
   font-weight: 600;
   margin-bottom: 0.5rem;
 `;
@@ -55,7 +61,7 @@ const WeightButton = styled.button<{ selected: boolean }>`
   background-color: ${({ selected }) => (selected ? '#5F00F8FF' : '#9333ea')};
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.75rem; /* Reducido para pantallas pequeñas */
   border-radius: 0.5rem;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
@@ -71,10 +77,10 @@ const AddToCartButton = styled.button`
   background-color: #9333ea;
   color: white;
   border: none;
-  padding: 0.75rem 1.5rem;
+  padding: 0.5rem 1rem; /* Reducido para pantallas pequeñas */
   border-radius: 0.5rem;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.875rem; /* Reducido para pantallas pequeñas */
   transition: background-color 0.3s, transform 0.2s;
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3), 0 6px 12px rgba(0, 0, 0, 0.15);
 
@@ -92,7 +98,7 @@ const ProductImage = styled.img`
 `;
 
 const Description = styled.p`
-  font-size: 0.875rem;
+  font-size: 0.75rem; /* Reducido para pantallas pequeñas */
   color: #6b7280;
   margin-bottom: 1rem;
 `;
@@ -111,7 +117,7 @@ const ProductGrid = styled.div`
 
 const ResponsiveCard = styled(Card)`
   @media (max-width: 768px) {
-    width: 100%;
+    width: 90%; /* Ancho más pequeño en pantallas pequeñas */
     margin-left: 0;
     margin-bottom: 1rem;
   }
@@ -221,7 +227,7 @@ const ProductPage: React.FC = () => {
   };
 
   return (
-    <>
+    <Container>
       {error && <div>{error}</div>}
       <CartComponent
         cartItems={cart}
@@ -271,7 +277,7 @@ const ProductPage: React.FC = () => {
             );
           })}
       </ProductGrid>
-    </>
+    </Container>
   );
 };
 
