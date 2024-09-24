@@ -33,6 +33,22 @@ PawHome is aimed at:
 
 - **Deployment**: Vercel
 
+## API Endpoints
+- **GET /api/AdoptionCenter**: Retrieve a list of adoption centers.  
+  [API Link](https://powhome.azurewebsites.net/api/v1/AdoptionCenter)
+
+- **GET /api/animals**: Retrieve a list of animals.  
+  [API Link](https://powhome.azurewebsites.net/api/Animals)
+
+- **POST /api/Auth/login**: Authenticate users.  
+  [API Link](https://powhome.azurewebsites.net/api/Auth/login)
+
+- **GET /api/v1/Products**: Retrieve a list of products.  
+  [API Link](https://powhome.azurewebsites.net/api/v1/Products)
+
+- **GET /api/v1/Users**: Retrieve a list of users.  
+  [API Link](https://powhome.azurewebsites.net/api/v1/Users)
+
 ## Backend Team Members
 - **Brayan Felipe Rodriguez Mosquera**  
   Email: duvingrand@gmail.com  
@@ -84,12 +100,3 @@ PawHome is aimed at:
    ```bash
    npm start
    ```
-
-## API Endpoints
-- **GET /api/animals**: Retrieve list of animals
-
-- **POST /api/animals**: Add a new animal
-
-- **PUT /api/animals/:id**: Update an existing animal
-
-- **DELETE /api/animals/:id**: Delete an animal
