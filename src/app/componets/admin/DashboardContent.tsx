@@ -116,7 +116,8 @@ const AdoptionTable: React.FC = () => {
       console.log('Adopción encontrada:', adoption); 
       if (adoption) {
         const templateParams = {
-          to_email: adoption.email, // Asegúrate de que este sea el correo del usuario
+          email_to_send: adoption.email, // Asegúrate de que este sea el correo del usuario
+          from_name: adoption.name,
           message: `¡Hola ${adoption.name}! Tu solicitud ha sido aceptada.`,
         };
   

@@ -34,7 +34,7 @@
     "react-router-dom": "^6.26.2",
     "styled": "^1.0.0",
     "styled-components": "^6.1.13",
-    "sweetalert2": "^11.14.0"
+    "sweetalert2": "^11.14.1"
   },
   "devDependencies": {
     "@types/jwt-decode": "^2.2.1",
