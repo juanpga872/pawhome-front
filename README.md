@@ -1,4 +1,6 @@
 
+
+```markdown
 # Project Title: PawHome
 
 ## Theme
@@ -14,40 +16,163 @@ This platform aims to bring together different animal protection organizations a
 PawHome is aimed at:
 
 - Individuals interested in helping dogs and cats in shelters, either through adoption, sponsorship (donating a fixed monthly amount), or making direct donations to organizations.
-
 - Pet owners looking for alternative food options for their pets.
 
 ## Features
 - **Adoption Listings**: View and adopt animals from various shelters.
-
 - **Sponsorship Options**: Support organizations through monthly donations.
-
 - **Product Marketplace**: Browse and purchase pet products.
-
 - **Event Calendar**: Stay updated on events organized by shelters.
 
 ## Technologies Used
 - **Frontend**: React, TypeScript, Styled Components
-
 - **Backend**: C#
-
 - **Deployment**: Vercel
 
 ## API Endpoints
 - **GET /api/AdoptionCenter**: Retrieve a list of adoption centers.  
   [API Link](https://powhome.azurewebsites.net/api/v1/AdoptionCenter)
-
+  
 - **GET /api/animals**: Retrieve a list of animals.  
   [API Link](https://powhome.azurewebsites.net/api/Animals)
-
+  
 - **POST /api/Auth/login**: Authenticate users.  
   [API Link](https://powhome.azurewebsites.net/api/Auth/login)
-
+  
 - **GET /api/v1/Products**: Retrieve a list of products.  
   [API Link](https://powhome.azurewebsites.net/api/v1/Products)
-
+  
 - **GET /api/v1/Users**: Retrieve a list of users.  
   [API Link](https://powhome.azurewebsites.net/api/v1/Users)
+
+## Dependencies
+The following dependencies are used in the project:
+
+- **React**:  
+  Install with:  
+  ```bash
+  npm install react@^18.3.1
+  ```
+
+- **React DOM**:  
+  Install with:  
+  ```bash
+  npm install react-dom@^18.3.1
+  ```
+
+- **Next.js**:  
+  Install with:  
+  ```bash
+  npm install next@^14.2.13
+  ```
+
+- **Axios**:  
+  Install with:  
+  ```bash
+  npm install axios@^1.7.7
+  ```
+
+- **@mui/material**:  
+  Install with:  
+  ```bash
+  npm install @mui/material@^6.1.1
+  ```
+
+- **@mui/icons-material**:  
+  Install with:  
+  ```bash
+  npm install @mui/icons-material@^6.1.1
+  ```
+
+- **@emotion/react**:  
+  Install with:  
+  ```bash
+  npm install @emotion/react@^11.13.3
+  ```
+
+- **@emotion/styled**:  
+  Install with:  
+  ```bash
+  npm install @emotion/styled@^11.13.0
+  ```
+
+- **Styled Components**:  
+  Install with:  
+  ```bash
+  npm install styled-components@^6.1.13
+  ```
+
+- **React Icons**:  
+  Install with:  
+  ```bash
+  npm install react-icons@^5.3.0
+  ```
+
+- **React Router DOM**:  
+  Install with:  
+  ```bash
+  npm install react-router-dom@^6.26.2
+  ```
+
+- **React Modal**:  
+  Install with:  
+  ```bash
+  npm install react-modal@^3.16.1
+  ```
+
+- **React Datepicker**:  
+  Install with:  
+  ```bash
+  npm install react-datepicker@^7.3.0
+  ```
+
+- **React Avatar**:  
+  Install with:  
+  ```bash
+  npm install react-avatar@^5.0.3
+  ```
+
+- **SweetAlert2**:  
+  Install with:  
+  ```bash
+  npm install sweetalert2@^11.14.1
+  ```
+
+- **Firebase**:  
+  Install with:  
+  ```bash
+  npm install firebase@^10.13.2
+  ```
+
+- **EmailJS**:  
+  Install with:  
+  ```bash
+  npm install emailjs-com@^3.2.0
+  ```
+
+- **JS Cookie**:  
+  Install with:  
+  ```bash
+  npm install js-cookie@^3.0.5
+  ```
+
+- **JWT Decode**:  
+  Install with:  
+  ```bash
+  npm install jwt-decode@^4.0.0
+  ```
+
+- **Lucide React**:  
+  Install with:  
+  ```bash
+  npm install lucide-react@^0.441.0
+  ```
+
+- **Datepicker**:  
+  Install with:  
+  ```bash
+  npm install datepicker@^0.0.0
+  ```
 
 ## Backend Team Members
 - **Brayan Felipe Rodriguez Mosquera**  
@@ -63,11 +188,6 @@ PawHome is aimed at:
   LinkedIn: [gomezjuanzero](https://www.linkedin.com/in/gomezjuanzero)
 
 ## Frontend Team Members
-- **José Miguel Barrientos Rivera**  
-  Email: josemiguel200606@gmail.com  
-  LinkedIn: [José Miguel](https://www.linkedin.com/in/jose-miguel-barrientos-rivera-245935213/)  
-  GitHub: [VICENTVANGOG](https://github.com/VICENTVANGOG)
-
 - **José Miguel Barrientos Rivera**  
   Email: josemiguel200606@gmail.com  
   LinkedIn: [José Miguel](https://www.linkedin.com/in/jose-miguel-barrientos-rivera-245935213/)  
@@ -100,3 +220,5 @@ PawHome is aimed at:
    ```bash
    npm start
    ```
+
+```
