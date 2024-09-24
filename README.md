@@ -1,6 +1,3 @@
-Aquí tienes el contenido del README con espacios para que se vea más organizado:
-
----
 
 # Project Title: PawHome
 
@@ -34,7 +31,7 @@ PawHome is aimed at:
 
 - **Backend**: C#
 
-- **Deployment**: AWS, Heroku, or any other cloud platform
+- **Deployment**: Vercel
 
 ## Backend Team Members
 - **Brayan Felipe Rodriguez Mosquera**  
