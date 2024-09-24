@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense } from 'react';
+import React, { useState, lazy, Suspense, useEffect } from 'react';
 import styled from 'styled-components';
 import { FaTh, FaShoppingCart, FaUserCheck, FaBox, FaEnvelope, FaSignOutAlt } from 'react-icons/fa';
 
@@ -102,6 +102,8 @@ const LogoutButton = styled.button`
 
 const Sidebar: React.FC = () => {
   const [activeItem, setActiveItem] = useState('Dashboard');
+  const [isAuthenticated, setIsAuthenticated] = useState(true); 
+  const [isAdmin, setIsAdmin] = useState(false); 
 
   const menuItems = [
     { icon: <FaTh />, label: 'requests', component: DashboardContent },
@@ -114,16 +116,29 @@ const Sidebar: React.FC = () => {
 
   const ActiveComponent = menuItems.find(item => item.label === activeItem)?.component || DashboardContent;
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const adminEmail = localStorage.getItem('adminEmail');
+  
+    setIsAuthenticated(!!token);
+    setIsAdmin(!!adminEmail);
+  
+    if (!token || !adminEmail) {
+      window.location.href = '/';
+    }
+  }, []);
+  
+
   const handleLogout = () => {
-    localStorage.clear(); // Borra todo el local storage
-    // Aquí puedes agregar lógica adicional para cerrar sesión, como redireccionar a la página de inicio de sesión.
+    localStorage.clear();
     console.log("Sesión cerrada");
+    window.location.href = '/login'; 
   };
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
       <SidebarContainer>
-        <Title>eProduct</Title>
+        <Title>Pawhome</Title>
         <Navigation>
           {menuItems.map((item) => (
             <MenuItemComponent
@@ -142,7 +157,7 @@ const Sidebar: React.FC = () => {
       </SidebarContainer>
       <ContentArea>
         <Suspense fallback={<div>Loading...</div>}>
-          <ActiveComponent />
+          {isAuthenticated ? <ActiveComponent /> : <div>No tienes acceso.</div>}
         </Suspense>
       </ContentArea>
     </div>

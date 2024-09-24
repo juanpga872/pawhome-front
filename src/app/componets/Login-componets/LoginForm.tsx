@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import styled, { createGlobalStyle, keyframes } from 'styled-components';
 import { FaFacebookF, FaGooglePlusG, FaArrowLeft } from 'react-icons/fa';
@@ -23,7 +24,7 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-// Animaciones
+// Keyframes for animations
 const slideInFromRight = keyframes`
   from {
     transform: translateX(100%);
@@ -70,9 +71,7 @@ const StyledIcon = styled(FaArrowLeft)<{ rightPanelActive: boolean }>`
   cursor: pointer;
   z-index: 1100;
   transition: transform 0.3s ease;
-
   transform: ${props => props.rightPanelActive ? 'rotate(180deg)' : 'rotate(0deg)'};
-
   &:hover {
     color: #d74d6b;
   }
@@ -87,14 +86,12 @@ const Container = styled.div<{ $rightPanelActive: boolean }>`
   width: 768px;
   max-width: 100%;
   min-height: 480px;
-
   .form-container {
     position: absolute;
     top: 0;
     height: 100%;
     transition: transform 0.6s ease-in-out;
   }
-
   .sign-in-container {
     left: 0;
     width: 50%;
@@ -102,7 +99,6 @@ const Container = styled.div<{ $rightPanelActive: boolean }>`
     transform: ${props => props.$rightPanelActive ? 'translateX(100%)' : 'translateX(0)'};
     animation: ${props => props.$rightPanelActive ? slideOutToLeft : slideInFromRight} 0.6s ease-in-out;
   }
-
   .sign-up-container {
     left: 0;
     width: 50%;
@@ -111,7 +107,6 @@ const Container = styled.div<{ $rightPanelActive: boolean }>`
     transform: ${props => props.$rightPanelActive ? 'translateX(100%)' : 'translateX(0)'};
     animation: ${props => props.$rightPanelActive ? slideInFromRight : slideOutToLeft} 0.6s ease-in-out;
   }
-
   .overlay-container {
     position: absolute;
     top: 0;
@@ -123,7 +118,6 @@ const Container = styled.div<{ $rightPanelActive: boolean }>`
     z-index: 100;
     transform: ${props => props.$rightPanelActive ? 'translateX(-100%)' : 'translateX(0)'};
   }
-
   .overlay {
     background: linear-gradient(to right, #E0BAFCFF, #EE597CFF);
     color: #FFFFFF;
@@ -134,7 +128,6 @@ const Container = styled.div<{ $rightPanelActive: boolean }>`
     transform: ${props => props.$rightPanelActive ? 'translateX(50%)' : 'translateX(0)'};
     transition: transform 0.6s ease-in-out;
   }
-
   .overlay-panel {
     position: absolute;
     display: flex;
@@ -147,49 +140,42 @@ const Container = styled.div<{ $rightPanelActive: boolean }>`
     width: 50%;
     transition: transform 0.6s ease-in-out;
   }
-
   .overlay-left {
     transform: ${props => props.$rightPanelActive ? 'translateX(0)' : 'translateX(-20%)'};
   }
-
   .overlay-right {
     right: 0;
     transform: ${props => props.$rightPanelActive ? 'translateX(20%)' : 'translateX(0)'};
   }
-
   @media (max-width: 768px) {
     width: 100%;
     height: 100%;
     overflow: hidden;
-
     .form-container {
       position: absolute;
       width: 100%;
       height: 100%;
       transition: none;
     }
-
     .sign-in-container, .sign-up-container {
       left: 0;
       opacity: 1;
       z-index: 1;
       transform: translateX(0);
     }
-
     .sign-in-container {
       animation: ${props => props.$rightPanelActive ? slideOutToRight : slideInFromLeft} 0.6s ease-in-out;
       display: ${props => props.$rightPanelActive ? 'none' : 'block'};
     }
-
     .sign-up-container {
       animation: ${props => props.$rightPanelActive ? slideInFromLeft : slideOutToRight} 0.6s ease-in-out;
       display: ${props => props.$rightPanelActive ? 'block' : 'none'};
     }
-
     .overlay-container {
       display: none;
     }
   }
+    
 `;
 
 const Title = styled.h1`
@@ -240,12 +226,11 @@ const Button = styled.button<{ $ghost?: boolean }>`
 `;
 
 const ToggleButton = styled(Button)`
-  display: none;
-
+  display: none; // Oculta el botón por defecto
   @media (max-width: 768px) {
-    display: block;
+    display: block; // Muestra el botón en dispositivos móviles
     position: fixed;
-    bottom: -1px;
+    bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
     background-color: #FF416C;
@@ -253,7 +238,6 @@ const ToggleButton = styled(Button)`
     border: none;
     z-index: 1000;
     margin: 0;
-    padin:1rem
   }
 `;
 
@@ -266,7 +250,6 @@ const Form = styled.form`
   padding: 0 50px;
   height: 100%;
   text-align: center;
-
   @media (max-width: 768px) {
     background: linear-gradient(to right, #F79BB0FF, #FFB6C1);
   }
@@ -286,7 +269,18 @@ const SocialContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 2rem;
+  gap:2rem
+`;
+const SocialLink = styled.a`
+  border: 1px solid #FFFFFFFF;
+  border-radius: 50%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 5px;
+  height: 40px;
+  width: 40px;
+  color: #000000FF;
 `;
 
 const Footer = styled.footer`
@@ -299,44 +293,151 @@ const Footer = styled.footer`
   right: 0;
   text-align: center;
   z-index: 999;
-  padding: 10px 0;
-`;
+  
+  p {
+    margin: 10px 0;
+  }
+  
+  a {
+    color: #3c97bf;
+    text-decoration: none;
+  }
+`; 
 
-const LoginPage = () => {
-  const [rightPanelActive, setRightPanelActive] = useState(false);
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
 
-  const toggleForm = () => {
-    setRightPanelActive(!rightPanelActive);
-  };
+  interface DecodedToken {
+    sub: string;
+    role: string;
+  }
+  
+  const LoginForm: React.FC = () => {
+    const [rightPanelActive, setRightPanelActive] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
+    const [phone, setPhone] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [registerMessage, setRegisterMessage] = useState('');
+    const decodeJwtToken = (token: string) => {
+      try {
+        // Divide el token en sus partes
+        const base64Url = token.split('.')[1];
+        // Reemplaza caracteres especiales
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        // Decodifica base64 a una cadena JSON
+        const jsonPayload = decodeURIComponent(
+          atob(base64)
+            .split('')
+            .map(function (c) {
+              return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            })
+            .join('')
+        );
+        // Parsear JSON y devolver
+        return JSON.parse(jsonPayload);
+      } catch (error) {
+        console.error('Error decoding JWT:', error);
+        return null;
+      }
+    };
+  
+    // Función para manejar el login
+    const handleSignIn = async (e: React.FormEvent) => {
+      e.preventDefault();
+    
+      try {
+        const response = await fetch('https://powhome.azurewebsites.net/api/Auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        });
+    
+        if (response.ok) {
+          const data = await response.json();
+          const { token } = data;
+    
+          const decodedToken = decodeJwtToken(token);
+          if (decodedToken) {
+            const { sub: userEmail, role } = decodedToken;
+    
+            // Almacenar el token en localStorage
+            localStorage.setItem('token', token);
+    
+            if (role === 'Admin') {
+              // Almacenar el email si el usuario es admin
+              localStorage.setItem('adminEmail', userEmail);
+              window.location.href = '/admin';
+            } else {
+              window.location.href = '/';
+            }
+          } else {
+            setErrorMessage('Token inválido');
+          }
+        } else {
+          setErrorMessage('Email o contraseña incorrectos');
+        }
+      } catch (error) {
+        console.error('Error during sign-in:', error);
+        setErrorMessage('Ocurrió un error al intentar iniciar sesión');
+      }
+    };
+  
 
-  const handleRegister = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // Aquí puedes añadir la lógica para el registro
-  };
-
-  const handleSignIn = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // Aquí puedes añadir la lógica para el inicio de sesión
-  };
+    const handleRegister = async (e: React.FormEvent) => {
+      e.preventDefault();
+      
+      console.log("Registering user with:", { name, phone, email, password });
+    
+      try {
+        const response = await fetch('https://powhome.azurewebsites.net/api/v1/Users', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name,
+            phone,
+            email,
+            password,
+            isAdmin: false,
+          }),
+        });
+    
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Registration successful:', data);
+          setRegisterMessage('Registration successful! Please log in.');
+          setErrorMessage('');
+        } else {
+          const errorData = await response.json();
+          console.log('Error during registration:', errorData);
+          setErrorMessage(errorData.message || 'Failed to register');
+        }
+      } catch (error) {
+        console.log('Request failed with error:', error);
+        setErrorMessage('An error occurred while trying to register');
+      }
+    };
+  
+    const toggleForm = () => {
+      setRightPanelActive(!rightPanelActive);
+    };
 
   return (
     <>
-
-      <GlobalStyle />
-      <StyledIcon rightPanelActive={rightPanelActive} onClick={toggleForm} />
-
+      {/* <GlobalStyle /> */}
       <Container $rightPanelActive={rightPanelActive}>
         <div className="form-container sign-up-container">
           <Form onSubmit={handleRegister}>
             <Title>Create Account</Title>
             <SocialContainer>
               <LoginButton />
-              <FacebookLoginButton />
+              <FacebookLoginButton /> {/* Asegúrate de tener un botón para Facebook */}
             </SocialContainer>
             <Span>or use your email for registration</Span>
             <Input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
@@ -344,9 +445,11 @@ const LoginPage = () => {
             <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
             <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
             <Button type="submit">Sign Up</Button>
+            <br />
+            <br />
             <ToggleButton onClick={toggleForm}>
-              {rightPanelActive ? 'Sign In' : 'Sign Up'}
-            </ToggleButton>
+          {rightPanelActive ? 'Sign In' : 'Sign Up'}
+        </ToggleButton>
           </Form>
         </div>
 
@@ -355,7 +458,7 @@ const LoginPage = () => {
             <Title>Sign in</Title>
             <SocialContainer>
               <LoginButton />
-              <FacebookLoginButton />
+              <FacebookLoginButton /> 
             </SocialContainer>
             <Span>or use your account</Span>
             <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -363,8 +466,8 @@ const LoginPage = () => {
             <Anchor href="#">Forgot your password?</Anchor>
             <Button type="submit">Sign In</Button>
             <ToggleButton onClick={toggleForm}>
-              {rightPanelActive ? 'Sign In' : 'Sign Up'}
-            </ToggleButton>
+          {rightPanelActive ? 'Sign In' : 'Sign Up'}
+        </ToggleButton>
             {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
           </Form>
         </div>
@@ -379,17 +482,14 @@ const LoginPage = () => {
             <div className="overlay-panel overlay-right">
               <Title>Hello, Friend!</Title>
               <Paragraph>Enter your personal details and start your journey with us</Paragraph>
-              <Button onClick={() => setRightPanelActive(true)}>register</Button>
+              <Button onClick={() => setRightPanelActive(true)}>Sign Up</Button>
+              
             </div>
           </div>
         </div>
       </Container>
-      <Footer>
-        © {new Date().getFullYear()} Your Company. All rights reserved.
-      </Footer>
     </>
   );
 };
 
-export default LoginPage;
-
+export default LoginForm;

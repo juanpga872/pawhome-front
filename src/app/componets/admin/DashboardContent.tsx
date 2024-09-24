@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import emailjs from 'emailjs-com';
 import styled from 'styled-components';
-import { FaPaw, FaTrash } from 'react-icons/fa'; 
+import { FaPaw, FaTrash } from 'react-icons/fa';
+
 interface AdoptionCenter {
   id: number;
   name: string;
@@ -14,20 +15,20 @@ const Container = styled.div`
   padding: 20px;
   max-width: 800px;
   margin: auto;
-  background-color: #ffeef8; // Fondo rosado claro
+  background-color: #ffeef8; 
   border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 `;
 
 const Title = styled.h1`
   text-align: center;
-  color: #d5006d; // Color rosado oscuro
+  color: #d5006d; 
 `;
 
 const Button = styled.button<{ disabled?: boolean }>`
   margin-bottom: 20px;
   padding: 10px 15px;
-  background-color: ${(props) => (props.disabled ? '#ff80ab' : '#d5006d')}; // Fondo rosado
+  background-color: ${(props) => (props.disabled ? '#ff80ab' : '#d5006d')}; 
   color: white;
   border: none;
   cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
@@ -36,7 +37,7 @@ const Button = styled.button<{ disabled?: boolean }>`
   transition: background-color 0.3s;
 
   &:hover {
-    background-color: ${(props) => (props.disabled ? '#ff80ab' : '#c51162')}; // Rosado más oscuro
+    background-color: ${(props) => (props.disabled ? '#ff80ab' : '#c51162')}; 
   }
 `;
 
@@ -46,7 +47,7 @@ const Table = styled.table`
 `;
 
 const TableHeader = styled.th`
-  background-color: #d5006d; // Color rosado oscuro
+  background-color: #d5006d; 
   color: white;
   padding: 10px;
   text-align: left;
@@ -60,18 +61,18 @@ const TableCell = styled.td`
 
 const TableRow = styled.tr`
   &:hover {
-    background-color: #ffe4f1; // Fondo rosado claro al pasar el mouse
+    background-color: #ffe4f1; 
   }
 `;
 
 const CheckIcon = styled(FaPaw)`
-  color: #d5006d; // Color rosado oscuro
+  color: #d5006d; 
   cursor: pointer;
   font-size: 1.5rem;
 `;
 
 const DeleteIcon = styled(FaTrash)`
-  color: #d5006d; // Color rosado oscuro
+  color: #d5006d; 
   cursor: pointer;
   font-size: 1.5rem;
 `;
@@ -109,16 +110,16 @@ const AdoptionTable: React.FC = () => {
 
   const handleAccept = () => {
     const uniqueSelected = Array.from(new Set(selectedAdoptions));
-    
+  
     uniqueSelected.forEach((id) => {
       const adoption = adoptions.find(adoption => adoption.id === id);
-      console.log('Adopción encontrada:', adoption); // Debugging
+      console.log('Adopción encontrada:', adoption); 
       if (adoption) {
         const templateParams = {
-          to_email: adoption.email,
+          to_email: adoption.email, // Asegúrate de que este sea el correo del usuario
           message: `¡Hola ${adoption.name}! Tu solicitud ha sido aceptada.`,
         };
-
+  
         emailjs.send('service_2jv15nb', 'template_rmm9ils', templateParams, 'YR5J8VoxemSVTIQtW')
           .then((response) => {
             console.log('Correo enviado', response.status, response.text);
@@ -128,12 +129,15 @@ const AdoptionTable: React.FC = () => {
             console.error('Error al enviar correo', error);
             alert('Error al enviar correo: ' + error.message);
           });
+      } else {
+        console.error(`No se encontró la adopción con ID ${id}`); // Verifica si la adopción existe
       }
     });
-    
+  
     // Limpiar la selección después de enviar correos
     setSelectedAdoptions([]);
   };
+  
 
   const handleDelete = async (id: number) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar esta solicitud?')) {
@@ -165,7 +169,7 @@ const AdoptionTable: React.FC = () => {
 
   return (
     <Container>
-      <Title>Adoption Centers</Title>
+      <Title>Adoption requests</Title>
       <Button onClick={handleAccept} disabled={selectedAdoptions.length === 0}>
         Aceptar Selección
       </Button>
