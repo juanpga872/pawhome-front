@@ -1,35 +1,81 @@
- <title>PawHome</title>
-<body>
-  <header>
-    <h1>PawHome</h1>
-  </header>
-  <main>
-    <h2>Getting Started</h2>
-    <p>First, run the development server:</p>
-    <pre><code>
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-    </code></pre>
-    <p>Open <a href="http://localhost:3000">http://localhost:3000</a> with your browser to see the result.</p>
-    <p>You can start editing the page by modifying <code>app/page.tsx</code>. The page auto-updates as you edit the file.</p>
-    <p>This project uses <a href="https://nextjs.org/docs/basic-features/font-optimization">`next/font`</a> to automatically optimize and load Inter, a custom Google Font.</p>
-    <h2>Learn More</h2>
-    <p>To learn more about Next.js, take a look at the following resources:</p>
-    <ul>
-      <li><a href="https://nextjs.org/docs">Next.js Documentation</a> - learn about Next.js features and API.</li>
-      <li><a href="https://nextjs.org/learn">Learn Next.js</a> - an interactive Next.js tutorial.</li>
-    </ul>
-    <p>You can check out <a href="https://github.com/vercel/next.js/">the Next.js GitHub repository</a> - your feedback and contributions are welcome!</p>
-    <h2>Deploy on Vercel</h2>
-    <p>The easiest way to deploy your Next.js app is to use the <a href="https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme">Vercel Platform</a> from the creators of Next.js.</p>
-    <p>Check out our <a href="https://nextjs.org/docs/deployment">Next.js deployment documentation</a> for more details.</p>
-  </main>
-  <footer>
-    <p>&copy; 2023 PawHome. All rights reserved.</p>
-  </footer>
-</body>
+Project Title: PawHome
+Theme
+E-commerce
+
+Why?
+PawHome primarily arises as a solution to the lack of web platforms offering features that connect animal protection organizations and shelters, facilitating easier adoption and support for stray animals.
+
+Purpose
+This platform aims to bring together different animal protection organizations and shelters, helping them raise funds for the care of animals, facilitating adoptions in a simpler and more dynamic way, and allowing them to start businesses selling pet products.
+
+Target Audience
+PawHome is aimed at:
+
+Individuals interested in helping dogs and cats in shelters, either through adoption, sponsorship (donating a fixed monthly amount), or making direct donations to organizations.
+Pet owners looking for alternative food options for their pets.
+Features
+Adoption Listings: View and adopt animals from various shelters.
+Sponsorship Options: Support organizations through monthly donations.
+Product Marketplace: Browse and purchase pet products.
+Event Calendar: Stay updated on events organized by shelters.
+Technologies Used
+Frontend: React, TypeScript, Styled Components
+Backend: Node.js, Express, MongoDB (or your chosen backend technology)
+Deployment: AWS, Heroku, or any other cloud platform
+Backend Team Members
+Brayan Felipe Rodriguez Mosquera
+Email: duvingrand@gmail.com
+LinkedIn: Duvingrand
+
+José Ignacio Zapata
+LinkedIn: LinkedIn Profile
+GitHub: Github Profile
+
+Juan Pablo Gómez Bustamante
+Email: gomezjuanzero@gmail.com
+LinkedIn: gomezjuanzero
+
+Frontend Team Members
+jose miguel barrientos rivera
+Email: josemiguel200606@gmail.com
+LinkedIn:https://www.linkedin.com/in/jose-miguel-barrientos-rivera-245935213/
+GitHub: VICENTVANGOG
+
+jose miguel barrientos rivera
+Email: josemiguel200606@gmail.com
+LinkedIn:https://www.linkedin.com/in/jose-miguel-barrientos-rivera-245935213/
+GitHub: VICENTVANGOG
+
+
+Getting Started
+Prerequisites
+Next.js
+React
+npm (or yarn)
+
+Installation
+Clone the repository:
+bash
+
+git clone https://github.com/your-repo/pawhome.git
+Navigate to the project directory:
+bash
+
+cd pawhome
+Install dependencies:
+bash
+
+npm install
+Start the development server:
+bash
+
+npm start
+API Endpoints
+GET /api/animals: Retrieve list of animals
+POST /api/animals: Add a new animal
+PUT /api/animals/
+: Update an existing animal
+DELETE /api/animals/
+: Delete an animal
+Contributing
+Contributions are welcome! Please read the CONTRIBUTING.md for details on our code of conduct and the process for submitting pull requests.
