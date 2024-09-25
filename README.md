@@ -192,12 +192,10 @@ gomezzero
   LinkedIn: [José Miguel](https://www.linkedin.com/in/jose-miguel-barrientos-rivera-245935213/)  
   GitHub: [VICENTVANGOG](https://github.com/VICENTVANGOG)
 
-Juan Pablo Garcés Acevedo 
-E-mail: juanpagacevedo@gmail.com
-LinkedIn: Juan Pablo Garcés https://www.linkedin.com/in/juan-garc%C3%A9s-20b43123b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app
-GitHub: https://github.com/juanpga872
-## Getting Started
-
+- **Juan Pablo Garcés Acevedo**  
+  Email: juanpagacevedo@gmail.com  
+  LinkedIn: [Juan Garcés](https://www.linkedin.com/in/juan-garc%C3%A9s-20b43123b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app)  
+  GitHub: [juanpga872](https://github.com/juanpga872)
 ### Prerequisites
 - Next.js
 - React
