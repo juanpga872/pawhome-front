@@ -333,7 +333,7 @@ const LoginForm: React.FC = () => {
           const { sub: userEmail, role } = decodedToken;
 
           localStorage.setItem('token', token);
-          const result = await Swal.fire(`Bienvenido, ${userEmail}`); // Alerta de bienvenida con SweetAlert
+          const result = await Swal.fire(`Bienvenido, ${userEmail}`);
           
           if (result.isConfirmed) { // Esperar a que el usuario acepte la alerta
             if (role === 'Admin') {
@@ -369,10 +369,10 @@ const LoginForm: React.FC = () => {
 
       if (response.ok) {
         const data = await response.json();
-        const result = await Swal.fire(`Bienvenido, ${name}`); // Alerta de bienvenida con SweetAlert
+        const result = await Swal.fire(`Bienvenido, ${name}`); 
 
-        if (result.isConfirmed) { // Esperar a que el usuario acepte la alerta
-          toggleForm(); // Cambiar al formulario de inicio de sesión
+        if (result.isConfirmed) { 
+          toggleForm(); 
         }
       } else {
         const errorData = await response.json();

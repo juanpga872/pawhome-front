@@ -112,7 +112,7 @@ const AdoptionTable: React.FC = () => {
   const handleAccept = async () => {
     const uniqueSelected = Array.from(new Set(selectedAdoptions));
 
-    // Mostrar el loader
+
     Swal.fire({
       title: 'Enviando correos...',
       text: 'Por favor, espera un momento.',

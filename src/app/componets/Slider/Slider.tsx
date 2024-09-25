@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-// Estilos del contenedor del slider
+
 const SliderContainer = styled.div`
   position: relative;
   margin: 0 auto;
@@ -10,7 +10,7 @@ const SliderContainer = styled.div`
   max-width: 1200px; /* Ancho máximo para pantallas grandes */
 `;
 
-// Estilos para las slides
+
 const Slides = styled.div<{ transitioning: boolean }>`
   display: flex;
   transition: transform 0.5s ease-in-out;
@@ -18,7 +18,7 @@ const Slides = styled.div<{ transitioning: boolean }>`
   transform: ${({ transitioning }) => (transitioning ? 'none' : 'none')};
 `;
 
-// Estilo de cada slide
+
 const Slide = styled.div`
   min-width: 100%;
   box-sizing: border-box;
@@ -27,7 +27,7 @@ const Slide = styled.div`
   justify-content: center;
 `;
 
-// Estilo de la imagen
+
 const Image = styled.img`
   width: 100%;
   height: auto;
@@ -35,7 +35,7 @@ const Image = styled.img`
   margin-bottom: 2rem;
 `;
 
-// Estilos responsivos
+
 const breakpoints = {
   mobile: '768px',
   tablet: '1024px',
@@ -87,7 +87,7 @@ const Slider: React.FC<SliderProps> = ({ images }) => {
         });
       }
       setTransitioning(true);
-    }, 5000); // Cambia de imagen cada 5 segundos
+    }, 5000); 
 
     setTimeout(() => {
       setTransitioning(false);

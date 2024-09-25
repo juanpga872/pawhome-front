@@ -6,7 +6,7 @@ import PawPrintLoader from '@/app/componets/preloader/preloader';
 import Pets from '@/app/componets/foster-componets/pets'; 
 import Video from '@/app/componets/foster-componets/information'; 
 import Header from '@/app/componets/foster-componets/header'; 
-import AdoptionFAQ from '@/app/componets/foster-componets/fromseccion'; // Asegúrate de que esta ruta sea correcta
+import AdoptionFAQ from '@/app/componets/foster-componets/fromseccion'; 
 
 const Background = styled.div`
   background: linear-gradient(to bottom right, #ff9a9e, #fad0c4);
