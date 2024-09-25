@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
-import { MdShoppingCart, MdDelete, MdClose } from 'react-icons/md'; // Importa los iconos
+import { MdShoppingCart, MdDelete, MdClose } from 'react-icons/md';
+import Swal from 'sweetalert2';
+import CheckoutModal from './CheckoutModal';
 
 // Tipo para los ítems del carrito
 export type CartItemType = {
@@ -240,110 +242,6 @@ const CheckoutButton = styled.button`
   }
 `;
 
-// Componente del carrito
-const CartComponent: React.FC<{
-  cartItems: CartItemType[];
-  onRemoveItem: (index: number) => void;
-  onUpdateQuantity: (id: number, newQuantity: number) => void;
-}> = ({ cartItems = [], onRemoveItem, onUpdateQuantity }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const modalRef = useRef<HTMLDivElement>(null);
-
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-      closeModal();
-    }
-  };
-
-  useEffect(() => {
-    if (isModalOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isModalOpen]);
-
-  const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const hasItems = cartItems.length > 0;
-
-  return (
-    <FloatingCartContainer>
-      <CartIcon onClick={openModal}>
-        <MdShoppingCart size="24" color="white" />
-        {hasItems && <CartCount>{cartItems.length}</CartCount>}
-      </CartIcon>
-
-      <Modal ref={modalRef} isOpen={isModalOpen}>
-        <CloseButton onClick={closeModal}>
-          <MdClose />
-        </CloseButton>
-        <ModalContent hasItems={hasItems}>
-          <CartTitle>Tu carrito</CartTitle>
-          <ScrollableContent>
-            {hasItems ? (
-              <CartItemsList>
-                {cartItems.map((item, index) => (
-                  <CartItemCard key={item.id} isHighlighted={index % 2 === 0}>
-                    <ProductImageContainer>
-                      <ProductImage src={item.imagePath} alt={item.name} />
-                      <CartItemDetails>
-                        <ProductName>{item.name}</ProductName>
-                        <ProductPrice>${item.price.toFixed(2)}</ProductPrice>
-                        <ProductWeight>Peso: {item.weight} KG</ProductWeight>
-                      </CartItemDetails>
-                    </ProductImageContainer>
-                    <QuantityControl>
-                      <QuantityButton onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}>
-                        +
-                      </QuantityButton>
-                      <QuantityCounter>{item.quantity}</QuantityCounter>
-                      <RemoveButton onClick={() => onRemoveItem(index)}>
-                        <MdDelete size="16" />
-                      </RemoveButton>
-                    </QuantityControl>
-                  </CartItemCard>
-                ))}
-              </CartItemsList>
-            ) : (
-              <EmptyCartMessageContainer>
-                <EmptyCartIcon size="3x" />
-                <EmptyCartText>¡Tu carrito está vacío!</EmptyCartText>
-                <StartShoppingButton onClick={() => window.location.href = '/products'}>
-                  Comienza a comprar
-                </StartShoppingButton>
-              </EmptyCartMessageContainer>
-            )}
-          </ScrollableContent>
-
-          {hasItems && (
-            <FixedBottomContent>
-              <CartTotalContainer>
-                <span>Total:</span>
-                <span>${total.toFixed(2)}</span>
-              </CartTotalContainer>
-              <CheckoutButton onClick={closeModal}>Finalizar compra</CheckoutButton>
-            </FixedBottomContent>
-          )}
-        </ModalContent>
-      </Modal>
-    </FloatingCartContainer>
-  );
-};
-
-export default CartComponent;
-
 // Estilos adicionales para mensajes vacíos
 const EmptyCartMessageContainer = styled.div`
   text-align: center;
@@ -378,3 +276,131 @@ const StartShoppingButton = styled.button`
     background-color: #731d97; 
   }
 `;
+
+// Componente del carrito
+const CartComponent: React.FC<{
+  cartItems: CartItemType[];
+  onRemoveItem: (index: number) => void;
+  onUpdateQuantity: (id: number, newQuantity: number) => void;
+}> = ({ cartItems = [], onRemoveItem, onUpdateQuantity }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const openCheckout = () => {
+    setIsCheckoutOpen(true);
+  };
+
+  const closeCheckout = () => {
+    setIsCheckoutOpen(false);
+  };
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      closeModal();
+    }
+  };
+
+  useEffect(() => {
+    if (isModalOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isModalOpen]);
+
+  const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const hasItems = cartItems.length > 0;
+
+  const handleCheckout = () => {
+    const isAuthenticated = true; // Simulando autenticación
+
+    if (!isAuthenticated) {
+      Swal.fire({
+        title: 'Inicia sesión',
+        text: 'Necesitas iniciar sesión para finalizar la compra.',
+        icon: 'warning',
+        confirmButtonText: 'Iniciar sesión',
+      });
+    } else {
+      openCheckout();
+    }
+  };
+
+  return (
+    <>
+      <FloatingCartContainer>
+        <CartIcon onClick={openModal}>
+          <MdShoppingCart size={30} color="white" />
+          {cartItems.length > 0 && <CartCount>{cartItems.length}</CartCount>}
+        </CartIcon>
+      </FloatingCartContainer>
+      <Modal isOpen={isModalOpen} ref={modalRef}>
+        <CloseButton onClick={closeModal}>
+          <MdClose size={24} />
+        </CloseButton>
+        <ModalContent hasItems={hasItems}>
+          <CartTitle>Tu carrito</CartTitle>
+          {hasItems ? (
+            <>
+              <ScrollableContent>
+                <CartItemsList>
+                  {cartItems.map((item, index) => (
+                    <CartItemCard key={item.id} isHighlighted={item.quantity > 1}>
+                      <ProductImageContainer>
+                        <ProductImage src={item.imagePath} alt={item.name} />
+                      </ProductImageContainer>
+                      <CartItemDetails>
+                        <ProductName>{item.name}</ProductName>
+                        <ProductPrice>${item.price.toFixed(2)}</ProductPrice>
+                        <ProductWeight>Peso: {item.weight}kg</ProductWeight>
+                      </CartItemDetails>
+                      <QuantityControl>
+                        <QuantityButton onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}>-</QuantityButton>
+                        <QuantityCounter>{item.quantity}</QuantityCounter>
+                        <QuantityButton onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}>+</QuantityButton>
+                        <RemoveButton onClick={() => onRemoveItem(index)}>
+                          <MdDelete size={16} />
+                        </RemoveButton>
+                      </QuantityControl>
+                    </CartItemCard>
+                  ))}
+                </CartItemsList>
+              </ScrollableContent>
+              <FixedBottomContent>
+                <CartTotalContainer>
+                  <span>Total:</span>
+                  <span>${total.toFixed(2)}</span>
+                </CartTotalContainer>
+                <CheckoutButton onClick={handleCheckout}>Finalizar compra</CheckoutButton>
+              </FixedBottomContent>
+            </>
+          ) : (
+            <EmptyCartMessageContainer>
+              <EmptyCartIcon size={48} />
+              <EmptyCartText>Tu carrito está vacío</EmptyCartText>
+              <StartShoppingButton onClick={closeModal}>Comienza a comprar</StartShoppingButton>
+            </EmptyCartMessageContainer>
+          )}
+        </ModalContent>
+      </Modal>
+
+      {/* Modal de Checkout */}
+      {isCheckoutOpen && <CheckoutModal total={total} onClose={closeCheckout} />}
+    </>
+  );
+};
+
+export default CartComponent;
