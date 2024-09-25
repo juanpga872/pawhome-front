@@ -9,7 +9,7 @@ import { FaSearch } from 'react-icons/fa';
 type Pet = {
   id: number;
   name: string;
-  imagePath: string; // Cambiado a 'imagePath'
+  imagePath: string; 
   breed: string;
   birthDate: string; 
   description: string;

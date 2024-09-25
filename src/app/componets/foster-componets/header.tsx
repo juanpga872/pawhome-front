@@ -31,6 +31,8 @@ const Buttons = styled.div`
   display: flex;
   justify-content: center;
   gap: 20px;
+  z-index: 2; 
+
 `;
 
 const ContainerInformation = styled.div`

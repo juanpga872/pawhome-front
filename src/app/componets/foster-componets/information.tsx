@@ -113,7 +113,7 @@ const Information = () => {
   <Content>
     <Title>
       <h1>ARE YOU LOOKING FOR A FURRY FRIEND?</h1>
-      <h2>At Tepa, we have many looking for a home</h2>
+      <h2>At pawhome, we have many looking for a home</h2>
       <Description>
         <p>
           We are glad to know that you are thinking about adopting. All our furry friends are waiting for a family and are given in optimal health and beauty to responsible and loving adopters. On this page, you will learn about our adoption process and requirements. But first, you need to meet the furry friend you want to adopt. If you already know their name, continue reading our conditions. Otherwise, you can meet all our furry friends through the following links.
