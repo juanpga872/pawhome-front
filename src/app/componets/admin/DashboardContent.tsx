@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { FaPaw, FaTrash } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 
+// Interface defining the structure for adoption data
 interface AdoptionCenter {
   id: number;
   name: string;
@@ -12,24 +13,25 @@ interface AdoptionCenter {
   email: string;
 }
 
+// Styled components for layout and presentation
 const Container = styled.div`
   padding: 20px;
   max-width: 800px;
   margin: auto;
-  background-color: #ffeef8; 
+  background-color: #ffeef8;
   border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 `;
 
 const Title = styled.h1`
   text-align: center;
-  color: #d5006d; 
+  color: #d5006d;
 `;
 
 const Button = styled.button<{ disabled?: boolean }>`
   margin-bottom: 20px;
   padding: 10px 15px;
-  background-color: ${(props) => (props.disabled ? '#ff80ab' : '#d5006d')}; 
+  background-color: ${(props) => (props.disabled ? '#ff80ab' : '#d5006d')};
   color: white;
   border: none;
   cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
@@ -38,7 +40,7 @@ const Button = styled.button<{ disabled?: boolean }>`
   transition: background-color 0.3s;
 
   &:hover {
-    background-color: ${(props) => (props.disabled ? '#ff80ab' : '#c51162')}; 
+    background-color: ${(props) => (props.disabled ? '#ff80ab' : '#c51162')};
   }
 `;
 
@@ -48,7 +50,7 @@ const Table = styled.table`
 `;
 
 const TableHeader = styled.th`
-  background-color: #d5006d; 
+  background-color: #d5006d;
   color: white;
   padding: 10px;
   text-align: left;
@@ -62,28 +64,29 @@ const TableCell = styled.td`
 
 const TableRow = styled.tr`
   &:hover {
-    background-color: #ffe4f1; 
+    background-color: #ffe4f1;
   }
 `;
 
 const CheckIcon = styled(FaPaw)`
-  color: #d5006d; 
+  color: #d5006d;
   cursor: pointer;
   font-size: 1.5rem;
 `;
 
 const DeleteIcon = styled(FaTrash)`
-  color: #d5006d; 
+  color: #d5006d;
   cursor: pointer;
   font-size: 1.5rem;
 `;
 
 const AdoptionTable: React.FC = () => {
-  const [adoptions, setAdoptions] = useState<AdoptionCenter[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedAdoptions, setSelectedAdoptions] = useState<number[]>([]);
+  const [adoptions, setAdoptions] = useState<AdoptionCenter[]>([]); // Stores the fetched adoptions
+  const [loading, setLoading] = useState<boolean>(true); // Loading state
+  const [error, setError] = useState<string | null>(null); // Error handling
+  const [selectedAdoptions, setSelectedAdoptions] = useState<number[]>([]); // Tracks selected adoptions
 
+  // Fetch adoption data from API on component mount
   useEffect(() => {
     const fetchAdoptions = async () => {
       try {
@@ -103,16 +106,18 @@ const AdoptionTable: React.FC = () => {
     fetchAdoptions();
   }, []);
 
+  // Handles selecting/deselecting adoption requests
   const handleSelect = (id: number) => {
-    setSelectedAdoptions((prev) => 
+    setSelectedAdoptions((prev) =>
       prev.includes(id) ? prev.filter((adoptionId) => adoptionId !== id) : [...prev, id]
     );
   };
 
+  // Sends an email for each selected adoption
   const handleAccept = async () => {
     const uniqueSelected = Array.from(new Set(selectedAdoptions));
 
-    // Mostrar el loader
+    // Display loader
     Swal.fire({
       title: 'Enviando correos...',
       text: 'Por favor, espera un momento.',
@@ -148,15 +153,14 @@ const AdoptionTable: React.FC = () => {
             text: 'Error al enviar correo: ' + (error as Error).message,
           });
         }
-      } else {
-        console.error(`No se encontró la adopción con ID ${id}`);
       }
     }
 
-    setSelectedAdoptions([]);
-    Swal.close(); // Cierra el loader
+    setSelectedAdoptions([]); // Clear selection after email sending
+    Swal.close(); // Close loader
   };
 
+  // Handles deleting an adoption request
   const handleDelete = async (id: number) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar esta solicitud?')) {
       try {
@@ -168,7 +172,7 @@ const AdoptionTable: React.FC = () => {
           throw new Error(`Error al eliminar la solicitud: ${errorMessage}`);
         }
 
-        setAdoptions(adoptions.filter(adoption => adoption.id !== id));
+        setAdoptions(adoptions.filter(adoption => adoption.id !== id)); // Remove deleted adoption from state
         alert(`Solicitud de adopción con ID ${id} eliminada.`);
       } catch (error) {
         console.error('Error al eliminar la solicitud', error);
@@ -177,6 +181,7 @@ const AdoptionTable: React.FC = () => {
     }
   };
 
+  // Loading or error state display
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -188,6 +193,7 @@ const AdoptionTable: React.FC = () => {
   return (
     <Container>
       <Title>Adoption requests</Title>
+      {/* Disable the button if no adoptions are selected */}
       <Button onClick={handleAccept} disabled={selectedAdoptions.length === 0}>
         Aceptar Selección
       </Button>
